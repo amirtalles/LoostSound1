@@ -1,0 +1,2747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LOST SOUND — Music Streaming</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#f4f1eb;
+    --white:#faf8f3;
+    --black:#111111;
+    --gray:#77736c;
+    --line:#d9d4ca;
+    --red:#b51f2a;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:var(--black);
+    font-family:Arial,Helvetica,sans-serif;
+    overflow-x:hidden;
+}
+
+button{
+    font-family:inherit;
+    cursor:pointer;
+    border:none;
+    background:none;
+}
+
+img{
+    display:block;
+}
+
+.app{
+    min-height:100vh;
+    padding-bottom:115px;
+}
+
+/* ================= HEADER ================= */
+
+.topbar{
+    height:72px;
+    padding:0 22px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    position:sticky;
+    top:0;
+    z-index:100;
+
+    background:rgba(244,241,235,.94);
+    backdrop-filter:blur(15px);
+
+    border-bottom:1px solid var(--line);
+}
+
+.logo{
+    font-size:20px;
+    font-weight:800;
+    letter-spacing:.08em;
+}
+
+.top-title{
+    font-size:11px;
+    letter-spacing:.25em;
+    font-weight:bold;
+}
+
+.menu{
+    font-size:25px;
+}
+
+/* ================= PAGE ================= */
+
+.page{
+    width:100%;
+    max-width:1180px;
+    margin:auto;
+    padding:25px 22px;
+}
+
+.view{
+    display:none;
+}
+
+.view.active{
+    display:block;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:end;
+    margin:20px 0 55px;
+}
+
+.kicker{
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:.18em;
+}
+
+.hero h1{
+    font-size:clamp(55px,10vw,125px);
+    line-height:.82;
+    letter-spacing:-.075em;
+    margin-top:12px;
+}
+
+.year{
+    font-size:12px;
+    letter-spacing:.15em;
+}
+
+/* ================= FEATURED ================= */
+
+.featured{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 360px;
+    gap:55px;
+    align-items:center;
+}
+
+.art-stage{
+    min-height:470px;
+    display:grid;
+    place-items:center;
+    position:relative;
+    overflow:hidden;
+}
+
+/* VINYL */
+
+.vinyl{
+    position:absolute;
+
+    width:min(65vw,470px);
+    height:min(65vw,470px);
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(
+        circle,
+        #171717 0 7%,
+        #555 7.5% 8%,
+        #111 8.5% 13%,
+        #292929 13.5% 14%,
+        #080808 14.5% 28%,
+        #292929 28.5% 29%,
+        #070707 29.5% 45%,
+        #252525 45.5% 46%,
+        #050505 46.5% 62%,
+        #222 62.5% 63%,
+        #050505 63.5% 100%
+    );
+
+    transform:translateX(30%);
+
+    box-shadow:0 30px 70px rgba(0,0,0,.15);
+
+    transition:.5s;
+}
+
+.vinyl::after{
+    content:"";
+
+    position:absolute;
+    width:14px;
+    height:14px;
+
+    border-radius:50%;
+
+    background:var(--red);
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+}
+
+.vinyl.playing{
+    animation:rotateVinyl 3s linear infinite;
+}
+
+@keyframes rotateVinyl{
+
+    from{
+        transform:translateX(30%) rotate(0deg);
+    }
+
+    to{
+        transform:translateX(30%) rotate(360deg);
+    }
+
+}
+
+/* COVER */
+
+.cover{
+    position:relative;
+    z-index:2;
+
+    width:min(68vw,390px);
+    aspect-ratio:1;
+
+    object-fit:cover;
+
+    border-radius:4px;
+
+    box-shadow:0 25px 60px rgba(0,0,0,.12);
+}
+
+/* ================= TRACK INFO ================= */
+
+.track-info h2{
+    font-size:36px;
+    line-height:1;
+    letter-spacing:-.05em;
+    margin:8px 0;
+}
+
+.artist{
+    color:var(--gray);
+    font-size:14px;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+    margin:22px 0;
+}
+
+.circle{
+    width:43px;
+    height:43px;
+
+    display:grid;
+    place-items:center;
+
+    border:1px solid var(--line);
+    border-radius:50%;
+
+    background:var(--white);
+}
+
+.circle.active{
+    color:var(--red);
+    border-color:var(--red);
+}
+
+/* ================= WAVEFORM ================= */
+
+.wave{
+    height:45px;
+
+    display:flex;
+    align-items:center;
+
+    gap:2px;
+
+    margin:20px 0;
+
+    overflow:hidden;
+}
+
+.wave span{
+    width:3px;
+    background:#c7c2b9;
+    border-radius:5px;
+}
+
+.wave span.played{
+    background:var(--red);
+}
+
+/* ================= PROGRESS ================= */
+
+.progress{
+    width:100%;
+    height:3px;
+
+    background:var(--line);
+
+    cursor:pointer;
+}
+
+.progress i{
+    display:block;
+
+    height:100%;
+    width:0;
+
+    background:var(--red);
+}
+
+.time{
+    display:flex;
+    justify-content:space-between;
+
+    margin-top:5px;
+
+    font-size:10px;
+    color:var(--gray);
+}
+
+/* ================= SECTIONS ================= */
+
+.section{
+    margin-top:75px;
+}
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    border-bottom:1px solid var(--line);
+
+    padding-bottom:10px;
+    margin-bottom:8px;
+}
+
+.section-title{
+    font-size:12px;
+    letter-spacing:.18em;
+    font-weight:bold;
+}
+
+.small{
+    font-size:10px;
+    color:var(--gray);
+}
+
+/* ================= TRACK ROW ================= */
+
+.track-row{
+    display:grid;
+
+    grid-template-columns:
+    40px
+    52px
+    1fr
+    auto
+    35px;
+
+    gap:12px;
+
+    align-items:center;
+
+    padding:12px 4px;
+
+    border-bottom:1px solid var(--line);
+
+    transition:.2s;
+}
+
+.track-row:hover{
+    background:rgba(0,0,0,.025);
+}
+
+.number{
+    color:var(--gray);
+    font-size:12px;
+}
+
+.thumb{
+    width:52px;
+    height:52px;
+
+    object-fit:cover;
+
+    border-radius:3px;
+}
+
+.track-title{
+    font-size:14px;
+    font-weight:bold;
+}
+
+.duration{
+    color:var(--gray);
+    font-size:11px;
+}
+
+.more{
+    font-size:20px;
+}
+
+/* ================= CARDS ================= */
+
+.cards{
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:18px;
+}
+
+.card{
+    cursor:pointer;
+}
+
+.card img{
+    width:100%;
+    aspect-ratio:1;
+
+    object-fit:cover;
+
+    border-radius:4px;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+
+    transition:.3s;
+}
+
+.card:hover img{
+    transform:translateY(-4px);
+}
+
+.card h4{
+    font-size:14px;
+    margin-top:10px;
+}
+
+.card p{
+    color:var(--gray);
+    font-size:12px;
+    margin-top:4px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    display:flex;
+
+    border-bottom:1px solid var(--black);
+
+    padding:15px 0;
+
+    margin-top:25px;
+}
+
+.search-box input{
+    width:100%;
+
+    border:none;
+    outline:none;
+
+    background:transparent;
+
+    font-size:28px;
+}
+
+.search-box button{
+    font-size:22px;
+}
+
+.chips{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+
+    margin:20px 0;
+}
+
+.chip{
+    padding:9px 14px;
+
+    border:1px solid var(--line);
+
+    border-radius:30px;
+
+    font-size:11px;
+}
+
+/* ================= PROFILE ================= */
+
+.profile-head{
+    display:flex;
+    align-items:center;
+
+    gap:25px;
+
+    padding-bottom:30px;
+
+    border-bottom:1px solid var(--line);
+}
+
+.avatar{
+    width:120px;
+    height:120px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+}
+
+.profile-head h2{
+    font-size:40px;
+    letter-spacing:-.06em;
+}
+
+.stats{
+    display:flex;
+    gap:20px;
+
+    margin-top:12px;
+
+    color:var(--gray);
+
+    font-size:12px;
+}
+
+/* ================= UPLOAD ================= */
+
+.upload{
+    max-width:700px;
+}
+
+.upload h1{
+    font-size:60px;
+    line-height:.9;
+
+    letter-spacing:-.06em;
+
+    margin:15px 0 30px;
+}
+
+.notice{
+    padding:14px;
+
+    border:1px solid var(--line);
+
+    font-size:12px;
+
+    margin-bottom:25px;
+}
+
+.field{
+    margin:18px 0;
+}
+
+.field label{
+    display:block;
+
+    font-size:10px;
+
+    letter-spacing:.15em;
+
+    margin-bottom:8px;
+}
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+
+    padding:13px;
+
+    background:var(--white);
+
+    border:1px solid var(--line);
+
+    border-radius:8px;
+
+    outline:none;
+}
+
+.primary{
+    padding:14px 22px;
+
+    color:white;
+
+    background:var(--black);
+
+    border-radius:30px;
+}
+
+/* ================= PLAYER ================= */
+
+.player{
+    position:fixed;
+
+    left:0;
+    right:0;
+    bottom:0;
+
+    z-index:200;
+
+    background:rgba(250,248,243,.97);
+
+    backdrop-filter:blur(20px);
+
+    border-top:1px solid var(--line);
+
+    padding:10px 18px;
+}
+
+.player-inner{
+    max-width:1180px;
+
+    margin:auto;
+
+    display:grid;
+
+    grid-template-columns:
+    52px
+    1fr
+    auto;
+
+    gap:12px;
+
+    align-items:center;
+}
+
+.player-art{
+    width:52px;
+    height:52px;
+
+    object-fit:cover;
+
+    border-radius:3px;
+}
+
+.player-title{
+    font-size:13px;
+    font-weight:bold;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.player-artist{
+    color:var(--gray);
+    font-size:11px;
+
+    margin:3px 0 6px;
+}
+
+.controls{
+    display:flex;
+    align-items:center;
+
+    gap:15px;
+}
+
+.controls button{
+    font-size:20px;
+}
+
+.play-button{
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    background:var(--black);
+
+    color:white;
+
+    display:grid;
+    place-items:center;
+}
+
+/* ================= BOTTOM NAV ================= */
+
+.bottom-nav{
+    display:none;
+}
+
+/* ================= DRAWER ================= */
+
+.drawer{
+    position:fixed;
+
+    inset:0;
+
+    z-index:500;
+
+    background:rgba(0,0,0,.4);
+
+    display:none;
+}
+
+.drawer.open{
+    display:block;
+}
+
+.drawer-panel{
+    position:absolute;
+
+    right:0;
+    top:0;
+    bottom:0;
+
+    width:min(340px,88vw);
+
+    padding:25px;
+
+    background:var(--white);
+
+    overflow:auto;
+}
+
+.drawer-head{
+    display:flex;
+
+    justify-content:space-between;
+
+    font-size:20px;
+}
+
+.drawer-list{
+    margin-top:30px;
+}
+
+.drawer-list button{
+    width:100%;
+
+    display:block;
+
+    text-align:left;
+
+    padding:14px 0;
+
+    border-bottom:1px solid var(--line);
+
+    font-size:14px;
+}
+
+/* ================= TOAST ================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+
+    bottom:130px;
+
+    transform:translateX(-50%);
+
+    z-index:1000;
+
+    padding:12px 18px;
+
+    background:#111;
+
+    color:white;
+
+    border-radius:30px;
+
+    font-size:12px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:800px){
+
+    .page{
+        padding:20px 16px;
+    }
+
+    .hero{
+        margin-bottom:25px;
+    }
+
+    .hero h1{
+        font-size:58px;
+    }
+
+    .featured{
+        grid-template-columns:1fr;
+        gap:15px;
+    }
+
+    .art-stage{
+        min-height:350px;
+    }
+
+    .vinyl{
+        width:340px;
+        height:340px;
+    }
+
+    .cover{
+        width:min(82vw,330px);
+    }
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .section{
+        margin-top:50px;
+    }
+
+    .track-row{
+        grid-template-columns:
+        25px
+        48px
+        1fr
+        30px;
+    }
+
+    .thumb{
+        width:48px;
+        height:48px;
+    }
+
+    .duration{
+        display:none;
+    }
+
+    .player{
+        bottom:58px;
+    }
+
+    .player-inner{
+        grid-template-columns:
+        44px
+        1fr
+        auto;
+    }
+
+    .player-art{
+        width:44px;
+        height:44px;
+    }
+
+    .controls button:first-child,
+    .controls button:last-child{
+        display:none;
+    }
+
+    .bottom-nav{
+        position:fixed;
+
+        display:flex;
+
+        left:0;
+        right:0;
+        bottom:0;
+
+        height:58px;
+
+        background:rgba(250,248,243,.98);
+
+        border-top:1px solid var(--line);
+
+        z-index:300;
+
+        justify-content:space-around;
+        align-items:center;
+    }
+
+    .bottom-nav button{
+        color:var(--gray);
+        font-size:10px;
+    }
+
+    .bottom-nav button.active{
+        color:var(--black);
+        font-weight:bold;
+    }
+
+    .profile-head{
+        align-items:flex-start;
+    }
+
+    .avatar{
+        width:90px;
+        height:90px;
+    }
+
+    .profile-head h2{
+        font-size:30px;
+    }
+
+    .upload h1{
+        font-size:50px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- ================= HEADER ================= -->
+
+<header class="topbar">
+
+    <button class="logo" onclick="showView('home')">
+        L/S
+    </button>
+
+    <div class="top-title">
+        LOST SOUND
+    </div>
+
+    <button class="menu" onclick="openDrawer()">
+        ☰
+    </button>
+
+</header>
+
+
+<main class="page">
+
+<!-- ================= HOME ================= -->
+
+<section id="home" class="view active">
+
+    <div class="hero">
+
+        <div>
+
+            <div class="kicker">
+                MUSIC STREAMING
+            </div>
+
+            <h1>
+                LOST<br>
+                SOUND
+            </h1>
+
+        </div>
+
+        <div class="year">
+            2024
+        </div>
+
+    </div>
+
+
+    <!-- FEATURED -->
+
+    <div class="featured">
+
+        <div class="art-stage">
+
+            <div
+                class="vinyl"
+                id="vinyl">
+            </div>
+
+            <img
+                id="featuredCover"
+                class="cover"
+                alt="Album artwork">
+
+        </div>
+
+
+        <div class="track-info">
+
+            <div class="kicker">
+                01 / FEATURED TRACK
+            </div>
+
+            <h2 id="featuredTitle">
+                Lost In Motion
+            </h2>
+
+            <div
+                class="artist"
+                id="featuredArtist">
+                AmirTalles
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="circle"
+                    id="featurePlay"
+                    onclick="togglePlay()">
+                    ▶
+                </button>
+
+                <button
+                    class="circle"
+                    id="featureLike"
+                    onclick="toggleLike(0)">
+                    ♡
+                </button>
+
+                <button
+                    class="circle"
+                    onclick="shareTrack(0)">
+                    ↗
+                </button>
+
+                <button
+                    class="circle"
+                    onclick="toast('More options')">
+                    ⋯
+                </button>
+
+            </div>
+
+
+            <div
+                class="wave"
+                id="wave">
+            </div>
+
+
+            <div class="time">
+
+                <span id="current">
+                    0:00
+                </span>
+
+                <span id="duration">
+                    0:00
+                </span>
+
+            </div>
+
+
+            <div
+                class="progress"
+                onclick="seek(event)">
+
+                <i id="progress"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- POPULAR -->
+
+    <section class="section">
+
+        <div class="section-head">
+
+            <div class="section-title">
+                POPULAR
+            </div>
+
+            <div class="small">
+                PLAY ALL
+            </div>
+
+        </div>
+
+        <div id="popular"></div>
+
+    </section>
+
+
+    <!-- NEW RELEASES -->
+
+    <section class="section">
+
+        <div class="section-head">
+
+            <div class="section-title">
+                NEW RELEASES
+            </div>
+
+            <div class="small">
+                VIEW ALL
+            </div>
+
+        </div>
+
+        <div
+            class="cards"
+            id="newReleases">
+        </div>
+
+    </section>
+
+
+    <!-- TRENDING -->
+
+    <section class="section">
+
+        <div class="section-head">
+
+            <div class="section-title">
+                TRENDING
+            </div>
+
+            <div class="small">
+                THIS WEEK
+            </div>
+
+        </div>
+
+        <div
+            class="cards"
+            id="trending">
+        </div>
+
+    </section>
+
+</section>
+
+
+<!-- ================= DISCOVER ================= -->
+
+<section id="discover" class="view">
+
+    <div class="hero">
+
+        <div>
+
+            <div class="kicker">
+                DISCOVER
+            </div>
+
+            <h1>
+                NEW<br>
+                WORLDS
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="chips"
+        id="genres">
+    </div>
+
+
+    <section class="section">
+
+        <div class="section-head">
+
+            <div class="section-title">
+                RECOMMENDED
+            </div>
+
+        </div>
+
+        <div
+            class="cards"
+            id="recommended">
+        </div>
+
+    </section>
+
+</section>
+
+
+<!-- ================= SEARCH ================= -->
+
+<section id="search" class="view">
+
+    <div class="kicker">
+        SEARCH
+    </div>
+
+
+    <div class="search-box">
+
+        <input
+            id="searchInput"
+            placeholder="Search music, artists, albums..."
+            oninput="runSearch()">
+
+        <button onclick="clearSearch()">
+            ×
+        </button>
+
+    </div>
+
+
+    <div class="chips">
+
+        <button class="chip">
+            All
+        </button>
+
+        <button class="chip">
+            Tracks
+        </button>
+
+        <button class="chip">
+            Artists
+        </button>
+
+        <button class="chip">
+            Albums
+        </button>
+
+        <button class="chip">
+            Playlists
+        </button>
+
+        <button class="chip">
+            People
+        </button>
+
+    </div>
+
+
+    <div id="searchResults"></div>
+
+</section>
+
+
+<!-- ================= LIBRARY ================= -->
+
+<section id="library" class="view">
+
+    <div class="hero">
+
+        <div>
+
+            <div class="kicker">
+                YOUR ARCHIVE
+            </div>
+
+            <h1>
+                MY<br>
+                SOUND
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    <section class="section">
+
+        <div class="section-head">
+
+            <div class="section-title">
+                LIKED TRACKS
+            </div>
+
+        </div>
+
+        <div id="liked"></div>
+
+    </section>
+
+
+    <section class="section">
+
+        <div class="section-head">
+
+            <div class="section-title">
+                RECENTLY PLAYED
+            </div>
+
+        </div>
+
+        <div id="recent"></div>
+
+    </section>
+
+</section>
+
+
+<!-- ================= PROFILE ================= -->
+
+<section id="profile" class="view">
+
+    <div class="profile-head">
+
+        <img
+            class="avatar"
+            id="avatar"
+            alt="Profile">
+
+        <div>
+
+            <div class="kicker">
+                ARTIST
+            </div>
+
+            <h2>
+                AmirTalles
+            </h2>
+
+            <div class="artist">
+                @amirtalles
+            </div>
+
+            <div class="stats">
+
+                <span>
+                    12 Followers
+                </span>
+
+                <span>
+                    28 Following
+                </span>
+
+                <span>
+                    8 Tracks
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <p
+        class="artist"
+        style="margin-top:24px;max-width:650px">
+
+        Independent artist, producer and creative.
+        Welcome to the LOST SOUND archive.
+
+    </p>
+
+
+    <div class="actions">
+
+        <button
+            class="primary"
+            onclick="toast('Followed')">
+
+            Follow
+
+        </button>
+
+        <button
+            class="circle"
+            onclick="shareProfile()">
+
+            ↗
+
+        </button>
+
+    </div>
+
+
+    <section class="section">
+
+        <div class="section-head">
+
+            <div class="section-title">
+                TRACKS
+            </div>
+
+        </div>
+
+        <div id="profileTracks"></div>
+
+    </section>
+
+</section>
+
+
+<!-- ================= UPLOAD ================= -->
+
+<section id="upload" class="view">
+
+    <div class="upload">
+
+        <div class="kicker">
+            CREATOR STUDIO
+        </div>
+
+        <h1>
+            UPLOAD<br>
+            YOUR SOUND
+        </h1>
+
+
+        <div class="notice">
+
+            Select an audio file and artwork.
+            This browser version previews uploads locally.
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                AUDIO FILE
+            </label>
+
+            <input
+                id="audioFile"
+                type="file"
+                accept="audio/*">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                COVER ARTWORK
+            </label>
+
+            <input
+                id="coverFile"
+                type="file"
+                accept="image/*">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                TITLE
+            </label>
+
+            <input
+                id="uploadTitle"
+                placeholder="Track title">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                ARTIST
+            </label>
+
+            <input
+                id="uploadArtist"
+                value="AmirTalles">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                GENRE
+            </label>
+
+            <select>
+
+                <option>
+                    Electronic
+                </option>
+
+                <option>
+                    Hip-Hop
+                </option>
+
+                <option>
+                    Pop
+                </option>
+
+                <option>
+                    Ambient
+                </option>
+
+                <option>
+                    Indie
+                </option>
+
+                <option>
+                    Experimental
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                DESCRIPTION
+            </label>
+
+            <textarea
+                rows="4"
+                placeholder="Tell listeners about this release">
+            </textarea>
+
+        </div>
+
+
+        <button
+            class="primary"
+            onclick="publishTrack()">
+
+            Publish Track
+
+        </button>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- ================= PLAYER ================= -->
+
+<div class="player">
+
+    <div class="player-inner">
+
+        <img
+            id="playerArt"
+            class="player-art"
+            alt="">
+
+        <div>
+
+            <div
+                id="playerTitle"
+                class="player-title">
+
+                Select a track
+
+            </div>
+
+            <div
+                id="playerArtist"
+                class="player-artist">
+
+                LOST SOUND
+
+            </div>
+
+
+            <div
+                class="progress"
+                onclick="seek(event)">
+
+                <i id="playerProgress"></i>
+
+            </div>
+
+
+            <div class="time">
+
+                <span id="playerCurrent">
+                    0:00
+                </span>
+
+                <span id="playerDuration">
+                    0:00
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="controls">
+
+            <button onclick="previousTrack()">
+                ‹
+            </button>
+
+            <button
+                class="play-button"
+                id="playButton"
+                onclick="togglePlay()">
+
+                ▶
+
+            </button>
+
+            <button onclick="nextTrack()">
+                ›
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= MOBILE NAV ================= -->
+
+<nav class="bottom-nav">
+
+    <button
+        class="active"
+        data-view="home"
+        onclick="showView('home')">
+
+        Home
+
+    </button>
+
+    <button
+        data-view="discover"
+        onclick="showView('discover')">
+
+        Discover
+
+    </button>
+
+    <button
+        data-view="search"
+        onclick="showView('search')">
+
+        Search
+
+    </button>
+
+    <button
+        data-view="library"
+        onclick="showView('library')">
+
+        Library
+
+    </button>
+
+    <button
+        data-view="profile"
+        onclick="showView('profile')">
+
+        Profile
+
+    </button>
+
+</nav>
+
+
+<!-- ================= DRAWER ================= -->
+
+<div
+    class="drawer"
+    id="drawer"
+    onclick="closeDrawer()">
+
+    <aside
+        class="drawer-panel"
+        onclick="event.stopPropagation()">
+
+        <div class="drawer-head">
+
+            <b>
+                L/S
+            </b>
+
+            <button onclick="closeDrawer()">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="drawer-list">
+
+            <button onclick="go('home')">
+                Home
+            </button>
+
+            <button onclick="go('discover')">
+                Discover
+            </button>
+
+            <button onclick="go('search')">
+                Search
+            </button>
+
+            <button onclick="go('library')">
+                Library
+            </button>
+
+            <button onclick="go('profile')">
+                Profile
+            </button>
+
+            <button onclick="go('upload')">
+                Upload
+            </button>
+
+            <button onclick="toast('Following')">
+                Following
+            </button>
+
+            <button onclick="toast('Feed')">
+                Feed
+            </button>
+
+            <button onclick="toast('Playlists')">
+                Playlists
+            </button>
+
+            <button onclick="toast('Albums')">
+                Albums
+            </button>
+
+            <button onclick="toast('Artists')">
+                Artists
+            </button>
+
+            <button onclick="toast('Notifications')">
+                Notifications
+            </button>
+
+            <button onclick="toast('Messages')">
+                Messages
+            </button>
+
+            <button onclick="toast('Listening History')">
+                Listening History
+            </button>
+
+            <button onclick="toast('Settings')">
+                Settings
+            </button>
+
+            <button onclick="toast('Help')">
+                Help
+            </button>
+
+            <button onclick="toast('Logged out')">
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+</div>
+
+
+<audio
+    id="audio"
+    preload="metadata">
+</audio>
+
+
+<script>
+
+/* =====================================================
+   TRACK DATA
+===================================================== */
+
+const tracks = [
+
+{
+    id:1,
+    title:"Lost In Motion",
+    artist:"AmirTalles",
+    duration:"3:42",
+    cover:"https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=900&q=85"
+},
+
+{
+    id:2,
+    title:"After Midnight",
+    artist:"AmirTalles",
+    duration:"4:01",
+    cover:"https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=900&q=85"
+},
+
+{
+    id:3,
+    title:"Static Dreams",
+    artist:"NOVA",
+    duration:"2:58",
+    cover:"https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=900&q=85"
+},
+
+{
+    id:4,
+    title:"No Signal",
+    artist:"KAIRO",
+    duration:"3:36",
+    cover:"https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=900&q=85"
+},
+
+{
+    id:5,
+    title:"Parallel",
+    artist:"AmirTalles",
+    duration:"3:18",
+    cover:"https://images.unsplash.com/photo-1524230572899-a752b3835840?auto=format&fit=crop&w=900&q=85"
+},
+
+{
+    id:6,
+    title:"Blue Room",
+    artist:"Mira",
+    duration:"4:22",
+    cover:"https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=900&q=85"
+},
+
+{
+    id:7,
+    title:"Frequency",
+    artist:"RØNIN",
+    duration:"3:51",
+    cover:"https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=900&q=85"
+},
+
+{
+    id:8,
+    title:"Falling Forward",
+    artist:"Lena",
+    duration:"3:09",
+    cover:"https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=900&q=85"
+}
+
+];
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let currentIndex = 0;
+
+let liked = new Set(
+    JSON.parse(
+        localStorage.getItem("lost_sound_liked") || "[]"
+    )
+);
+
+let recent = JSON.parse(
+    localStorage.getItem("lost_sound_recent") || "[]"
+);
+
+const audio = document.getElementById("audio");
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function $(id){
+    return document.getElementById(id);
+}
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function render(){
+
+    const featured = tracks[0];
+
+    $("featuredCover").src = featured.cover;
+    $("featuredTitle").textContent = featured.title;
+    $("featuredArtist").textContent = featured.artist;
+
+    $("playerArt").src = featured.cover;
+
+    renderRows(
+        "popular",
+        tracks.slice(0,4)
+    );
+
+    renderCards(
+        "newReleases",
+        tracks.slice(4,8)
+    );
+
+    renderCards(
+        "trending",
+        [
+            tracks[1],
+            tracks[4],
+            tracks[6],
+            tracks[2]
+        ]
+    );
+
+    renderCards(
+        "recommended",
+        [
+            tracks[3],
+            tracks[5],
+            tracks[0],
+            tracks[7]
+        ]
+    );
+
+    renderRows(
+        "profileTracks",
+        tracks.slice(0,6)
+    );
+
+    renderLibrary();
+
+    renderGenres();
+
+    createWaveform();
+
+    $("avatar").src = tracks[0].cover;
+
+}
+
+
+/* =====================================================
+   ROWS
+===================================================== */
+
+function renderRows(id,list){
+
+    const element = $(id);
+
+    if(!element){
+        return;
+    }
+
+    if(list.length === 0){
+
+        element.innerHTML = `
+        <div style="
+            padding:35px 0;
+            color:#777;
+            font-size:13px;
+        ">
+            No music here yet.
+        </div>
+        `;
+
+        return;
+    }
+
+    element.innerHTML = list.map(
+
+        (track,index)=>`
+
+        <div class="track-row">
+
+            <span class="number">
+                ${String(index+1).padStart(2,"0")}
+            </span>
+
+            <img
+                class="thumb"
+                src="${track.cover}"
+                alt="">
+
+            <div
+                onclick="playTrack(${tracks.indexOf(track)})"
+                style="cursor:pointer">
+
+                <div class="track-title">
+                    ${track.title}
+                </div>
+
+                <div class="artist">
+                    ${track.artist}
+                </div>
+
+            </div>
+
+            <span class="duration">
+                ${track.duration}
+            </span>
+
+            <button
+                class="more"
+                onclick="event.stopPropagation();toast('Track menu')">
+
+                ⋯
+
+            </button>
+
+        </div>
+
+        `
+
+    ).join("");
+
+}
+
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+function renderCards(id,list){
+
+    const element = $(id);
+
+    if(!element){
+        return;
+    }
+
+    element.innerHTML = list.map(
+
+        track=>`
+
+        <article
+            class="card"
+            onclick="playTrack(${tracks.indexOf(track)})">
+
+            <img
+                src="${track.cover}"
+                alt="">
+
+            <h4>
+                ${track.title}
+            </h4>
+
+            <p>
+                ${track.artist}
+            </p>
+
+        </article>
+
+        `
+
+    ).join("");
+
+}
+
+
+/* =====================================================
+   GENRES
+===================================================== */
+
+function renderGenres(){
+
+    const genres = [
+
+        "Electronic",
+        "Hip-Hop",
+        "Pop",
+        "Rock",
+        "Ambient",
+        "Indie",
+        "R&B",
+        "Experimental",
+        "Classical",
+        "Lo-Fi",
+        "House",
+        "Techno"
+
+    ];
+
+    $("genres").innerHTML = genres.map(
+
+        genre=>`
+
+        <button
+            class="chip"
+            onclick="toast('${genre}')">
+
+            ${genre}
+
+        </button>
+
+        `
+
+    ).join("");
+
+}
+
+
+/* =====================================================
+   WAVEFORM
+===================================================== */
+
+function createWaveform(){
+
+    const wave = $("wave");
+
+    let html = "";
+
+    for(let i=0;i<100;i++){
+
+        const height =
+            Math.floor(
+                Math.random()*35
+            )+5;
+
+        html += `
+            <span
+                style="height:${height}px">
+            </span>
+        `;
+    }
+
+    wave.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   PLAY
+===================================================== */
+
+function playTrack(index){
+
+    currentIndex = index;
+
+    const track = tracks[index];
+
+    $("playerArt").src = track.cover;
+
+    $("playerTitle").textContent =
+        track.title;
+
+    $("playerArtist").textContent =
+        track.artist;
+
+    $("featuredCover").src =
+        track.cover;
+
+    $("featuredTitle").textContent =
+        track.title;
+
+    $("featuredArtist").textContent =
+        track.artist;
+
+
+    recent = [
+
+        track.id,
+
+        ...recent.filter(
+            id=>id !== track.id
+        )
+
+    ].slice(0,10);
+
+
+    localStorage.setItem(
+        "lost_sound_recent",
+        JSON.stringify(recent)
+    );
+
+
+    renderLibrary();
+
+
+    if(track.audio){
+
+        audio.src = track.audio;
+
+        audio.play().catch(()=>{
+
+            toast(
+                "Tap play to start audio."
+            );
+
+        });
+
+        startPlaying();
+
+    }else{
+
+        toast(
+            "Demo track selected. Add an audio file to play it."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PLAY / PAUSE
+===================================================== */
+
+function togglePlay(){
+
+    if(!audio.src){
+
+        toast(
+            "Select or upload an audio file first."
+        );
+
+        return;
+
+    }
+
+
+    if(audio.paused){
+
+        audio.play();
+
+        startPlaying();
+
+    }else{
+
+        audio.pause();
+
+        stopPlaying();
+
+    }
+
+}
+
+
+function startPlaying(){
+
+    $("vinyl").classList.add("playing");
+
+    $("playButton").textContent = "Ⅱ";
+
+    $("featurePlay").textContent = "Ⅱ";
+
+}
+
+
+function stopPlaying(){
+
+    $("vinyl").classList.remove("playing");
+
+    $("playButton").textContent = "▶";
+
+    $("featurePlay").textContent = "▶";
+
+}
+
+
+/* =====================================================
+   NEXT / PREVIOUS
+===================================================== */
+
+function nextTrack(){
+
+    playTrack(
+        (currentIndex+1)%tracks.length
+    );
+
+}
+
+
+function previousTrack(){
+
+    playTrack(
+        (currentIndex-1+tracks.length)
+        %tracks.length
+    );
+
+}
+
+
+/* =====================================================
+   LIKE
+===================================================== */
+
+function toggleLike(index){
+
+    const id = tracks[index].id;
+
+    if(liked.has(id)){
+
+        liked.delete(id);
+
+    }else{
+
+        liked.add(id);
+
+    }
+
+
+    localStorage.setItem(
+        "lost_sound_liked",
+        JSON.stringify([...liked])
+    );
+
+
+    $("featureLike")
+        .classList.toggle(
+            "active",
+            liked.has(id)
+        );
+
+
+    renderLibrary();
+
+}
+
+
+/* =====================================================
+   AUDIO PROGRESS
+===================================================== */
+
+audio.addEventListener(
+    "timeupdate",
+    ()=>{
+
+        const percentage =
+            audio.duration
+            ?
+            audio.currentTime /
+            audio.duration *
+            100
+            :
+            0;
+
+
+        $("progress").style.width =
+            percentage+"%";
+
+        $("playerProgress").style.width =
+            percentage+"%";
+
+
+        $("current").textContent =
+            formatTime(
+                audio.currentTime
+            );
+
+        $("playerCurrent").textContent =
+            formatTime(
+                audio.currentTime
+            );
+
+
+        $("duration").textContent =
+            formatTime(
+                audio.duration
+            );
+
+        $("playerDuration").textContent =
+            formatTime(
+                audio.duration
+            );
+
+    }
+);
+
+
+audio.addEventListener(
+    "play",
+    startPlaying
+);
+
+
+audio.addEventListener(
+    "pause",
+    stopPlaying
+);
+
+
+audio.addEventListener(
+    "ended",
+    nextTrack
+);
+
+
+function formatTime(seconds){
+
+    if(!isFinite(seconds)){
+        return "0:00";
+    }
+
+    return Math.floor(seconds/60)
+        +":"
+        +String(
+            Math.floor(seconds%60)
+        ).padStart(2,"0");
+
+}
+
+
+/* =====================================================
+   SEEK
+===================================================== */
+
+function seek(event){
+
+    if(!audio.duration){
+        return;
+    }
+
+    const rect =
+        event.currentTarget
+        .getBoundingClientRect();
+
+    const percent =
+        (event.clientX-rect.left)
+        /
+        rect.width;
+
+
+    audio.currentTime =
+        percent *
+        audio.duration;
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function showView(view){
+
+    document
+        .querySelectorAll(".view")
+        .forEach(
+            section=>
+            section.classList.remove("active")
+        );
+
+
+    $(view).classList.add("active");
+
+
+    document
+        .querySelectorAll(".bottom-nav button")
+        .forEach(button=>{
+
+            button.classList.toggle(
+                "active",
+                button.dataset.view===view
+            );
+
+        });
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =====================================================
+   DRAWER
+===================================================== */
+
+function openDrawer(){
+
+    $("drawer")
+        .classList.add("open");
+
+}
+
+
+function closeDrawer(){
+
+    $("drawer")
+        .classList.remove("open");
+
+}
+
+
+function go(view){
+
+    closeDrawer();
+
+    showView(view);
+
+}
+
+
+/* =====================================================
+   LIBRARY
+===================================================== */
+
+function renderLibrary(){
+
+    renderRows(
+        "liked",
+        tracks.filter(
+            track=>liked.has(track.id)
+        )
+    );
+
+
+    renderRows(
+        "recent",
+        recent
+            .map(
+                id=>tracks.find(
+                    track=>track.id===id
+                )
+            )
+            .filter(Boolean)
+    );
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function runSearch(){
+
+    const query =
+        $("searchInput")
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    if(!query){
+
+        $("searchResults").innerHTML="";
+
+        return;
+
+    }
+
+
+    const results =
+        tracks.filter(
+            track=>
+            (
+                track.title
+                +" "
+                +track.artist
+            )
+            .toLowerCase()
+            .includes(query)
+        );
+
+
+    renderRows(
+        "searchResults",
+        results
+    );
+
+}
+
+
+function clearSearch(){
+
+    $("searchInput").value="";
+
+    $("searchResults").innerHTML="";
+
+}
+
+
+/* =====================================================
+   SHARE
+===================================================== */
+
+function shareTrack(index){
+
+    const url =
+        location.href
+        +"#track-"
+        +tracks[index].id;
+
+
+    if(
+        navigator.clipboard
+    ){
+
+        navigator.clipboard
+            .writeText(url);
+
+    }
+
+
+    toast(
+        "Track link copied"
+    );
+
+}
+
+
+function shareProfile(){
+
+    const url =
+        location.href
+        +"#artist-amirtalles";
+
+
+    if(
+        navigator.clipboard
+    ){
+
+        navigator.clipboard
+            .writeText(url);
+
+    }
+
+
+    toast(
+        "Profile link copied"
+    );
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function toast(message){
+
+    const old =
+        document.querySelector(".toast");
+
+    if(old){
+        old.remove();
+    }
+
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        "toast";
+
+    element.textContent =
+        message;
+
+
+    document.body.appendChild(
+        element
+    );
+
+
+    setTimeout(
+        ()=>{
+            element.remove();
+        },
+        1800
+    );
+
+}
+
+
+/* =====================================================
+   LOCAL UPLOAD
+===================================================== */
+
+function publishTrack(){
+
+    const audioFile =
+        $("audioFile")
+        .files[0];
+
+    const coverFile =
+        $("coverFile")
+        .files[0];
+
+
+    const title =
+        $("uploadTitle")
+        .value
+        .trim()
+        ||
+        "Untitled Track";
+
+
+    const artist =
+        $("uploadArtist")
+        .value
+        .trim()
+        ||
+        "Unknown Artist";
+
+
+    if(!audioFile){
+
+        toast(
+            "Choose an audio file first."
+        );
+
+        return;
+
+    }
+
+
+    const newTrack = {
+
+        id:Date.now(),
+
+        title:title,
+
+        artist:artist,
+
+        duration:"0:00",
+
+        cover:
+            coverFile
+            ?
+            URL.createObjectURL(
+                coverFile
+            )
+            :
+            tracks[0].cover,
+
+        audio:
+            URL.createObjectURL(
+                audioFile
+            )
+
+    };
+
+
+    tracks.unshift(
+        newTrack
+    );
+
+
+    render();
+
+
+    playTrack(0);
+
+
+    showView("home");
+
+
+    toast(
+        "Track published locally."
+    );
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+render();
+
+</script>
+
+</body>
+</html>
