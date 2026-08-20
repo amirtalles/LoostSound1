@@ -2,19 +2,27 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1,
+maximum-scale=1,
+minimum-scale=1,
+user-scalable=no,
+viewport-fit=cover">
+
 <meta name="theme-color" content="#f4f1eb">
+
 <title>LOST SOUND</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;min-height:100%;overflow-x:hidden;background:#f4f1eb;color:#111;font-family:Arial,Helvetica,sans-serif}
-button,input,textarea,select{font:inherit}
-button{border:0;background:none;color:inherit;cursor:pointer}
-img{max-width:100%;display:block}
-audio{display:none}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
 
 :root{
 --bg:#f4f1eb;
@@ -22,246 +30,920 @@ audio{display:none}
 --black:#111;
 --gray:#77736c;
 --line:#d9d4ca;
---red:#b51f2a
+--red:#b51f2a;
 }
 
-.app{width:100%;min-height:100vh;padding-bottom:115px}
+html,body{
+width:100%;
+min-height:100%;
+background:var(--bg);
+color:var(--black);
+font-family:Arial,Helvetica,sans-serif;
+overflow-x:hidden;
+}
+
+body{
+padding-bottom:120px;
+}
+
+button,
+input,
+textarea,
+select{
+font-family:inherit;
+}
+
+button{
+border:0;
+background:none;
+color:inherit;
+cursor:pointer;
+}
+
+img{
+max-width:100%;
+display:block;
+}
+
+.app{
+width:100%;
+min-height:100vh;
+overflow:hidden;
+}
+
+/* TOP */
 
 .topbar{
-height:70px;padding:0 20px;display:flex;align-items:center;
-justify-content:space-between;position:sticky;top:0;z-index:100;
-background:rgba(244,241,235,.95);backdrop-filter:blur(18px);
-border-bottom:1px solid var(--line)
+height:70px;
+width:100%;
+padding:0 20px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+position:sticky;
+top:0;
+z-index:100;
+background:rgba(244,241,235,.96);
+backdrop-filter:blur(18px);
+border-bottom:1px solid var(--line);
 }
 
-.logo{font-size:20px;font-weight:800;letter-spacing:.08em}
-.top-title{font-size:10px;letter-spacing:.25em;font-weight:bold}
-.menu{width:36px;height:36px;font-size:23px}
+.logo{
+font-size:20px;
+font-weight:800;
+letter-spacing:.08em;
+}
 
-.page{width:100%;max-width:1180px;margin:auto;padding:25px 22px}
-.view{display:none}.view.active{display:block}
+.top-title{
+font-size:10px;
+font-weight:bold;
+letter-spacing:.25em;
+}
+
+.menu{
+width:38px;
+height:38px;
+font-size:24px;
+}
+
+/* PAGE */
+
+.page{
+width:100%;
+max-width:1180px;
+margin:auto;
+padding:25px 22px;
+}
+
+.view{
+display:none;
+}
+
+.view.active{
+display:block;
+}
+
+/* HERO */
 
 .hero{
-display:grid;grid-template-columns:minmax(0,1fr) auto;
-align-items:end;margin:20px 0 45px
+display:grid;
+grid-template-columns:minmax(0,1fr) auto;
+align-items:end;
+margin:20px 0 45px;
 }
-.kicker{font-size:10px;font-weight:bold;letter-spacing:.18em}
+
+.kicker{
+font-size:10px;
+font-weight:bold;
+letter-spacing:.18em;
+}
+
 .hero h1{
-font-size:clamp(55px,11vw,125px);line-height:.82;
-letter-spacing:-.075em;margin-top:12px
+font-size:clamp(55px,11vw,125px);
+line-height:.82;
+letter-spacing:-.075em;
+margin-top:12px;
 }
-.year{font-size:11px;letter-spacing:.15em}
+
+.year{
+font-size:11px;
+letter-spacing:.15em;
+}
+
+/* VINYL */
 
 .ls-stage{
-width:100%;min-height:min(520px,90vw);position:relative;
-display:flex;align-items:center;justify-content:center;overflow:visible
+width:100%;
+min-height:min(520px,90vw);
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:visible;
 }
 
 .ls-vinyl{
-position:absolute;width:min(78vw,450px);height:min(78vw,450px);
-border-radius:50%;left:50%;top:50%;transform:translate(-22%,-50%);
-background:radial-gradient(circle,#222 0 5%,#555 5.5% 6%,#111 6.5% 12%,#292929 12.5% 13%,#080808 13.5% 27%,#242424 27.5% 28%,#060606 28.5% 44%,#252525 44.5% 45%,#050505 45.5% 61%,#222 61.5% 62%,#050505 62.5% 100%);
-box-shadow:0 30px 70px rgba(0,0,0,.16);z-index:1;pointer-events:none
+position:absolute;
+width:min(78vw,450px);
+height:min(78vw,450px);
+border-radius:50%;
+left:50%;
+top:50%;
+transform:translate(-22%,-50%);
+
+background:
+radial-gradient(
+circle,
+#222 0 5%,
+#555 5.5% 6%,
+#111 6.5% 12%,
+#292929 12.5% 13%,
+#080808 13.5% 27%,
+#242424 27.5% 28%,
+#060606 28.5% 44%,
+#252525 44.5% 45%,
+#050505 45.5% 61%,
+#222 61.5% 62%,
+#050505 62.5% 100%
+);
+
+box-shadow:0 30px 70px rgba(0,0,0,.16);
+z-index:1;
+pointer-events:none;
 }
+
 .ls-vinyl:after{
-content:"L/S";position:absolute;width:54px;height:54px;border-radius:50%;
-top:50%;left:50%;transform:translate(-50%,-50%);
-display:flex;align-items:center;justify-content:center;
-background:#151515;color:#eee;font-size:10px
+content:"L/S";
+position:absolute;
+width:54px;
+height:54px;
+border-radius:50%;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+display:flex;
+align-items:center;
+justify-content:center;
+background:#151515;
+color:#eee;
+font-size:10px;
+letter-spacing:.1em;
 }
-.ls-vinyl.playing,.track-vinyl.playing{animation:rotate 4s linear infinite}
-@keyframes rotate{from{transform:translate(-22%,-50%) rotate(0)}to{transform:translate(-22%,-50%) rotate(360deg)}}
+
+.ls-vinyl.playing{
+animation:rotateVinyl 4s linear infinite;
+}
+
+@keyframes rotateVinyl{
+from{
+transform:translate(-22%,-50%) rotate(0deg);
+}
+to{
+transform:translate(-22%,-50%) rotate(360deg);
+}
+}
+
+/* COVER */
 
 .ls-cover{
-width:min(65vw,350px);aspect-ratio:1;position:relative;z-index:2;
-display:flex;flex-direction:column;justify-content:space-between;
-padding:22px;background:#e8e2d7;border-radius:3px;
-box-shadow:0 25px 60px rgba(0,0,0,.14);overflow:hidden
+width:min(65vw,350px);
+aspect-ratio:1;
+position:relative;
+z-index:2;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+padding:22px;
+background:#e8e2d7;
+border-radius:3px;
+box-shadow:0 25px 60px rgba(0,0,0,.14);
+overflow:hidden;
 }
-.ls-cover-top,.ls-cover-bottom{
-display:flex;justify-content:space-between;font-size:9px;letter-spacing:.18em
+
+.ls-cover-top,
+.ls-cover-bottom{
+display:flex;
+justify-content:space-between;
+font-size:9px;
+letter-spacing:.18em;
 }
-.ls-cover-center{text-align:center}
+
+.ls-cover-center{
+text-align:center;
+}
+
 .ls-cover-center strong{
-display:block;font-size:clamp(35px,10vw,65px);
-line-height:.8;letter-spacing:-.07em
+display:block;
+font-size:clamp(35px,10vw,65px);
+line-height:.8;
+letter-spacing:-.07em;
 }
+
 .ls-cover-center span{
-display:block;margin-top:12px;font-size:9px;letter-spacing:.35em
+display:block;
+margin-top:12px;
+font-size:9px;
+letter-spacing:.35em;
 }
+
+/* EMPTY */
 
 .empty-state{
-width:100%;padding:35px 10px;text-align:center;
-border-top:1px solid var(--line);border-bottom:1px solid var(--line)
+width:100%;
+padding:35px 10px;
+text-align:center;
+border-top:1px solid var(--line);
+border-bottom:1px solid var(--line);
 }
-.empty-title{font-size:14px;font-weight:bold;margin-bottom:8px}
-.empty-text{color:var(--gray);font-size:12px;line-height:1.7}
 
-.music-content{display:none}.music-content.visible{display:block}
+.empty-title{
+font-size:14px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.empty-text{
+color:var(--gray);
+font-size:12px;
+line-height:1.7;
+}
+
+/* MUSIC */
+
+.music-content{
+display:none;
+}
+
+.music-content.visible{
+display:block;
+}
+
+/* FEATURED */
 
 .featured{
-width:100%;display:grid;grid-template-columns:minmax(0,1fr) 360px;
-gap:55px;align-items:center
+width:100%;
+display:grid;
+grid-template-columns:minmax(0,1fr) 360px;
+gap:55px;
+align-items:center;
 }
+
 .track-cover-stage{
-min-width:0;min-height:430px;position:relative;
-display:grid;place-items:center;overflow:visible
+min-height:430px;
+position:relative;
+display:grid;
+place-items:center;
+overflow:visible;
 }
+
 .track-vinyl{
-position:absolute;width:min(62vw,400px);height:min(62vw,400px);
-border-radius:50%;background:repeating-radial-gradient(circle,#090909 0,#292929 2px,#050505 4px);
-transform:translateX(27%)
+position:absolute;
+width:min(62vw,400px);
+height:min(62vw,400px);
+border-radius:50%;
+background:
+repeating-radial-gradient(
+circle,
+#090909 0,
+#292929 2px,
+#050505 4px
+);
+transform:translateX(27%);
 }
+
+.track-vinyl.playing{
+animation:trackRotate 4s linear infinite;
+}
+
+@keyframes trackRotate{
+from{
+transform:translateX(27%) rotate(0deg);
+}
+to{
+transform:translateX(27%) rotate(360deg);
+}
+}
+
 .track-cover{
-position:relative;z-index:2;width:min(62vw,360px);aspect-ratio:1;
-object-fit:cover;border-radius:4px;box-shadow:0 25px 60px rgba(0,0,0,.15)
+position:relative;
+z-index:2;
+width:min(62vw,360px);
+aspect-ratio:1;
+object-fit:cover;
+border-radius:4px;
+box-shadow:0 25px 60px rgba(0,0,0,.15);
+background:#e8e2d7;
 }
-.track-info h2{font-size:36px;line-height:1;letter-spacing:-.05em;margin:8px 0}
-.artist{color:var(--gray);font-size:13px}
 
-.actions{display:flex;align-items:center;gap:9px;margin:20px 0}
+.track-info h2{
+font-size:36px;
+line-height:1;
+letter-spacing:-.05em;
+margin:8px 0;
+}
+
+.artist{
+color:var(--gray);
+font-size:13px;
+}
+
+/* ACTIONS */
+
+.actions{
+display:flex;
+align-items:center;
+gap:9px;
+margin:20px 0;
+}
+
 .circle{
-width:43px;height:43px;display:grid;place-items:center;
-border:1px solid var(--line);border-radius:50%;background:var(--paper)
+width:43px;
+height:43px;
+display:grid;
+place-items:center;
+border:1px solid var(--line);
+border-radius:50%;
+background:var(--paper);
 }
-.circle.active{color:var(--red);border-color:var(--red)}
 
-.wave{width:100%;height:45px;display:flex;align-items:center;gap:2px;overflow:hidden;margin:20px 0}
-.wave span{flex:1;min-width:2px;background:#c8c2b9;border-radius:5px}
+.circle.active{
+color:var(--red);
+border-color:var(--red);
+}
 
-.progress{width:100%;height:3px;background:var(--line);cursor:pointer}
-.progress i{display:block;width:0;height:100%;background:var(--red)}
-.time{display:flex;justify-content:space-between;margin-top:6px;color:var(--gray);font-size:9px}
+/* WAVE */
 
-.section{width:100%;margin-top:70px}
+.wave{
+width:100%;
+height:45px;
+display:flex;
+align-items:center;
+gap:2px;
+overflow:hidden;
+margin:20px 0;
+}
+
+.wave span{
+flex:1;
+min-width:2px;
+background:#c8c2b9;
+border-radius:5px;
+}
+
+/* PROGRESS */
+
+.progress{
+width:100%;
+height:3px;
+background:var(--line);
+cursor:pointer;
+}
+
+.progress i{
+display:block;
+width:0;
+height:100%;
+background:var(--red);
+}
+
+.time{
+display:flex;
+justify-content:space-between;
+margin-top:6px;
+color:var(--gray);
+font-size:9px;
+}
+
+/* SECTIONS */
+
+.section{
+width:100%;
+margin-top:70px;
+}
+
 .section-head{
-display:flex;align-items:center;justify-content:space-between;
-padding-bottom:10px;margin-bottom:8px;border-bottom:1px solid var(--line)
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding-bottom:10px;
+margin-bottom:8px;
+border-bottom:1px solid var(--line);
 }
-.section-title{font-size:11px;font-weight:bold;letter-spacing:.18em}
+
+.section-title{
+font-size:11px;
+font-weight:bold;
+letter-spacing:.18em;
+}
+
+/* TRACK ROW */
 
 .track-row{
-width:100%;display:grid;grid-template-columns:40px 52px minmax(0,1fr) auto 35px;
-align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)
+width:100%;
+display:grid;
+grid-template-columns:40px 52px minmax(0,1fr) auto 35px;
+align-items:center;
+gap:12px;
+padding:12px 4px;
+border-bottom:1px solid var(--line);
 }
-.number{color:var(--gray);font-size:11px}
-.thumb{width:52px;height:52px;object-fit:cover;border-radius:3px}
-.track-title{font-size:13px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.duration{color:var(--gray);font-size:10px}
-.more{font-size:20px}
 
-.cards{width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.card{min-width:0;cursor:pointer}
-.card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.08)}
-.card h4{margin-top:9px;font-size:13px}.card p{margin-top:4px;color:var(--gray);font-size:11px}
+.number{
+color:var(--gray);
+font-size:11px;
+}
 
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0}
-.chip{padding:9px 14px;border:1px solid var(--line);border-radius:30px;font-size:10px}
+.thumb{
+width:52px;
+height:52px;
+object-fit:cover;
+border-radius:3px;
+}
+
+.track-title{
+font-size:13px;
+font-weight:bold;
+overflow:hidden;
+white-space:nowrap;
+text-overflow:ellipsis;
+}
+
+.duration{
+color:var(--gray);
+font-size:10px;
+}
+
+.more{
+font-size:20px;
+}
+
+/* CARDS */
+
+.cards{
+width:100%;
+display:grid;
+grid-template-columns:repeat(4,minmax(0,1fr));
+gap:18px;
+}
+
+.card{
+min-width:0;
+cursor:pointer;
+}
+
+.card img{
+width:100%;
+aspect-ratio:1;
+object-fit:cover;
+border-radius:4px;
+box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+.card h4{
+margin-top:9px;
+font-size:13px;
+}
+
+.card p{
+margin-top:4px;
+color:var(--gray);
+font-size:11px;
+}
+
+/* SEARCH */
 
 .search-box{
-width:100%;display:flex;align-items:center;gap:10px;margin-top:25px;
-padding:12px 0;border-bottom:1px solid var(--black)
+width:100%;
+display:flex;
+align-items:center;
+gap:10px;
+margin-top:25px;
+padding:12px 0;
+border-bottom:1px solid var(--black);
 }
-.search-box input{width:100%;border:0;outline:0;background:transparent;font-size:25px}
+
+.search-box input{
+width:100%;
+border:0;
+outline:0;
+background:transparent;
+font-size:25px;
+}
+
+.search-box button{
+font-size:22px;
+}
+
+/* PROFILE */
 
 .profile-head{
-display:flex;align-items:center;gap:25px;padding-bottom:30px;border-bottom:1px solid var(--line)
+display:flex;
+align-items:center;
+gap:25px;
+padding-bottom:30px;
+border-bottom:1px solid var(--line);
 }
-.avatar{width:110px;height:110px;object-fit:cover;border-radius:50%;background:#ddd}
-.profile-head h2{font-size:40px;letter-spacing:-.06em}
-.stats{display:flex;flex-wrap:wrap;gap:15px;margin-top:12px;color:var(--gray);font-size:11px}
 
-.upload{width:100%;max-width:700px}
+.avatar{
+width:110px;
+height:110px;
+object-fit:cover;
+border-radius:50%;
+background:#ddd;
+}
+
+.profile-head h2{
+font-size:40px;
+letter-spacing:-.06em;
+}
+
+.stats{
+display:flex;
+gap:15px;
+margin-top:12px;
+color:var(--gray);
+font-size:11px;
+}
+
+/* UPLOAD */
+
+.upload{
+width:100%;
+max-width:700px;
+}
+
 .upload h1{
-margin:15px 0 30px;font-size:clamp(48px,10vw,80px);
-line-height:.88;letter-spacing:-.06em
+margin:15px 0 30px;
+font-size:clamp(48px,10vw,80px);
+line-height:.88;
+letter-spacing:-.06em;
 }
-.notice{padding:14px;margin-bottom:25px;border:1px solid var(--line);color:var(--gray);font-size:11px;line-height:1.7}
-.field{margin:18px 0}.field label{display:block;margin-bottom:8px;font-size:9px;font-weight:bold;letter-spacing:.15em}
-.field input,.field textarea,.field select{
-width:100%;padding:13px;outline:0;background:var(--paper);
-border:1px solid var(--line);border-radius:7px
+
+.notice{
+padding:14px;
+margin-bottom:25px;
+border:1px solid var(--line);
+color:var(--gray);
+font-size:11px;
+line-height:1.7;
 }
-.primary{padding:14px 22px;color:white;background:var(--black);border-radius:30px}
+
+.field{
+margin:18px 0;
+}
+
+.field label{
+display:block;
+margin-bottom:8px;
+font-size:9px;
+font-weight:bold;
+letter-spacing:.15em;
+}
+
+.field input,
+.field textarea,
+.field select{
+width:100%;
+padding:13px;
+outline:0;
+background:var(--paper);
+border:1px solid var(--line);
+border-radius:7px;
+}
+
+.primary{
+padding:14px 22px;
+color:white;
+background:var(--black);
+border-radius:30px;
+}
+
+/* PLAYER */
 
 .player{
-position:fixed;left:0;right:0;bottom:0;z-index:200;width:100%;
-padding:10px 18px;background:rgba(250,248,243,.97);
-backdrop-filter:blur(20px);border-top:1px solid var(--line)
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+z-index:200;
+width:100%;
+padding:10px 18px calc(10px + env(safe-area-inset-bottom));
+background:rgba(250,248,243,.97);
+backdrop-filter:blur(20px);
+border-top:1px solid var(--line);
 }
-.player-inner{
-width:100%;max-width:1180px;margin:auto;
-display:grid;grid-template-columns:52px minmax(0,1fr) auto;
-gap:12px;align-items:center
-}
-.player-art{width:52px;height:52px;object-fit:cover;border-radius:3px;background:#ddd}
-.player-title{font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.player-artist{margin:3px 0 6px;color:var(--gray);font-size:10px}
-.controls{display:flex;align-items:center;gap:14px}.controls button{font-size:20px}
-.play-button{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#111;color:#fff}
 
-.bottom-nav{display:none}
+.player-inner{
+width:100%;
+max-width:1180px;
+margin:auto;
+display:grid;
+grid-template-columns:52px minmax(0,1fr) auto;
+gap:12px;
+align-items:center;
+}
+
+.player-art{
+width:52px;
+height:52px;
+object-fit:cover;
+border-radius:3px;
+background:#e8e2d7;
+overflow:hidden;
+}
+
+.player-title{
+font-size:12px;
+font-weight:bold;
+overflow:hidden;
+white-space:nowrap;
+text-overflow:ellipsis;
+}
+
+.player-artist{
+margin:3px 0 6px;
+color:var(--gray);
+font-size:10px;
+}
+
+.controls{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.controls button{
+font-size:20px;
+}
+
+.play-button{
+width:42px;
+height:42px;
+display:grid;
+place-items:center;
+border-radius:50%;
+background:var(--black);
+color:white;
+}
+
+/* BOTTOM NAV */
+
+.bottom-nav{
+display:none;
+}
+
+/* DRAWER */
 
 .drawer{
-position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,.4)
+position:fixed;
+inset:0;
+z-index:500;
+display:none;
+background:rgba(0,0,0,.4);
 }
-.drawer.open{display:block}
+
+.drawer.open{
+display:block;
+}
+
 .drawer-panel{
-position:absolute;top:0;right:0;bottom:0;width:min(340px,88vw);
-padding:25px;background:var(--paper);overflow-y:auto
+position:absolute;
+top:0;
+right:0;
+bottom:0;
+width:min(340px,88vw);
+padding:25px;
+background:var(--paper);
+overflow-y:auto;
 }
-.drawer-head{display:flex;align-items:center;justify-content:space-between;font-size:20px}
-.drawer-list{margin-top:30px}
-.drawer-list button{width:100%;padding:14px 0;text-align:left;border-bottom:1px solid var(--line);font-size:13px}
+
+.drawer-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+font-size:20px;
+}
+
+.drawer-list{
+margin-top:30px;
+}
+
+.drawer-list button{
+width:100%;
+padding:14px 0;
+text-align:left;
+border-bottom:1px solid var(--line);
+font-size:13px;
+}
+
+/* AUTH */
+
+.auth-box{
+max-width:500px;
+margin:30px auto;
+padding:25px;
+border:1px solid var(--line);
+background:var(--paper);
+border-radius:8px;
+}
+
+.auth-box h2{
+font-size:32px;
+margin-bottom:20px;
+}
+
+.auth-buttons{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.secondary{
+padding:13px 20px;
+border:1px solid var(--line);
+border-radius:30px;
+}
+
+/* TOAST */
 
 .toast{
-position:fixed;left:50%;bottom:135px;z-index:1000;transform:translateX(-50%);
-padding:11px 17px;background:#111;color:#fff;border-radius:30px;font-size:11px;white-space:nowrap
+position:fixed;
+left:50%;
+bottom:135px;
+z-index:1000;
+transform:translateX(-50%);
+padding:11px 17px;
+background:var(--black);
+color:white;
+border-radius:30px;
+font-size:11px;
+white-space:nowrap;
 }
+
+/* MOBILE */
 
 @media(max-width:800px){
-.page{padding:18px 15px}
-.hero{margin:15px 0 25px}
-.hero h1{font-size:clamp(52px,16vw,70px)}
-.ls-stage{min-height:86vw;max-height:470px}
-.ls-vinyl{width:min(78vw,360px);height:min(78vw,360px)}
-.ls-cover{width:min(70vw,310px)}
-.featured{grid-template-columns:1fr;gap:10px}
-.track-cover-stage{min-height:84vw}
-.track-vinyl{width:min(70vw,330px);height:min(70vw,330px)}
-.track-cover{width:min(72vw,300px)}
-.track-info h2{font-size:30px}
-.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
-.track-row{grid-template-columns:25px 46px minmax(0,1fr) 30px;gap:9px}
-.thumb{width:46px;height:46px}
-.duration{display:none}
-.profile-head{align-items:flex-start;gap:15px}
-.avatar{width:85px;height:85px}
-.profile-head h2{font-size:29px}
-.player{bottom:58px;padding:8px 12px}
-.player-inner{grid-template-columns:44px minmax(0,1fr) auto;gap:9px}
-.player-art{width:44px;height:44px}
-.controls{gap:8px}
-.controls button:first-child,.controls button:last-child{display:none}
-.play-button{width:40px;height:40px}
-.bottom-nav{
-position:fixed;left:0;right:0;bottom:0;z-index:300;width:100%;
-height:58px;display:flex;align-items:center;justify-content:space-around;
-background:rgba(250,248,243,.98);border-top:1px solid var(--line)
-}
-.bottom-nav button{flex:1;height:58px;color:var(--gray);font-size:9px}
-.bottom-nav button.active{color:#111;font-weight:bold}
-.upload h1{font-size:50px}
-.search-box input{font-size:21px}
+
+.page{
+padding:18px 15px;
 }
 
-@media(max-width:360px){
-.page{padding-left:12px;padding-right:12px}
-.hero h1{font-size:51px}
-.ls-cover{width:250px}
-.ls-vinyl{width:300px;height:300px}
-.track-cover{width:250px}
+.hero{
+margin:15px 0 25px;
 }
+
+.hero h1{
+font-size:clamp(52px,16vw,70px);
+}
+
+.ls-stage{
+min-height:86vw;
+max-height:470px;
+}
+
+.ls-vinyl{
+width:min(78vw,360px);
+height:min(78vw,360px);
+}
+
+.ls-cover{
+width:min(70vw,310px);
+}
+
+.featured{
+grid-template-columns:1fr;
+gap:10px;
+}
+
+.track-cover-stage{
+min-height:84vw;
+}
+
+.track-vinyl{
+width:min(70vw,330px);
+height:min(70vw,330px);
+}
+
+.track-cover{
+width:min(72vw,300px);
+}
+
+.track-info h2{
+font-size:30px;
+}
+
+.cards{
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:15px;
+}
+
+.track-row{
+grid-template-columns:25px 46px minmax(0,1fr) 30px;
+gap:9px;
+}
+
+.thumb{
+width:46px;
+height:46px;
+}
+
+.duration{
+display:none;
+}
+
+.profile-head{
+align-items:flex-start;
+gap:15px;
+}
+
+.avatar{
+width:85px;
+height:85px;
+}
+
+.profile-head h2{
+font-size:29px;
+}
+
+.player{
+bottom:58px;
+padding:8px 12px;
+}
+
+.player-inner{
+grid-template-columns:44px minmax(0,1fr) auto;
+gap:9px;
+}
+
+.player-art{
+width:44px;
+height:44px;
+}
+
+.controls{
+gap:8px;
+}
+
+.controls button:first-child,
+.controls button:last-child{
+display:none;
+}
+
+.play-button{
+width:40px;
+height:40px;
+}
+
+.bottom-nav{
+position:fixed;
+left:0;
+right:0;
+bottom:0;
+z-index:300;
+width:100%;
+height:calc(58px + env(safe-area-inset-bottom));
+padding-bottom:env(safe-area-inset-bottom);
+display:flex;
+align-items:center;
+justify-content:space-around;
+background:rgba(250,248,243,.98);
+border-top:1px solid var(--line);
+}
+
+.bottom-nav button{
+flex:1;
+height:58px;
+color:var(--gray);
+font-size:9px;
+}
+
+.bottom-nav button.active{
+color:var(--black);
+font-weight:bold;
+}
+
+}
+
 </style>
 </head>
 
@@ -270,203 +952,480 @@ background:rgba(250,248,243,.98);border-top:1px solid var(--line)
 <div class="app">
 
 <header class="topbar">
-<button class="logo" onclick="showView('home')">L/S</button>
-<div class="top-title">LOST SOUND</div>
-<button class="menu" onclick="openDrawer()">☰</button>
+
+<button class="logo" onclick="showView('home')">
+L/S
+</button>
+
+<div class="top-title">
+LOST SOUND
+</div>
+
+<button class="menu" onclick="openDrawer()">
+☰
+</button>
+
 </header>
 
 <main class="page">
 
+<!-- HOME -->
+
 <section id="home" class="view active">
 
 <div class="hero">
+
 <div>
-<div class="kicker">MUSIC STREAMING</div>
-<h1>LOST<br>SOUND</h1>
+
+<div class="kicker">
+MUSIC STREAMING
 </div>
-<div class="year">2024</div>
+
+<h1>
+LOST<br>
+SOUND
+</h1>
+
+</div>
+
+<div class="year">
+2026
+</div>
+
 </div>
 
 <div class="ls-stage">
+
 <div id="lostVinyl" class="ls-vinyl"></div>
 
 <div class="ls-cover">
-<div class="ls-cover-top"><span>L/S</span><span>MUSIC</span></div>
+
+<div class="ls-cover-top">
+<span>L/S</span>
+<span>MUSIC</span>
+</div>
+
 <div class="ls-cover-center">
 <strong>LOST</strong>
 <strong>SOUND</strong>
 <span>MUSIC STREAMING</span>
 </div>
-<div class="ls-cover-bottom"><span>INDEPENDENT</span><span>2024</span></div>
+
+<div class="ls-cover-bottom">
+<span>INDEPENDENT</span>
+<span>2026</span>
 </div>
+
+</div>
+
 </div>
 
 <div id="emptyState" class="empty-state">
-<div class="empty-title">No music here yet.</div>
-<div class="empty-text">Your library is waiting.<br>Upload the first track to LOST SOUND.</div>
+
+<div class="empty-title">
+No music here yet.
+</div>
+
+<div class="empty-text">
+Music uploaded by LOST SOUND artists will appear here.
+</div>
+
 </div>
 
 <div id="musicContent" class="music-content">
 
 <div class="featured" style="margin-top:45px">
+
 <div class="track-cover-stage">
+
 <div id="trackVinyl" class="track-vinyl"></div>
-<img id="featuredCover" class="track-cover" alt="">
+
+<img id="featuredCover"
+class="track-cover"
+alt="Track cover">
+
 </div>
 
 <div class="track-info">
-<div class="kicker">FEATURED TRACK</div>
-<h2 id="featuredTitle"></h2>
-<div id="featuredArtist" class="artist"></div>
+
+<div class="kicker">
+FEATURED TRACK
+</div>
+
+<h2 id="featuredTitle">
+</h2>
+
+<div id="featuredArtist" class="artist">
+</div>
 
 <div class="actions">
-<button id="featurePlay" class="circle" onclick="togglePlay()">▶</button>
-<button id="featureLike" class="circle" onclick="toggleLike()">♡</button>
-<button class="circle" onclick="shareTrack()">↗</button>
-<button class="circle" onclick="toast('More options')">⋯</button>
+
+<button id="featurePlay"
+class="circle"
+onclick="togglePlay()">
+▶
+</button>
+
+<button id="featureLike"
+class="circle"
+onclick="toggleLike()">
+♡
+</button>
+
+<button class="circle"
+onclick="shareTrack()">
+↗
+</button>
+
+<button class="circle"
+onclick="toast('More options')">
+⋯
+</button>
+
 </div>
 
 <div id="wave" class="wave"></div>
 
 <div class="time">
-<span id="current">0:00</span>
-<span id="duration">0:00</span>
+
+<span id="current">
+0:00
+</span>
+
+<span id="duration">
+0:00
+</span>
+
 </div>
 
-<div class="progress" onclick="seek(event)">
+<div class="progress"
+onclick="seek(event)">
+
 <i id="progress"></i>
+
 </div>
+
 </div>
+
 </div>
 
 <section id="popularSection" class="section">
-<div class="section-head"><div class="section-title">POPULAR</div></div>
+
+<div class="section-head">
+<div class="section-title">
+POPULAR
+</div>
+</div>
+
 <div id="popular"></div>
+
 </section>
 
 <section id="newSection" class="section">
-<div class="section-head"><div class="section-title">NEW RELEASES</div></div>
+
+<div class="section-head">
+<div class="section-title">
+NEW RELEASES
+</div>
+</div>
+
 <div id="newReleases" class="cards"></div>
+
 </section>
 
 <section id="trendingSection" class="section">
-<div class="section-head"><div class="section-title">TRENDING</div></div>
+
+<div class="section-head">
+<div class="section-title">
+TRENDING
+</div>
+</div>
+
 <div id="trending" class="cards"></div>
+
 </section>
 
 </div>
+
 </section>
+
+<!-- DISCOVER -->
 
 <section id="discover" class="view">
+
 <div class="hero">
+
 <div>
-<div class="kicker">DISCOVER</div>
-<h1>NEW<br>WORLDS</h1>
-</div>
+
+<div class="kicker">
+DISCOVER
 </div>
 
-<div class="chips">
-<button class="chip" onclick="filterGenre('Electronic')">Electronic</button>
-<button class="chip" onclick="filterGenre('Hip-Hop')">Hip-Hop</button>
-<button class="chip" onclick="filterGenre('Pop')">Pop</button>
-<button class="chip" onclick="filterGenre('Rock')">Rock</button>
-<button class="chip" onclick="filterGenre('Ambient')">Ambient</button>
-<button class="chip" onclick="filterGenre('Indie')">Indie</button>
-<button class="chip" onclick="filterGenre('Experimental')">Experimental</button>
-<button class="chip" onclick="filterGenre('House')">House</button>
-<button class="chip" onclick="filterGenre('Techno')">Techno</button>
+<h1>
+NEW<br>
+WORLDS
+</h1>
+
+</div>
+
+</div>
+
+<div class="chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:25px">
+
+<button class="chip secondary"
+onclick="filterGenre('Electronic')">
+Electronic
+</button>
+
+<button class="chip secondary"
+onclick="filterGenre('Hip-Hop')">
+Hip-Hop
+</button>
+
+<button class="chip secondary"
+onclick="filterGenre('Pop')">
+Pop
+</button>
+
+<button class="chip secondary"
+onclick="filterGenre('Rock')">
+Rock
+</button>
+
+<button class="chip secondary"
+onclick="filterGenre('Ambient')">
+Ambient
+</button>
+
+<button class="chip secondary"
+onclick="filterGenre('Indie')">
+Indie
+</button>
+
+<button class="chip secondary"
+onclick="filterGenre('House')">
+House
+</button>
+
+<button class="chip secondary"
+onclick="filterGenre('Techno')">
+Techno
+</button>
+
 </div>
 
 <div id="discoverEmpty" class="empty-state">
-<div class="empty-title">Start discovering something new.</div>
-<div class="empty-text">New music uploaded by LOST SOUND users will appear here.</div>
+
+<div class="empty-title">
+Start discovering something new.
 </div>
 
-<div id="discoverMusic" class="cards" style="margin-top:30px"></div>
+<div class="empty-text">
+New music uploaded by LOST SOUND users will appear here.
+</div>
+
+</div>
+
+<div id="discoverMusic"
+class="cards"
+style="margin-top:30px">
+</div>
+
 </section>
+
+<!-- SEARCH -->
 
 <section id="search" class="view">
-<div class="kicker">SEARCH</div>
-<div class="search-box">
-<input id="searchInput" type="search" placeholder="Search music..." oninput="runSearch()">
-<button onclick="clearSearch()">×</button>
+
+<div class="kicker">
+SEARCH
 </div>
-<div id="searchResults" style="margin-top:25px"></div>
+
+<div class="search-box">
+
+<input
+id="searchInput"
+type="search"
+placeholder="Search music...">
+
+<button onclick="clearSearch()">
+×
+</button>
+
+</div>
+
+<div id="searchResults"
+style="margin-top:25px">
+</div>
+
 </section>
 
+<!-- LIBRARY -->
+
 <section id="library" class="view">
+
 <div class="hero">
+
 <div>
-<div class="kicker">YOUR ARCHIVE</div>
-<h1>MY<br>SOUND</h1>
+
+<div class="kicker">
+YOUR ARCHIVE
 </div>
+
+<h1>
+MY<br>
+SOUND
+</h1>
+
+</div>
+
 </div>
 
 <div id="libraryEmpty" class="empty-state">
-<div class="empty-title">Your library is waiting.</div>
-<div class="empty-text">Like tracks or upload your first song.</div>
+
+<div class="empty-title">
+Your library is waiting.
 </div>
 
-<div id="liked" style="margin-top:30px"></div>
+<div class="empty-text">
+Like tracks to save them here.
+</div>
+
+</div>
+
+<div id="liked"
+style="margin-top:30px">
+</div>
+
 </section>
+
+<!-- PROFILE -->
 
 <section id="profile" class="view">
 
+<div id="profileContent">
+
 <div class="profile-head">
-<div id="profileAvatar" class="avatar" style="display:grid;place-items:center;background:#e8e2d7;font-weight:bold;font-size:20px">L/S</div>
+
+<div id="profileAvatar"
+class="avatar"
+style="display:grid;place-items:center;font-weight:bold">
+L/S
+</div>
 
 <div>
-<div class="kicker">ARTIST</div>
-<h2 id="profileName">LOST SOUND</h2>
-<div id="profileBio" class="artist">Independent Music Platform</div>
-<div class="stats">
-<span id="artistCount">0 Artists</span>
-<span id="trackCount">0 Tracks</span>
-<span>Community</span>
-</div>
-</div>
+
+<div class="kicker">
+PROFILE
 </div>
 
-<div class="empty-state" style="margin-top:30px">
-<div class="empty-title">LOST SOUND PROFILE</div>
-<div class="empty-text">Your artist profile and uploaded tracks are connected to your account.</div>
+<h2 id="profileName">
+Guest
+</h2>
+
+<div id="profileUsername"
+class="artist">
+Not signed in
+</div>
+
+<div class="stats">
+
+<span id="profileTracks">
+0 Tracks
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="profileButtons"
+style="margin-top:25px">
 </div>
 
 </section>
+
+<!-- UPLOAD -->
 
 <section id="upload" class="view">
 
 <div class="upload">
-<div class="kicker">CREATOR STUDIO</div>
-<h1>UPLOAD<br>YOUR SOUND</h1>
 
-<div class="notice">
-Upload your music and artwork. Your files are stored in the LOST SOUND Supabase storage.
+<div class="kicker">
+CREATOR STUDIO
+</div>
+
+<h1>
+UPLOAD<br>
+YOUR SOUND
+</h1>
+
+<div id="uploadLoginNotice"
+class="notice">
+You must sign in before uploading music.
 </div>
 
 <div class="field">
-<label>AUDIO FILE</label>
-<input id="audioFile" type="file" accept="audio/*">
+
+<label>
+AUDIO FILE
+</label>
+
+<input
+id="audioFile"
+type="file"
+accept="audio/*">
+
 </div>
 
 <div class="field">
-<label>COVER ARTWORK</label>
-<input id="coverFile" type="file" accept="image/*">
+
+<label>
+COVER ARTWORK
+</label>
+
+<input
+id="coverFile"
+type="file"
+accept="image/*">
+
 </div>
 
 <div class="field">
-<label>TRACK TITLE</label>
-<input id="uploadTitle" placeholder="Track title">
+
+<label>
+TRACK TITLE
+</label>
+
+<input
+id="uploadTitle"
+placeholder="Track title">
+
 </div>
 
 <div class="field">
-<label>ARTIST NAME</label>
-<input id="uploadArtist" placeholder="Artist name">
+
+<label>
+ARTIST NAME
+</label>
+
+<input
+id="uploadArtist"
+placeholder="Artist name">
+
 </div>
 
 <div class="field">
-<label>GENRE</label>
+
+<label>
+GENRE
+</label>
+
 <select id="uploadGenre">
+
 <option>Electronic</option>
 <option>Hip-Hop</option>
 <option>Pop</option>
@@ -476,97 +1435,277 @@ Upload your music and artwork. Your files are stored in the LOST SOUND Supabase 
 <option>Experimental</option>
 <option>House</option>
 <option>Techno</option>
+
 </select>
+
 </div>
 
 <div class="field">
-<label>DESCRIPTION</label>
-<textarea id="uploadDescription" rows="4" placeholder="About this track"></textarea>
+
+<label>
+DESCRIPTION
+</label>
+
+<textarea
+id="uploadDescription"
+rows="4"
+placeholder="About this track"></textarea>
+
 </div>
 
-<button id="publishButton" class="primary" onclick="publishTrack()">
+<button
+class="primary"
+onclick="publishTrack()">
+
 Publish Track
+
 </button>
 
 </div>
+
+</section>
+
+<!-- AUTH -->
+
+<section id="auth" class="view">
+
+<div class="auth-box">
+
+<h2>
+LOST SOUND ACCOUNT
+</h2>
+
+<div class="field">
+
+<label>
+EMAIL
+</label>
+
+<input
+id="authEmail"
+type="email"
+placeholder="you@example.com">
+
+</div>
+
+<div class="field">
+
+<label>
+PASSWORD
+</label>
+
+<input
+id="authPassword"
+type="password"
+placeholder="Password">
+
+</div>
+
+<div class="auth-buttons">
+
+<button
+class="primary"
+onclick="signUp()">
+Create Account
+</button>
+
+<button
+class="secondary"
+onclick="signIn()">
+Sign In
+</button>
+
+</div>
+
+<div
+id="authMessage"
+style="margin-top:18px;color:#777;font-size:12px">
+</div>
+
+</div>
+
 </section>
 
 </main>
 
+<!-- PLAYER -->
+
 <div class="player">
+
 <div class="player-inner">
 
-<div id="playerArt" class="player-art" style="display:grid;place-items:center;background:#e8e2d7;font-size:10px">
+<div id="playerArt"
+class="player-art"
+style="display:grid;place-items:center;font-size:10px">
 L/S
 </div>
 
 <div>
-<div id="playerTitle" class="player-title">No track selected</div>
-<div id="playerArtist" class="player-artist">LOST SOUND</div>
 
-<div class="progress" onclick="seek(event)">
+<div id="playerTitle"
+class="player-title">
+No track selected
+</div>
+
+<div id="playerArtist"
+class="player-artist">
+LOST SOUND
+</div>
+
+<div class="progress"
+onclick="seek(event)">
+
 <i id="playerProgress"></i>
+
 </div>
 
 <div class="time">
-<span id="playerCurrent">0:00</span>
-<span id="playerDuration">0:00</span>
+
+<span id="playerCurrent">
+0:00
+</span>
+
+<span id="playerDuration">
+0:00
+</span>
+
 </div>
+
 </div>
 
 <div class="controls">
-<button onclick="previousTrack()">‹</button>
-<button id="playButton" class="play-button" onclick="togglePlay()">▶</button>
-<button onclick="nextTrack()">›</button>
+
+<button onclick="previousTrack()">
+‹
+</button>
+
+<button
+id="playButton"
+class="play-button"
+onclick="togglePlay()">
+▶
+</button>
+
+<button onclick="nextTrack()">
+›
+</button>
+
 </div>
 
 </div>
+
 </div>
+
+<!-- NAV -->
 
 <nav class="bottom-nav">
-<button class="active" data-view="home" onclick="showView('home')">Home</button>
-<button data-view="discover" onclick="showView('discover')">Discover</button>
-<button data-view="search" onclick="showView('search')">Search</button>
-<button data-view="library" onclick="showView('library')">Library</button>
-<button data-view="profile" onclick="showView('profile')">Profile</button>
+
+<button
+class="active"
+data-view="home"
+onclick="showView('home')">
+Home
+</button>
+
+<button
+data-view="discover"
+onclick="showView('discover')">
+Discover
+</button>
+
+<button
+data-view="search"
+onclick="showView('search')">
+Search
+</button>
+
+<button
+data-view="library"
+onclick="showView('library')">
+Library
+</button>
+
+<button
+data-view="profile"
+onclick="showView('profile')">
+Profile
+</button>
+
 </nav>
 
-<div id="drawer" class="drawer" onclick="closeDrawer()">
-<aside class="drawer-panel" onclick="event.stopPropagation()">
+<!-- DRAWER -->
+
+<div
+id="drawer"
+class="drawer"
+onclick="closeDrawer()">
+
+<aside
+class="drawer-panel"
+onclick="event.stopPropagation()">
 
 <div class="drawer-head">
-<strong>L/S</strong>
-<button onclick="closeDrawer()">×</button>
+
+<strong>
+L/S
+</strong>
+
+<button onclick="closeDrawer()">
+×
+</button>
+
 </div>
 
 <div class="drawer-list">
-<button onclick="go('home')">Home</button>
-<button onclick="go('discover')">Discover</button>
-<button onclick="go('search')">Search</button>
-<button onclick="go('library')">Library</button>
-<button onclick="go('profile')">Profile</button>
-<button onclick="go('upload')">Upload</button>
-<button onclick="toast('Following')">Following</button>
-<button onclick="toast('Feed')">Feed</button>
-<button onclick="toast('Playlists')">Playlists</button>
-<button onclick="toast('Albums')">Albums</button>
-<button onclick="toast('Artists')">Artists</button>
-<button onclick="toast('Notifications')">Notifications</button>
-<button onclick="toast('Messages')">Messages</button>
-<button onclick="toast('Listening History')">Listening History</button>
-<button onclick="showLiked()">Likes</button>
-<button onclick="toast('Reposts')">Reposts</button>
-<button onclick="toast('Settings')">Settings</button>
-<button onclick="toast('Help')">Help</button>
-<button onclick="logout()">Logout</button>
+
+<button onclick="go('home')">
+Home
+</button>
+
+<button onclick="go('discover')">
+Discover
+</button>
+
+<button onclick="go('search')">
+Search
+</button>
+
+<button onclick="go('library')">
+My Sound
+</button>
+
+<button onclick="go('profile')">
+Profile
+</button>
+
+<button onclick="go('upload')">
+Upload
+</button>
+
+<button onclick="go('auth')">
+Login / Sign Up
+</button>
+
+<button onclick="signOut()">
+Logout
+</button>
+
 </div>
 
 </aside>
-</div>
-
-<audio id="audio" preload="metadata"></audio>
 
 </div>
+
+<audio
+id="audio"
+preload="metadata">
+</audio>
+
+</div>
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
@@ -582,8 +1721,15 @@ const SUPABASE_PUBLISHABLE_KEY =
 
 const supabaseClient =
 window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+SUPABASE_URL,
+SUPABASE_PUBLISHABLE_KEY,
+{
+auth:{
+persistSession:true,
+autoRefreshToken:true,
+detectSessionInUrl:true
+}
+}
 );
 
 
@@ -592,8 +1738,8 @@ window.supabase.createClient(
 ===================================================== */
 
 let tracks=[];
-let liked=new Set();
 let currentIndex=-1;
+let liked=new Set();
 let currentUser=null;
 let currentArtist=null;
 
@@ -602,28 +1748,306 @@ let currentArtist=null;
    ELEMENTS
 ===================================================== */
 
-const audio=document.getElementById("audio");
+const audio=
+document.getElementById("audio");
 
 
 /* =====================================================
    START
 ===================================================== */
 
-async function init(){
+document.addEventListener(
+"DOMContentLoaded",
+async()=>{
 
-    createWaveform();
+await loadSession();
 
-    const result=
-        await supabaseClient.auth.getUser();
+await loadTracks();
 
-    currentUser=
-        result.data.user || null;
+await loadProfile();
 
-    await loadProfile();
+createWaveform();
 
-    await loadTracks();
+}
+);
 
-    renderLibrary();
+
+/* =====================================================
+   AUTH SESSION
+===================================================== */
+
+async function loadSession(){
+
+const {
+data,
+error
+}=await supabaseClient.auth.getUser();
+
+if(error){
+
+currentUser=null;
+
+}else{
+
+currentUser=data.user;
+
+}
+
+updateAuthUI();
+
+}
+
+
+/* =====================================================
+   AUTH UI
+===================================================== */
+
+function updateAuthUI(){
+
+const notice=
+document.getElementById(
+"uploadLoginNotice"
+);
+
+if(currentUser){
+
+notice.textContent=
+"Signed in. You can upload music to your LOST SOUND account.";
+
+}else{
+
+notice.textContent=
+"You must sign in before uploading music.";
+
+}
+
+}
+
+
+/* =====================================================
+   SIGN UP
+===================================================== */
+
+async function signUp(){
+
+const email=
+document.getElementById(
+"authEmail"
+).value.trim();
+
+const password=
+document.getElementById(
+"authPassword"
+).value;
+
+if(!email||!password){
+
+showAuthMessage(
+"Enter email and password."
+);
+
+return;
+
+}
+
+if(password.length<6){
+
+showAuthMessage(
+"Password must be at least 6 characters."
+);
+
+return;
+
+}
+
+const {
+data,
+error
+}=
+await supabaseClient.auth.signUp({
+email,
+password
+});
+
+if(error){
+
+showAuthMessage(
+error.message
+);
+
+return;
+
+}
+
+if(data.user){
+
+currentUser=data.user;
+
+await createProfile();
+
+showAuthMessage(
+"Account created successfully."
+);
+
+updateAuthUI();
+
+}
+
+}
+
+
+/* =====================================================
+   SIGN IN
+===================================================== */
+
+async function signIn(){
+
+const email=
+document.getElementById(
+"authEmail"
+).value.trim();
+
+const password=
+document.getElementById(
+"authPassword"
+).value;
+
+if(!email||!password){
+
+showAuthMessage(
+"Enter email and password."
+);
+
+return;
+
+}
+
+const {
+data,
+error
+}=
+await supabaseClient.auth.signInWithPassword({
+email,
+password
+});
+
+if(error){
+
+showAuthMessage(
+error.message
+);
+
+return;
+
+}
+
+currentUser=data.user;
+
+await createProfile();
+
+updateAuthUI();
+
+await loadProfile();
+
+await loadTracks();
+
+showAuthMessage(
+"Signed in successfully."
+);
+
+setTimeout(
+()=>{
+showView("home");
+},
+700
+);
+
+}
+
+
+/* =====================================================
+   SIGN OUT
+===================================================== */
+
+async function signOut(){
+
+await supabaseClient.auth.signOut();
+
+currentUser=null;
+currentArtist=null;
+tracks=[];
+currentIndex=-1;
+
+if(!audio.paused){
+
+audio.pause();
+
+}
+
+audio.removeAttribute("src");
+
+updateAuthUI();
+updateMusicUI();
+loadProfile();
+
+closeDrawer();
+
+showView("home");
+
+toast(
+"Logged out."
+);
+
+}
+
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+async function createProfile(){
+
+if(!currentUser){
+
+return;
+
+}
+
+const {
+data:existing
+}=
+await supabaseClient
+.from("profiles")
+.select("id")
+.eq("id",currentUser.id)
+.maybeSingle();
+
+if(existing){
+
+return;
+
+}
+
+const username=
+(
+currentUser.email
+||
+"user"
+)
+.split("@")[0]
+.replace(/[^a-zA-Z0-9_]/g,"")
+.slice(0,30)
+||
+"user";
+
+await supabaseClient
+.from("profiles")
+.insert({
+id:currentUser.id,
+username:username,
+display_name:username,
+role:"artist"
+});
 
 }
 
@@ -634,47 +2058,97 @@ async function init(){
 
 async function loadProfile(){
 
-    if(!currentUser){
+if(!currentUser){
 
-        document.getElementById("profileName").textContent=
-            "LOST SOUND";
+document.getElementById(
+"profileName"
+).textContent="Guest";
 
-        return;
-    }
+document.getElementById(
+"profileUsername"
+).textContent="Not signed in";
 
-    const {data,error}=
-        await supabaseClient
-        .from("artists")
-        .select("*")
-        .eq("user_id",currentUser.id)
-        .maybeSingle();
+document.getElementById(
+"profileTracks"
+).textContent="0 Tracks";
 
-    if(error){
+document.getElementById(
+"profileButtons"
+).innerHTML=`
 
-        console.error(error);
+<button
+class="primary"
+onclick="showView('auth')">
+Sign In / Create Account
+</button>
+`;
 
-        return;
-    }
+return;
 
-    if(data){
+}
 
-        currentArtist=data;
+const {
+data:profile
+}=
+await supabaseClient
+.from("profiles")
+.select("*")
+.eq("id",currentUser.id)
+.maybeSingle();
 
-        document.getElementById("profileName").textContent=
-            data.name || data.username || "Artist";
+if(profile){
 
-        document.getElementById("profileBio").textContent=
-            data.bio || "Independent Artist";
+document.getElementById(
+"profileName"
+).textContent=
+profile.display_name||
+profile.username||
+"LOST SOUND";
 
-        if(data.avatar_url){
+document.getElementById(
+"profileUsername"
+).textContent=
+"@" +
+(
+profile.username||
+"artist"
+);
 
-            document.getElementById("profileAvatar").innerHTML=
-                `<img src="${escapeHTML(data.avatar_url)}"
-                style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+if(profile.avatar_url){
 
-        }
+document.getElementById(
+"profileAvatar"
+).innerHTML=
+`<img src="${profile.avatar_url}"
+style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
 
-    }
+}
+
+}
+
+const myTracks=
+tracks.filter(
+t=>t.user_id===currentUser.id
+);
+
+document.getElementById(
+"profileTracks"
+).textContent=
+myTracks.length+
+" Tracks";
+
+document.getElementById(
+"profileButtons"
+).innerHTML=`
+
+<button
+class="primary"
+onclick="showView('upload')">
+Upload Track
+</button>
+
+`;
+
 
 }
 
@@ -685,83 +2159,48 @@ async function loadProfile(){
 
 async function loadTracks(){
 
-    const {data,error}=
-        await supabaseClient
-        .from("tracks")
-        .select(`
-            id,
-            artist_id,
-            title,
-            description,
-            cover_url,
-            audio_url,
-            duration_seconds,
-            play_count,
-            like_count,
-            is_published,
-            created_at,
-            artists (
-                id,
-                name,
-                username,
-                user_id
-            )
-        `)
-        .eq("is_published",true)
-        .order("created_at",{ascending:false});
+const {
+data,
+error
+}=
+await supabaseClient
+.from("tracks")
+.select("*")
+.eq("is_published",true)
+.order("created_at",{ascending:false});
 
-    if(error){
+if(error){
 
-        console.error(error);
+console.error(error);
 
-        toast("Could not load music.");
+toast(
+"Could not load music."
+);
 
-        return;
-    }
+tracks=[];
 
-    tracks=(data || []).map(track=>({
+updateMusicUI();
 
-        id:track.id,
+return;
 
-        title:track.title,
+}
 
-        artist:
-            track.artists?.name ||
-            track.artists?.username ||
-            "Unknown Artist",
+tracks=data||[];
 
-        genre:"",
+renderAll();
 
-        description:track.description || "",
+}
 
-        cover:track.cover_url,
 
-        audio:track.audio_url,
+/* =====================================================
+   RENDER
+===================================================== */
 
-        duration:
-            track.duration_seconds
-            ?
-            formatTime(track.duration_seconds)
-            :
-            "0:00",
+function renderAll(){
 
-        playCount:track.play_count || 0,
+updateMusicUI();
 
-        likeCount:track.like_count || 0,
-
-        createdAt:track.created_at,
-
-        artistId:track.artist_id
-
-    }));
-
-    updateMusicUI();
-
-    document.getElementById("artistCount").textContent=
-        "Artists";
-
-    document.getElementById("trackCount").textContent=
-        tracks.length+" Tracks";
+renderLibrary();
 
 }
 
@@ -772,22 +2211,36 @@ async function loadTracks(){
 
 function updateMusicUI(){
 
-    const hasMusic=tracks.length>0;
+const empty=
+document.getElementById(
+"emptyState"
+);
 
-    document.getElementById("emptyState").style.display=
-        hasMusic ? "none":"block";
+const content=
+document.getElementById(
+"musicContent"
+);
 
-    document.getElementById("musicContent").classList.toggle(
-        "visible",
-        hasMusic
-    );
+if(tracks.length===0){
 
-    if(!hasMusic)return;
+empty.style.display="block";
 
-    renderPopular();
-    renderNewReleases();
-    renderTrending();
-    renderDiscover();
+content.classList.remove("visible");
+
+renderDiscover();
+
+return;
+
+}
+
+empty.style.display="none";
+
+content.classList.add("visible");
+
+renderPopular();
+renderNewReleases();
+renderTrending();
+renderDiscover();
 
 }
 
@@ -798,56 +2251,54 @@ function updateMusicUI(){
 
 function renderPopular(){
 
-    const container=
-        document.getElementById("popular");
+const container=
+document.getElementById(
+"popular"
+);
 
-    const sorted=
-        [...tracks]
-        .sort((a,b)=>
-            (b.playCount||0)-(a.playCount||0)
-        );
+container.innerHTML=
+tracks.map(
+(track,index)=>`
 
-    container.innerHTML=
-        sorted.map(track=>{
+<div class="track-row">
 
-            const index=tracks.indexOf(track);
+<span class="number">
+${String(index+1).padStart(2,"0")}
+</span>
 
-            return `
-            <div class="track-row">
+<img
+class="thumb"
+src="${escapeAttr(track.cover_url||defaultCover())}"
+alt="">
 
-                <span class="number">
-                    ${String(index+1).padStart(2,"0")}
-                </span>
+<div
+onclick="playTrack(${index})"
+style="min-width:0;cursor:pointer">
 
-                <img class="thumb"
-                     src="${escapeHTML(track.cover || defaultCover())}">
+<div class="track-title">
+${escapeHTML(track.title)}
+</div>
 
-                <div onclick="playTrack(${index})"
-                     style="min-width:0;cursor:pointer">
+<div class="artist">
+${escapeHTML(getArtistName(track))}
+</div>
 
-                    <div class="track-title">
-                        ${escapeHTML(track.title)}
-                    </div>
+</div>
 
-                    <div class="artist">
-                        ${escapeHTML(track.artist)}
-                    </div>
+<span class="duration">
+${formatTime(track.duration_seconds)}
+</span>
 
-                </div>
+<button
+class="more"
+onclick="event.stopPropagation();toggleLikeById('${track.id}')">
+♡
+</button>
 
-                <span class="duration">
-                    ${track.duration}
-                </span>
+</div>
 
-                <button class="more"
-                    onclick="event.stopPropagation();toast('More options')">
-                    ⋯
-                </button>
-
-            </div>
-            `;
-
-        }).join("");
+`
+).join("");
 
 }
 
@@ -858,28 +2309,35 @@ function renderPopular(){
 
 function renderNewReleases(){
 
-    const container=
-        document.getElementById("newReleases");
+const container=
+document.getElementById(
+"newReleases"
+);
 
-    container.innerHTML=
-        tracks.slice(0,8).map(track=>{
+container.innerHTML=
+tracks.slice(0,8).map(
+(track)=>`
 
-            const index=tracks.indexOf(track);
+<article
+class="card"
+onclick="playTrackById('${track.id}')">
 
-            return `
-            <article class="card"
-                onclick="playTrack(${index})">
+<img
+src="${escapeAttr(track.cover_url||defaultCover())}"
+alt="">
 
-                <img src="${escapeHTML(track.cover || defaultCover())}">
+<h4>
+${escapeHTML(track.title)}
+</h4>
 
-                <h4>${escapeHTML(track.title)}</h4>
+<p>
+${escapeHTML(getArtistName(track))}
+</p>
 
-                <p>${escapeHTML(track.artist)}</p>
+</article>
 
-            </article>
-            `;
-
-        }).join("");
+`
+).join("");
 
 }
 
@@ -890,35 +2348,44 @@ function renderNewReleases(){
 
 function renderTrending(){
 
-    const container=
-        document.getElementById("trending");
+const container=
+document.getElementById(
+"trending"
+);
 
-    const list=
-        [...tracks]
-        .sort((a,b)=>
-            (b.playCount||0)-(a.playCount||0)
-        )
-        .slice(0,4);
+const list=
+[...tracks]
+.sort(
+(a,b)=>
+Number(b.play_count||0)-
+Number(a.play_count||0)
+)
+.slice(0,8);
 
-    container.innerHTML=
-        list.map(track=>{
+container.innerHTML=
+list.map(
+track=>`
 
-            const index=tracks.indexOf(track);
+<article
+class="card"
+onclick="playTrackById('${track.id}')">
 
-            return `
-            <article class="card"
-                onclick="playTrack(${index})">
+<img
+src="${escapeAttr(track.cover_url||defaultCover())}"
+alt="">
 
-                <img src="${escapeHTML(track.cover || defaultCover())}">
+<h4>
+${escapeHTML(track.title)}
+</h4>
 
-                <h4>${escapeHTML(track.title)}</h4>
+<p>
+${escapeHTML(getArtistName(track))}
+</p>
 
-                <p>${escapeHTML(track.artist)}</p>
+</article>
 
-            </article>
-            `;
-
-        }).join("");
+`
+).join("");
 
 }
 
@@ -929,43 +2396,52 @@ function renderTrending(){
 
 function renderDiscover(list=tracks){
 
-    const empty=
-        document.getElementById("discoverEmpty");
+const empty=
+document.getElementById(
+"discoverEmpty"
+);
 
-    const container=
-        document.getElementById("discoverMusic");
+const container=
+document.getElementById(
+"discoverMusic"
+);
 
-    if(!list.length){
+if(!list.length){
 
-        empty.style.display="block";
+empty.style.display="block";
 
-        container.innerHTML="";
+container.innerHTML="";
 
-        return;
+return;
 
-    }
+}
 
-    empty.style.display="none";
+empty.style.display="none";
 
-    container.innerHTML=
-        list.map(track=>{
+container.innerHTML=
+list.map(
+track=>`
 
-            const index=tracks.indexOf(track);
+<article
+class="card"
+onclick="playTrackById('${track.id}')">
 
-            return `
-            <article class="card"
-                onclick="playTrack(${index})">
+<img
+src="${escapeAttr(track.cover_url||defaultCover())}"
+alt="">
 
-                <img src="${escapeHTML(track.cover || defaultCover())}">
+<h4>
+${escapeHTML(track.title)}
+</h4>
 
-                <h4>${escapeHTML(track.title)}</h4>
+<p>
+${escapeHTML(getArtistName(track))}
+</p>
 
-                <p>${escapeHTML(track.artist)}</p>
+</article>
 
-            </article>
-            `;
-
-        }).join("");
+`
+).join("");
 
 }
 
@@ -976,13 +2452,43 @@ function renderDiscover(list=tracks){
 
 function filterGenre(genre){
 
-    /*
-      genre column isn't currently in your tracks table.
-      So this doesn't fake filtering.
-      It simply informs you that genre needs to be added later.
-    */
+const result=
+tracks.filter(
+track=>
+String(track.description||"")
+.toLowerCase()
+.includes(
+genre.toLowerCase()
+)
+);
 
-    toast("Genre filter ready after adding genre column.");
+if(result.length){
+
+renderDiscover(result);
+
+}else{
+
+renderDiscover([]);
+
+toast(
+"No tracks found for "+genre
+);
+
+}
+
+}
+
+
+/* =====================================================
+   ARTIST NAME
+===================================================== */
+
+function getArtistName(track){
+
+return (
+track.artist_name||
+"LOST SOUND"
+);
 
 }
 
@@ -991,81 +2497,133 @@ function filterGenre(genre){
    PLAY
 ===================================================== */
 
-async function playTrack(index){
+function playTrack(index){
 
-    if(index<0 || index>=tracks.length)return;
+if(index<0||index>=tracks.length){
 
-    currentIndex=index;
+return;
 
-    const track=tracks[index];
+}
 
-    document.getElementById("featuredCover").src=
-        track.cover || defaultCover();
+currentIndex=index;
 
-    document.getElementById("featuredTitle").textContent=
-        track.title;
+const track=
+tracks[index];
 
-    document.getElementById("featuredArtist").textContent=
-        track.artist;
+const cover=
+track.cover_url||
+defaultCover();
 
-    const playerArt=
-        document.getElementById("playerArt");
+document.getElementById(
+"featuredCover"
+).src=cover;
 
-    playerArt.innerHTML=
-        `<img src="${escapeHTML(track.cover || defaultCover())}"
-        style="width:100%;height:100%;object-fit:cover;border-radius:3px">`;
+document.getElementById(
+"featuredTitle"
+).textContent=
+track.title;
 
-    document.getElementById("playerTitle").textContent=
-        track.title;
+document.getElementById(
+"featuredArtist"
+).textContent=
+getArtistName(track);
 
-    document.getElementById("playerArtist").textContent=
-        track.artist;
+const playerArt=
+document.getElementById(
+"playerArt"
+);
 
-    audio.src=track.audio;
+playerArt.innerHTML=
+`<img
+src="${escapeAttr(cover)}"
+style="width:100%;height:100%;object-fit:cover">`;
 
-    audio.load();
+document.getElementById(
+"playerTitle"
+).textContent=
+track.title;
 
-    try{
+document.getElementById(
+"playerArtist"
+).textContent=
+getArtistName(track);
 
-        await audio.play();
+if(track.audio_url){
 
-        startPlaying();
+audio.src=
+track.audio_url;
 
-        incrementPlay(track);
+audio.load();
 
-    }catch(error){
+audio.play()
+.then(
+()=>{
+startPlaying();
+}
+)
+.catch(
+()=>{
+toast(
+"Press play to start."
+);
+}
+);
 
-        toast("Press play to start");
+}
 
-    }
+incrementPlay(track.id);
 
 }
 
 
 /* =====================================================
-   PLAY COUNT
+   PLAY BY ID
 ===================================================== */
 
-async function incrementPlay(track){
+function playTrackById(id){
 
-    if(track._counted)return;
+const index=
+tracks.findIndex(
+track=>track.id===id
+);
 
-    track._counted=true;
+if(index!==-1){
 
-    const newCount=
-        Number(track.playCount||0)+1;
+playTrack(index);
 
-    track.playCount=newCount;
+}
 
-    const {error}=
-        await supabaseClient
-        .from("tracks")
-        .update({
-            play_count:newCount
-        })
-        .eq("id",track.id);
+}
 
-    if(error)console.error(error);
+
+/* =====================================================
+   INCREMENT PLAY
+===================================================== */
+
+async function incrementPlay(id){
+
+const track=
+tracks.find(
+t=>t.id===id
+);
+
+if(!track){
+
+return;
+
+}
+
+const count=
+Number(track.play_count||0)+1;
+
+track.play_count=count;
+
+await supabaseClient
+.from("tracks")
+.update({
+play_count:count
+})
+.eq("id",id);
 
 }
 
@@ -1076,32 +2634,43 @@ async function incrementPlay(track){
 
 function togglePlay(){
 
-    if(currentIndex===-1){
+if(currentIndex===-1){
 
-        if(tracks.length){
+if(tracks.length){
 
-            playTrack(0);
+playTrack(0);
 
-        }else{
+}else{
 
-            toast("No music available yet.");
+toast(
+"No music available yet."
+);
 
-        }
+}
 
-        return;
-    }
+return;
 
-    if(audio.paused){
+}
 
-        audio.play()
-        .then(startPlaying)
-        .catch(()=>toast("Unable to play"));
+if(!audio.src){
 
-    }else{
+return;
 
-        audio.pause();
+}
 
-    }
+if(audio.paused){
+
+audio.play();
+
+startPlaying();
+
+}else{
+
+audio.pause();
+
+stopPlaying();
+
+}
 
 }
 
@@ -1112,76 +2681,85 @@ function togglePlay(){
 
 function startPlaying(){
 
-    document.getElementById("trackVinyl")
-        .classList.add("playing");
+document.getElementById(
+"trackVinyl"
+).classList.add("playing");
 
-    document.getElementById("lostVinyl")
-        .classList.add("playing");
+document.getElementById(
+"lostVinyl"
+).classList.add("playing");
 
-    document.getElementById("playButton")
-        .textContent="Ⅱ";
+document.getElementById(
+"playButton"
+).textContent="Ⅱ";
 
-    document.getElementById("featurePlay")
-        .textContent="Ⅱ";
+document.getElementById(
+"featurePlay"
+).textContent="Ⅱ";
 
 }
 
 function stopPlaying(){
 
-    document.getElementById("trackVinyl")
-        .classList.remove("playing");
+document.getElementById(
+"trackVinyl"
+).classList.remove("playing");
 
-    document.getElementById("lostVinyl")
-        .classList.remove("playing");
+document.getElementById(
+"lostVinyl"
+).classList.remove("playing");
 
-    document.getElementById("playButton")
-        .textContent="▶";
+document.getElementById(
+"playButton"
+).textContent="▶";
 
-    document.getElementById("featurePlay")
-        .textContent="▶";
+document.getElementById(
+"featurePlay"
+).textContent="▶";
 
 }
 
 
 /* =====================================================
-   NEXT / PREVIOUS
+   NEXT
 ===================================================== */
 
 function nextTrack(){
 
-    if(!tracks.length){
+if(!tracks.length){
 
-        toast("No tracks yet.");
-
-        return;
-
-    }
-
-    const next=
-        currentIndex<0
-        ?0
-        :(currentIndex+1)%tracks.length;
-
-    playTrack(next);
+return;
 
 }
 
+const next=
+currentIndex<0
+?0
+:(currentIndex+1)%tracks.length;
+
+playTrack(next);
+
+}
+
+
+/* =====================================================
+   PREVIOUS
+===================================================== */
+
 function previousTrack(){
 
-    if(!tracks.length){
+if(!tracks.length){
 
-        toast("No tracks yet.");
+return;
 
-        return;
+}
 
-    }
+const previous=
+currentIndex<=0
+?tracks.length-1
+:currentIndex-1;
 
-    const previous=
-        currentIndex<=0
-        ?tracks.length-1
-        :currentIndex-1;
-
-    playTrack(previous);
+playTrack(previous);
 
 }
 
@@ -1190,20 +2768,30 @@ function previousTrack(){
    AUDIO EVENTS
 ===================================================== */
 
-audio.addEventListener("play",startPlaying);
-audio.addEventListener("pause",stopPlaying);
+audio.addEventListener(
+"play",
+startPlaying
+);
 
-audio.addEventListener("ended",()=>{
+audio.addEventListener(
+"pause",
+stopPlaying
+);
 
-    if(currentIndex<0)return;
+audio.addEventListener(
+"ended",
+nextTrack
+);
 
-    nextTrack();
+audio.addEventListener(
+"timeupdate",
+updateProgress
+);
 
-});
-
-audio.addEventListener("timeupdate",updateProgress);
-
-audio.addEventListener("loadedmetadata",updateProgress);
+audio.addEventListener(
+"loadedmetadata",
+updateProgress
+);
 
 
 /* =====================================================
@@ -1212,30 +2800,42 @@ audio.addEventListener("loadedmetadata",updateProgress);
 
 function updateProgress(){
 
-    const percentage=
-        audio.duration
-        ?
-        (audio.currentTime/audio.duration)*100
-        :
-        0;
+const percentage=
+audio.duration
+?
+audio.currentTime/
+audio.duration*100
+:0;
 
-    document.getElementById("progress").style.width=
-        percentage+"%";
+document.getElementById(
+"progress"
+).style.width=
+percentage+"%";
 
-    document.getElementById("playerProgress").style.width=
-        percentage+"%";
+document.getElementById(
+"playerProgress"
+).style.width=
+percentage+"%";
 
-    document.getElementById("current").textContent=
-        formatTime(audio.currentTime);
+document.getElementById(
+"current"
+).textContent=
+formatTime(audio.currentTime);
 
-    document.getElementById("playerCurrent").textContent=
-        formatTime(audio.currentTime);
+document.getElementById(
+"playerCurrent"
+).textContent=
+formatTime(audio.currentTime);
 
-    document.getElementById("duration").textContent=
-        formatTime(audio.duration);
+document.getElementById(
+"duration"
+).textContent=
+formatTime(audio.duration);
 
-    document.getElementById("playerDuration").textContent=
-        formatTime(audio.duration);
+document.getElementById(
+"playerDuration"
+).textContent=
+formatTime(audio.duration);
 
 }
 
@@ -1246,18 +2846,32 @@ function updateProgress(){
 
 function seek(event){
 
-    if(!audio.duration)return;
+if(!audio.duration){
 
-    const rect=
-        event.currentTarget.getBoundingClientRect();
+return;
 
-    let percent=
-        (event.clientX-rect.left)/rect.width;
+}
 
-    percent=Math.max(0,Math.min(1,percent));
+const rect=
+event.currentTarget
+.getBoundingClientRect();
 
-    audio.currentTime=
-        percent*audio.duration;
+const percent=
+(
+event.clientX-
+rect.left
+)/
+rect.width;
+
+audio.currentTime=
+Math.max(
+0,
+Math.min(
+1,
+percent
+)
+)*
+audio.duration;
 
 }
 
@@ -1266,36 +2880,51 @@ function seek(event){
    LIKE
 ===================================================== */
 
-async function toggleLike(){
+function toggleLike(){
 
-    if(currentIndex===-1){
+if(currentIndex===-1){
 
-        toast("Select a track first.");
+toast(
+"Select a track first."
+);
 
-        return;
+return;
 
-    }
+}
 
-    const track=tracks[currentIndex];
+toggleLikeById(
+tracks[currentIndex].id
+);
 
-    const button=
-        document.getElementById("featureLike");
+}
 
-    if(liked.has(track.id)){
 
-        liked.delete(track.id);
+function toggleLikeById(id){
 
-        button.classList.remove("active");
+if(liked.has(id)){
 
-    }else{
+liked.delete(id);
 
-        liked.add(track.id);
+}else{
 
-        button.classList.add("active");
+liked.add(id);
 
-    }
+}
 
-    renderLibrary();
+if(currentIndex!==-1){
+
+document.getElementById(
+"featureLike"
+).classList.toggle(
+"active",
+liked.has(
+tracks[currentIndex].id
+)
+);
+
+}
+
+renderLibrary();
 
 }
 
@@ -1306,77 +2935,73 @@ async function toggleLike(){
 
 function renderLibrary(){
 
-    const likedTracks=
-        tracks.filter(track=>liked.has(track.id));
+const empty=
+document.getElementById(
+"libraryEmpty"
+);
 
-    const empty=
-        document.getElementById("libraryEmpty");
+const container=
+document.getElementById(
+"liked"
+);
 
-    const container=
-        document.getElementById("liked");
+const likedTracks=
+tracks.filter(
+track=>liked.has(track.id)
+);
 
-    if(!likedTracks.length){
+if(!likedTracks.length){
 
-        empty.style.display="block";
+empty.style.display="block";
 
-        container.innerHTML="";
+container.innerHTML="";
 
-        return;
-
-    }
-
-    empty.style.display="none";
-
-    container.innerHTML=
-        likedTracks.map(track=>{
-
-            const index=tracks.indexOf(track);
-
-            return `
-            <div class="track-row">
-
-                <span class="number">♡</span>
-
-                <img class="thumb"
-                     src="${escapeHTML(track.cover || defaultCover())}">
-
-                <div onclick="playTrack(${index})"
-                     style="min-width:0;cursor:pointer">
-
-                    <div class="track-title">
-                        ${escapeHTML(track.title)}
-                    </div>
-
-                    <div class="artist">
-                        ${escapeHTML(track.artist)}
-                    </div>
-
-                </div>
-
-                <span></span>
-
-                <button class="more"
-                    onclick="toast('More options')">
-                    ⋯
-                </button>
-
-            </div>
-            `;
-
-        }).join("");
+return;
 
 }
 
+empty.style.display="none";
 
-/* =====================================================
-   SHOW LIKES
-===================================================== */
+container.innerHTML=
+likedTracks.map(
+track=>`
 
-function showLiked(){
+<div class="track-row">
 
-    closeDrawer();
+<span class="number">
+♡
+</span>
 
-    showView("library");
+<img
+class="thumb"
+src="${escapeAttr(track.cover_url||defaultCover())}">
+
+<div
+onclick="playTrackById('${track.id}')"
+style="min-width:0;cursor:pointer">
+
+<div class="track-title">
+${escapeHTML(track.title)}
+</div>
+
+<div class="artist">
+${escapeHTML(getArtistName(track))}
+</div>
+
+</div>
+
+<span></span>
+
+<button
+class="more"
+onclick="toggleLikeById('${track.id}')">
+♥
+</button>
+
+</div>
+
+`
+).join("");
 
 }
 
@@ -1385,93 +3010,125 @@ function showLiked(){
    SEARCH
 ===================================================== */
 
+document.getElementById(
+"searchInput"
+).addEventListener(
+"input",
+runSearch
+);
+
+
 function runSearch(){
 
-    const query=
-        document.getElementById("searchInput")
-        .value
-        .trim()
-        .toLowerCase();
+const query=
+document.getElementById(
+"searchInput"
+).value
+.trim()
+.toLowerCase();
 
-    const container=
-        document.getElementById("searchResults");
+const container=
+document.getElementById(
+"searchResults"
+);
 
-    if(!query){
+if(!query){
 
-        container.innerHTML="";
+container.innerHTML="";
 
-        return;
-
-    }
-
-    const results=
-        tracks.filter(track=>
-            (
-                track.title+" "+
-                track.artist+" "+
-                track.description
-            )
-            .toLowerCase()
-            .includes(query)
-        );
-
-    if(!results.length){
-
-        container.innerHTML=`
-        <div class="empty-state">
-            <div class="empty-title">No results.</div>
-            <div class="empty-text">Try another search.</div>
-        </div>`;
-
-        return;
-
-    }
-
-    container.innerHTML=
-        results.map(track=>{
-
-            const index=tracks.indexOf(track);
-
-            return `
-            <div class="track-row">
-
-                <span class="number">♪</span>
-
-                <img class="thumb"
-                     src="${escapeHTML(track.cover || defaultCover())}">
-
-                <div onclick="playTrack(${index})"
-                     style="min-width:0;cursor:pointer">
-
-                    <div class="track-title">
-                        ${escapeHTML(track.title)}
-                    </div>
-
-                    <div class="artist">
-                        ${escapeHTML(track.artist)}
-                    </div>
-
-                </div>
-
-                <span></span>
-
-                <button class="more"
-                    onclick="toast('More options')">
-                    ⋯
-                </button>
-
-            </div>
-            `;
-
-        }).join("");
+return;
 
 }
 
+const results=
+tracks.filter(
+track=>
+(
+String(track.title||"")+
+" "+
+String(track.description||"")+
+" "+
+getArtistName(track)
+)
+.toLowerCase()
+.includes(query)
+);
+
+if(!results.length){
+
+container.innerHTML=`
+
+<div class="empty-state">
+
+<div class="empty-title">
+No results.
+</div>
+
+<div class="empty-text">
+Try another search.
+</div>
+
+</div>
+
+`;
+
+return;
+
+}
+
+container.innerHTML=
+results.map(
+track=>`
+
+<div class="track-row">
+
+<span class="number">
+♪
+</span>
+
+<img
+class="thumb"
+src="${escapeAttr(track.cover_url||defaultCover())}">
+
+<div
+onclick="playTrackById('${track.id}')"
+style="min-width:0;cursor:pointer">
+
+<div class="track-title">
+${escapeHTML(track.title)}
+</div>
+
+<div class="artist">
+${escapeHTML(getArtistName(track))}
+</div>
+
+</div>
+
+<span></span>
+
+<button
+class="more"
+onclick="toggleLikeById('${track.id}')">
+♡
+</button>
+
+</div>
+
+`
+).join("");
+
+}
+
+
 function clearSearch(){
 
-    document.getElementById("searchInput").value="";
+document.getElementById(
+"searchInput"
+).value="";
 
-    document.getElementById("searchResults").innerHTML="";
+document.getElementById(
+"searchResults"
+).innerHTML="";
 
 }
 
@@ -1482,312 +3139,294 @@ function clearSearch(){
 
 async function publishTrack(){
 
-    if(!currentUser){
+if(!currentUser){
 
-        toast("Please sign in first.");
+toast(
+"Please sign in first."
+);
 
-        return;
+showView("auth");
 
-    }
+return;
 
-    const audioFile=
-        document.getElementById("audioFile").files[0];
+}
 
-    const coverFile=
-        document.getElementById("coverFile").files[0];
+const audioFile=
+document.getElementById(
+"audioFile"
+).files[0];
 
-    const title=
-        document.getElementById("uploadTitle").value.trim();
+const coverFile=
+document.getElementById(
+"coverFile"
+).files[0];
 
-    const artistName=
-        document.getElementById("uploadArtist").value.trim();
+const title=
+document.getElementById(
+"uploadTitle"
+).value.trim();
 
-    const description=
-        document.getElementById("uploadDescription").value.trim();
+const artist=
+document.getElementById(
+"uploadArtist"
+).value.trim();
 
-    if(!audioFile){
+const genre=
+document.getElementById(
+"uploadGenre"
+).value;
 
-        toast("Select an audio file.");
+const description=
+document.getElementById(
+"uploadDescription"
+).value.trim();
 
-        return;
+if(!audioFile){
 
-    }
+toast(
+"Select an audio file."
+);
 
-    if(!title){
+return;
 
-        toast("Enter track title.");
+}
 
-        return;
+if(!title){
+
+toast(
+"Enter track title."
+);
+
+return;
 
-    }
+}
 
-    if(!artistName){
+if(!artist){
 
-        toast("Enter artist name.");
+toast(
+"Enter artist name."
+);
 
-        return;
+return;
+
+}
+
+try{
+
+toast(
+"Uploading..."
+);
 
-    }
 
-    const button=
-        document.getElementById("publishButton");
+/* AUDIO */
 
-    button.disabled=true;
+const audioPath=
+currentUser.id+
+"/"+
+crypto.randomUUID()+
+"-"+
+safeFileName(
+audioFile.name
+);
 
-    button.textContent="Uploading...";
+const {
+error:audioError
+}=
+await supabaseClient
+.storage
+.from("audio")
+.upload(
+audioPath,
+audioFile,
+{
+contentType:
+audioFile.type||
+"audio/mpeg",
+upsert:false
+}
+);
+
+if(audioError){
+
+throw audioError;
+
+}
 
+const {
+data:audioPublic
+}=
+supabaseClient
+.storage
+.from("audio")
+.getPublicUrl(
+audioPath
+);
 
-    try{
 
-        /* ---------------------------------------------
-           FIND OR CREATE CURRENT USER ARTIST
-        --------------------------------------------- */
+/* COVER */
 
-        let artist=currentArtist;
+let coverURL=null;
 
-        if(!artist){
+if(coverFile){
 
-            const username=
-                "artist_"+currentUser.id.slice(0,8);
+const coverPath=
+currentUser.id+
+"/"+
+crypto.randomUUID()+
+"-"+
+safeFileName(
+coverFile.name
+);
 
-            const {data,error}=
-                await supabaseClient
-                .from("artists")
-                .insert({
+const {
+error:coverError
+}=
+await supabaseClient
+.storage
+.from("covers")
+.upload(
+coverPath,
+coverFile,
+{
+contentType:
+coverFile.type||
+"image/jpeg",
+upsert:false
+}
+);
 
-                    user_id:currentUser.id,
+if(coverError){
 
-                    name:artistName,
+throw coverError;
 
-                    username:username,
+}
 
-                    bio:""
+const {
+data:coverPublic
+}=
+supabaseClient
+.storage
+.from("covers")
+.getPublicUrl(
+coverPath
+);
 
-                })
-                .select()
-                .single();
+coverURL=
+coverPublic.publicUrl;
 
-            if(error)throw error;
+}else{
 
-            artist=data;
+coverURL=
+defaultCover();
 
-            currentArtist=data;
+}
 
-        }
 
+/* DATABASE */
 
-        /* ---------------------------------------------
-           AUDIO UPLOAD
-        --------------------------------------------- */
+const {
+data,
+error
+}=
+await supabaseClient
+.from("tracks")
+.insert({
 
-        const audioPath=
-            currentUser.id+
-            "/"+
-            Date.now()+
-            "_"+
-            cleanFileName(audioFile.name);
+artist_id:null,
 
-        const audioUpload=
-            await supabaseClient.storage
-            .from("audio")
-            .upload(
-                audioPath,
-                audioFile,
-                {
-                    cacheControl:"3600",
-                    upsert:false,
-                    contentType:audioFile.type
-                }
-            );
+title:title,
 
-        if(audioUpload.error)
-            throw audioUpload.error;
+description:
+description+
+"\nGenre: "+
+genre+
+"\nArtist: "+
+artist,
 
+cover_url:coverURL,
 
-        const audioPublic=
-            supabaseClient.storage
-            .from("audio")
-            .getPublicUrl(audioPath);
+audio_url:
+audioPublic.publicUrl,
 
-        const audioURL=
-            audioPublic.data.publicUrl;
+duration_seconds:0,
 
+play_count:0,
 
-        /* ---------------------------------------------
-           COVER UPLOAD
-        --------------------------------------------- */
+like_count:0,
 
-        let coverURL=null;
+is_published:true
 
-        if(coverFile){
+})
+.select()
+.single();
 
-            const coverPath=
-                currentUser.id+
-                "/"+
-                Date.now()+
-                "_"+
-                cleanFileName(coverFile.name);
 
-            const coverUpload=
-                await supabaseClient.storage
-                .from("covers")
-                .upload(
-                    coverPath,
-                    coverFile,
-                    {
-                        cacheControl:"3600",
-                        upsert:false,
-                        contentType:coverFile.type
-                    }
-                );
+if(error){
 
-            if(coverUpload.error)
-                throw coverUpload.error;
+throw error;
 
-            const coverPublic=
-                supabaseClient.storage
-                .from("covers")
-                .getPublicUrl(coverPath);
+}
 
-            coverURL=
-                coverPublic.data.publicUrl;
 
-        }else{
+/* LOCAL */
 
-            coverURL=defaultCover();
+tracks.unshift(
+data
+);
 
-        }
+updateMusicUI();
 
+await loadProfile();
 
-        /* ---------------------------------------------
-           GET AUDIO DURATION
-        --------------------------------------------- */
+document.getElementById(
+"audioFile"
+).value="";
 
-        const duration=
-            await getAudioDuration(audioFile);
+document.getElementById(
+"coverFile"
+).value="";
 
+document.getElementById(
+"uploadTitle"
+).value="";
 
-        /* ---------------------------------------------
-           SAVE TRACK
-        --------------------------------------------- */
+document.getElementById(
+"uploadArtist"
+).value="";
 
-        const {error:trackError}=
-            await supabaseClient
-            .from("tracks")
-            .insert({
+document.getElementById(
+"uploadDescription"
+).value="";
 
-                artist_id:artist.id,
+showView("home");
 
-                title:title,
+toast(
+"Track published successfully."
+);
 
-                description:description,
+}catch(error){
 
-                cover_url:coverURL,
+console.error(error);
 
-                audio_url:audioURL,
+toast(
+"Upload error: "+
+(error.message||"Unknown error")
+);
 
-                duration_seconds:duration,
-
-                play_count:0,
-
-                like_count:0,
-
-                is_published:true
-
-            });
-
-        if(trackError)
-            throw trackError;
-
-
-        /* ---------------------------------------------
-           SUCCESS
-        --------------------------------------------- */
-
-        document.getElementById("audioFile").value="";
-        document.getElementById("coverFile").value="";
-        document.getElementById("uploadTitle").value="";
-        document.getElementById("uploadArtist").value="";
-        document.getElementById("uploadDescription").value="";
-
-        toast("Track published successfully.");
-
-        await loadTracks();
-
-        showView("home");
-
-
-    }catch(error){
-
-        console.error(error);
-
-        toast(
-            error.message ||
-            "Upload failed."
-        );
-
-    }finally{
-
-        button.disabled=false;
-
-        button.textContent="Publish Track";
-
-    }
+}
 
 }
 
 
 /* =====================================================
-   AUDIO DURATION
+   SAFE FILE NAME
 ===================================================== */
 
-function getAudioDuration(file){
+function safeFileName(name){
 
-    return new Promise(resolve=>{
-
-        const url=
-            URL.createObjectURL(file);
-
-        const temp=
-            document.createElement("audio");
-
-        temp.preload="metadata";
-
-        temp.onloadedmetadata=()=>{
-
-            const duration=
-                Math.round(temp.duration||0);
-
-            URL.revokeObjectURL(url);
-
-            resolve(duration);
-
-        };
-
-        temp.onerror=()=>{
-
-            URL.revokeObjectURL(url);
-
-            resolve(0);
-
-        };
-
-        temp.src=url;
-
-    });
-
-}
-
-
-/* =====================================================
-   FILE NAME
-===================================================== */
-
-function cleanFileName(name){
-
-    return name
-        .replace(/[^a-zA-Z0-9._-]/g,"_")
-        .slice(-100);
+return name
+.replace(/[^a-zA-Z0-9._-]/g,"_")
+.slice(0,100);
 
 }
 
@@ -1798,29 +3437,45 @@ function cleanFileName(name){
 
 function defaultCover(){
 
-    return "data:image/svg+xml;charset=UTF-8,"+
-        encodeURIComponent(`
-        <svg xmlns="http://www.w3.org/2000/svg"
-             width="800" height="800">
+const svg=`
 
-        <rect width="800" height="800" fill="#e8e2d7"/>
+<svg
+xmlns="http://www.w3.org/2000/svg"
+width="800"
+height="800">
 
-        <text x="400" y="365"
-              text-anchor="middle"
-              font-size="82"
-              font-family="Arial"
-              font-weight="bold"
-              fill="#111">LOST</text>
+<rect
+width="800"
+height="800"
+fill="#e8e2d7"/>
 
-        <text x="400" y="445"
-              text-anchor="middle"
-              font-size="82"
-              font-family="Arial"
-              font-weight="bold"
-              fill="#111">SOUND</text>
+<text
+x="400"
+y="365"
+text-anchor="middle"
+font-size="82"
+font-family="Arial"
+font-weight="bold"
+fill="#111">
+LOST
+</text>
 
-        </svg>
-        `);
+<text
+x="400"
+y="445"
+text-anchor="middle"
+font-size="82"
+font-family="Arial"
+font-weight="bold"
+fill="#111">
+SOUND
+</text>
+
+</svg>
+`;
+
+return "data:image/svg+xml;charset=UTF-8,"+
+encodeURIComponent(svg);
 
 }
 
@@ -1831,22 +3486,28 @@ function defaultCover(){
 
 function createWaveform(){
 
-    const wave=
-        document.getElementById("wave");
+const wave=
+document.getElementById("wave");
 
-    let html="";
+let html="";
 
-    for(let i=0;i<80;i++){
+for(let i=0;i<80;i++){
 
-        const height=
-            5+Math.floor(Math.random()*30);
+const height=
+5+
+Math.floor(
+Math.random()*30
+);
 
-        html+=
-            `<span style="height:${height}px"></span>`;
+html+=`
+<span
+style="height:${height}px">
+</span>
+`;
 
-    }
+}
 
-    wave.innerHTML=html;
+wave.innerHTML=html;
 
 }
 
@@ -1857,39 +3518,48 @@ function createWaveform(){
 
 function showView(view){
 
-    document
-        .querySelectorAll(".view")
-        .forEach(element=>
-            element.classList.remove("active")
-        );
+document
+.querySelectorAll(".view")
+.forEach(
+element=>
+element.classList.remove("active")
+);
 
-    const target=
-        document.getElementById(view);
+const target=
+document.getElementById(view);
 
-    if(target)
-        target.classList.add("active");
+if(target){
 
-    document
-        .querySelectorAll(".bottom-nav button")
-        .forEach(button=>
-            button.classList.toggle(
-                "active",
-                button.dataset.view===view
-            )
-        );
-
-    if(view==="library")
-        renderLibrary();
-
-    window.scrollTo(0,0);
+target.classList.add("active");
 
 }
 
+document
+.querySelectorAll(
+".bottom-nav button"
+)
+.forEach(
+button=>{
+button.classList.toggle(
+"active",
+button.dataset.view===view
+);
+}
+);
+
+window.scrollTo(
+0,
+0
+);
+
+}
+
+
 function go(view){
 
-    closeDrawer();
+closeDrawer();
 
-    showView(view);
+showView(view);
 
 }
 
@@ -1900,17 +3570,17 @@ function go(view){
 
 function openDrawer(){
 
-    document
-        .getElementById("drawer")
-        .classList.add("open");
+document
+.getElementById("drawer")
+.classList.add("open");
 
 }
 
 function closeDrawer(){
 
-    document
-        .getElementById("drawer")
-        .classList.remove("open");
+document
+.getElementById("drawer")
+.classList.remove("open");
 
 }
 
@@ -1919,62 +3589,72 @@ function closeDrawer(){
    SHARE
 ===================================================== */
 
-function shareTrack(){
+async function shareTrack(){
 
-    if(currentIndex===-1){
+if(currentIndex===-1){
 
-        toast("Select a track first.");
+toast(
+"Select a track first."
+);
 
-        return;
+return;
 
-    }
+}
 
-    const track=tracks[currentIndex];
+const track=
+tracks[currentIndex];
 
-    const url=
-        location.href+
-        "#track-"+track.id;
+const url=
+location.href+
+"#track-"+track.id;
 
-    if(navigator.share){
+if(navigator.share){
 
-        navigator.share({
+try{
 
-            title:track.title,
+await navigator.share({
+title:track.title,
+text:
+getArtistName(track)+
+" — LOST SOUND",
+url:url
+});
 
-            text:
-                track.artist+
-                " — LOST SOUND",
+}catch(e){}
 
-            url:url
+}else{
 
-        }).catch(()=>{});
+try{
 
-    }else{
+await navigator.clipboard.writeText(url);
 
-        navigator.clipboard
-        ?.writeText(url);
+toast(
+"Track link copied."
+);
 
-        toast("Track link copied.");
+}catch(e){
 
-    }
+toast(
+"Could not copy link."
+);
+
+}
+
+}
 
 }
 
 
 /* =====================================================
-   LOGOUT
+   AUTH MESSAGE
 ===================================================== */
 
-async function logout(){
+function showAuthMessage(message){
 
-    await supabaseClient.auth.signOut();
-
-    currentUser=null;
-    currentArtist=null;
-
-    closeDrawer();
-
-    toast("Logged out.");
+document.getElementById(
+"authMessage"
+).textContent=
+message;
 
 }
 
@@ -1985,40 +3665,32 @@ async function logout(){
 
 function toast(message){
 
-    const old=
-        document.querySelector(".toast");
+const old=
+document.querySelector(".toast");
 
-    if(old)old.remove();
+if(old){
 
-    const element=
-        document.createElement("div");
-
-    element.className="toast";
-
-    element.textContent=message;
-
-    document.body.appendChild(element);
-
-    setTimeout(
-        ()=>element.remove(),
-        2000
-    );
+old.remove();
 
 }
 
+const element=
+document.createElement("div");
 
-/* =====================================================
-   SECURITY
-===================================================== */
+element.className="toast";
 
-function escapeHTML(value){
+element.textContent=message;
 
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+document.body.appendChild(
+element
+);
+
+setTimeout(
+()=>{
+element.remove();
+},
+2200
+);
 
 }
 
@@ -2029,49 +3701,48 @@ function escapeHTML(value){
 
 function formatTime(seconds){
 
-    if(!isFinite(seconds))
-        return "0:00";
+if(!isFinite(seconds)||seconds<0){
 
-    const minutes=
-        Math.floor(seconds/60);
+return "0:00";
 
-    const sec=
-        Math.floor(seconds%60);
+}
 
-    return minutes+
-        ":"+
-        String(sec).padStart(2,"0");
+const minutes=
+Math.floor(seconds/60);
+
+const secondsPart=
+Math.floor(seconds%60);
+
+return(
+minutes+
+":"+
+String(secondsPart)
+.padStart(2,"0")
+);
 
 }
 
 
 /* =====================================================
-   SUPABASE AUTH EVENTS
+   SECURITY
 ===================================================== */
 
-supabaseClient.auth.onAuthStateChange(
-    async(event,session)=>{
+function escapeHTML(value){
 
-        currentUser=
-            session?.user || null;
+return String(value||"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
-        if(currentUser){
+}
 
-            await loadProfile();
+function escapeAttr(value){
 
-            await loadTracks();
+return escapeHTML(value);
 
-        }
-
-    }
-);
-
-
-/* =====================================================
-   RUN
-===================================================== */
-
-init();
+}
 
 </script>
 
