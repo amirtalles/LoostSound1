@@ -33,8 +33,8 @@ body{min-height:100vh}button,input,textarea,select{font-family:inherit}button{bo
 .profile-head{display:flex;align-items:center;gap:25px;padding-bottom:30px;border-bottom:1px solid var(--line)}.avatar{width:110px;height:110px;object-fit:cover;border-radius:50%;background:#ddd}.profile-head h2{font-size:40px;letter-spacing:-.06em}.stats{display:flex;gap:15px;margin-top:12px;color:var(--gray);font-size:11px}
 .profile-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}.small-btn{padding:9px 14px;border:1px solid var(--line);border-radius:20px;font-size:10px;background:var(--paper)}
 .upload{width:100%;max-width:700px}.upload h1{margin:15px 0 30px;font-size:clamp(48px,10vw,80px);line-height:.88;letter-spacing:-.06em}.notice{padding:14px;margin-bottom:25px;border:1px solid var(--line);color:var(--gray);font-size:11px;line-height:1.7}.field{margin:18px 0}.field label{display:block;margin-bottom:8px;font-size:9px;font-weight:bold;letter-spacing:.15em}.field input,.field textarea,.field select{width:100%;padding:13px;outline:0;background:var(--paper);border:1px solid var(--line);border-radius:7px}.primary{padding:14px 22px;color:white;background:var(--black);border-radius:30px}
-.player{position:fixed;left:0;right:0;bottom:0;z-index:200;padding:10px 18px calc(10px + env(safe-area-inset-bottom));background:rgba(250,248,243,.97);backdrop-filter:blur(20px);border-top:1px solid var(--line)}
-.player-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;align-items:center}.player-art{width:52px;height:52px;object-fit:cover;border-radius:3px;background:#e8e2d7}.player-title{font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.player-artist{margin:3px 0 6px;color:var(--gray);font-size:10px}.controls{display:flex;align-items:center;gap:14px}.controls button{font-size:20px}.play-button{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:var(--black);color:white}
+.player{display:none;position:fixed;left:0;right:0;bottom:58px;z-index:350;padding:10px 18px calc(10px + env(safe-area-inset-bottom));background:rgba(250,248,243,.97);backdrop-filter:blur(20px);border-top:1px solid var(--line)}
+.player.open{display:block}.player-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;align-items:center}.player-art{width:52px;height:52px;object-fit:cover;border-radius:3px;background:#e8e2d7}.player-title{font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.player-artist{margin:3px 0 6px;color:var(--gray);font-size:10px}.controls{display:flex;align-items:center;gap:14px}.controls button{font-size:20px}.play-button{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:var(--black);color:white}
 .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:300;height:calc(58px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);display:flex;align-items:center;justify-content:space-around;background:rgba(250,248,243,.98);border-top:1px solid var(--line)}.bottom-nav button{flex:1;height:58px;color:var(--gray);font-size:9px}.bottom-nav button.active{color:var(--black);font-weight:bold}
 .drawer{position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,.4)}.drawer.open{display:block}.drawer-panel{position:absolute;top:0;right:0;bottom:0;width:min(340px,88vw);padding:25px;background:var(--paper);overflow-y:auto}.drawer-head{display:flex;align-items:center;justify-content:space-between;font-size:20px}.drawer-list{margin-top:30px}.drawer-list button{width:100%;padding:14px 0;text-align:left;border-bottom:1px solid var(--line);font-size:13px}
 .toast{position:fixed;left:50%;bottom:135px;z-index:2000;transform:translateX(-50%);padding:11px 17px;background:#111;color:white;border-radius:30px;font-size:11px;white-space:nowrap;max-width:90vw}
@@ -77,13 +77,13 @@ body{min-height:100vh}button,input,textarea,select{font-family:inherit}button{bo
 <section id="editProfile" class="view"><div class="upload"><div class="kicker">ACCOUNT</div><h1>EDIT<br>PROFILE</h1><div class="field"><label>PROFILE PHOTO</label><input id="profilePhotoFile" type="file" accept="image/*"></div><div class="field"><label>USERNAME</label><input id="editUsername" placeholder="username"></div><div class="field"><label>DISPLAY NAME</label><input id="editDisplayName" placeholder="Your name"></div><button id="saveProfileButton" class="primary">Save Profile</button></div></section>
 </main>
 
-<div class="player"><div class="player-inner"><div id="playerArt" class="player-art"></div><div><div id="playerTitle" class="player-title">No track selected</div><div id="playerArtist" class="player-artist">LOST SOUND</div><div id="playerProgressBar" class="progress"><i id="playerProgress"></i></div><div class="time"><span id="playerCurrent">0:00</span><span id="playerDuration">0:00</span></div></div><div class="controls"><button id="previousButton">‹</button><button id="playButton" class="play-button">▶</button><button id="nextButton">›</button></div></div></div>
+<div id="player" class="player"><div class="player-inner"><div id="playerArt" class="player-art"></div><div><div id="playerTitle" class="player-title">No track selected</div><div id="playerArtist" class="player-artist">LOST SOUND</div><div id="playerProgressBar" class="progress"><i id="playerProgress"></i></div><div class="time"><span id="playerCurrent">0:00</span><span id="playerDuration">0:00</span></div></div><div class="controls"><button id="previousButton">‹</button><button id="playButton" class="play-button">▶</button><button id="nextButton">›</button></div></div></div>
 
 <nav class="bottom-nav"><button class="active" data-view="home">Home</button><button data-view="discover">Discover</button><button data-view="search">Search</button><button data-view="library">Library</button><button data-view="profile">Profile</button></nav>
 
 <div id="drawer" class="drawer"><aside class="drawer-panel"><div class="drawer-head"><strong>L/S</strong><button id="closeDrawer">×</button></div><div class="drawer-list"><button data-go="home">Home</button><button data-go="discover">Discover</button><button data-go="search">Search</button><button data-go="library">Library</button><button data-go="profile">Profile</button><button data-go="upload">Upload</button><button id="authMenuButton">Register / Login</button></div></aside></div>
 
-<div id="authOverlay" class="auth-overlay"><div class="auth-panel"><div class="auth-top"><div class="auth-logo">L/S</div><button id="authClose" class="auth-close">×</button></div><div class="kicker">LOST SOUND ACCOUNT</div><h2 id="authTitle" class="auth-title">REGISTER</h2><div id="authSubtitle" class="auth-subtitle">Create your Lost Sound account and start uploading your music.</div><div id="authMessage" class="auth-message"></div><div class="auth-field"><label>EMAIL</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></div><div class="auth-field"><label>PASSWORD</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Minimum 6 characters"></div><div id="usernameField" class="auth-field"><label>USERNAME</label><input id="authUsername" type="text" autocomplete="username" placeholder="Your username"></div><div id="displayNameField" class="auth-field"><label>DISPLAY NAME</label><input id="authDisplayName" type="text" placeholder="Your artist name"></div><button id="authSubmit" class="auth-submit">CREATE ACCOUNT</button><div id="forgotWrap" style="text-align:center;margin-top:14px"><button id="forgotButton" style="font-size:11px;text-decoration:underline">Forgot password?</button></div><div class="auth-switch"><span id="authSwitchText">Already have an account?</span> <button id="authSwitchButton">Login</button></div></div></div>
+<div id="authOverlay" class="auth-overlay"><div class="auth-panel"><div class="auth-top"><div class="auth-logo">L/S</div><button id="authClose" class="auth-close">×</button></div><div class="kicker">LOST SOUND ACCOUNT</div><h2 id="authTitle" class="auth-title">REGISTER</h2><div id="authSubtitle" class="auth-subtitle">Create your Lost Sound account and start uploading your music.</div><div id="authMessage" class="auth-message"></div><div class="auth-field"><label>EMAIL</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></div><div class="auth-field"><label>PASSWORD</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Minimum 6 characters"></div><div id="confirmPasswordField" class="auth-field" style="display:none"><label>CONFIRM PASSWORD</label><input id="authPasswordConfirm" type="password" autocomplete="new-password" placeholder="Repeat new password"></div><div id="usernameField" class="auth-field"><label>USERNAME</label><input id="authUsername" type="text" autocomplete="username" placeholder="Your username"></div><div id="displayNameField" class="auth-field"><label>DISPLAY NAME</label><input id="authDisplayName" type="text" placeholder="Your artist name"></div><button id="authSubmit" class="auth-submit">CREATE ACCOUNT</button><div id="forgotWrap" style="text-align:center;margin-top:14px"><button id="forgotButton" style="font-size:11px;text-decoration:underline">Forgot password?</button></div><div class="auth-switch"><span id="authSwitchText">Already have an account?</span> <button id="authSwitchButton">Login</button></div></div></div>
 
 <audio id="audio" preload="metadata"></audio>
 </div>
@@ -133,18 +133,22 @@ audio.onplay=startPlaying;audio.onpause=stopPlaying;audio.onended=nextTrack;audi
 }
 
 async function checkSession(){
-const {data,error}=await supabaseClient.auth.getSession();
-if(error){console.error(error);return}
-currentUser=data.session?.user||null;
-if(currentUser)await loadProfile();
-updateAuthUI();
-supabaseClient.auth.onAuthStateChange(async(event,session)=>{
-currentUser=session?.user||null;
-if(currentUser)await loadProfile();else currentProfile=null;
-updateAuthUI();
-});
-const hash=new URLSearchParams(location.hash.replace("#","?"));
-if(location.hash.includes("type=recovery")||hash.get("type")==="recovery"){pendingReset=true;openAuth("reset")}
+ const {data,error}=await supabaseClient.auth.getSession();
+ if(error){console.error(error);return}
+ currentUser=data.session?.user||null;
+ if(currentUser){await loadProfile();await ensureUserData();await loadProfile();}
+ updateAuthUI();
+ supabaseClient.auth.onAuthStateChange((event,session)=>{
+   currentUser=session?.user||null;
+   if(event==="PASSWORD_RECOVERY"){pendingReset=true;setTimeout(()=>openAuth("reset"),0);}
+   setTimeout(async()=>{
+     if(currentUser){await loadProfile();await ensureUserData();await loadProfile();}
+     else currentProfile=null;
+     updateAuthUI();
+   },0);
+ });
+ const hash=new URLSearchParams(location.hash.replace("#","?"));
+ if(location.hash.includes("type=recovery")||hash.get("type")==="recovery"){pendingReset=true;setTimeout(()=>openAuth("reset"),0);}
 }
 
 async function loadProfile(){
@@ -169,7 +173,7 @@ document.getElementById("authTitle").textContent=register?"REGISTER":login?"LOGI
 document.getElementById("authSubtitle").textContent=register?"Create your Lost Sound account and start uploading your music.":login?"Login to your Lost Sound account.":"Set a new password for your Lost Sound account.";
 document.getElementById("usernameField").style.display=register?"block":"none";
 document.getElementById("displayNameField").style.display=register?"block":"none";
-document.getElementById("authPassword").placeholder=reset?"New password (minimum 6 characters)":"Minimum 6 characters";
+document.getElementById("authPassword").placeholder=reset?"New password (minimum 6 characters)":"Minimum 6 characters";document.getElementById("confirmPasswordField").style.display=reset?"block":"none";
 document.getElementById("authSubmit").textContent=register?"CREATE ACCOUNT":login?"LOGIN":"UPDATE PASSWORD";
 document.getElementById("authSwitchText").textContent=register?"Already have an account?":"Don't have an account?";
 document.getElementById("authSwitchButton").textContent=register?"Login":"Register";
@@ -179,20 +183,22 @@ hideAuthMessage();
 function switchAuth(){authMode=authMode==="register"?"login":"register";updateAuthPanel()}
 async function submitAuth(){
 const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value;
-if(authMode==="reset"){if(password.length<6)return showAuthMessage("Password must be at least 6 characters.");const {error}=await supabaseClient.auth.updateUser({password});if(error)return showAuthMessage(authError(error));pendingReset=false;closeAuth();history.replaceState({},document.title,location.pathname);toast("Password updated successfully.");return}
+if(authMode==="reset"){const confirm=document.getElementById("authPasswordConfirm").value;if(password.length<6)return showAuthMessage("Password must be at least 6 characters.");if(password!==confirm)return showAuthMessage("Passwords do not match.");const {error}=await supabaseClient.auth.updateUser({password});if(error)return showAuthMessage(authError(error));pendingReset=false;document.getElementById("authPassword").value="";document.getElementById("authPasswordConfirm").value="";closeAuth();history.replaceState({},document.title,location.pathname);toast("Password updated successfully.");return}
 if(!email)return showAuthMessage("Please enter your email.");
 if(password.length<6)return showAuthMessage("Password must be at least 6 characters.");
 const button=document.getElementById("authSubmit");button.disabled=true;button.textContent="PLEASE WAIT...";
 try{
 if(authMode==="register"){
-const {data,error}=await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname}});
+const username=(document.getElementById("authUsername").value.trim()||email.split("@")[0]).replace(/\s+/g,"").toLowerCase();
+const displayName=document.getElementById("authDisplayName").value.trim()||username;
+const {data,error}=await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname,data:{username,display_name:displayName}}});
 if(error)throw error;
 if(data.session){currentUser=data.user;await createUserData();closeAuth();showView("profile");toast("Account created successfully.")}
 else showAuthMessage("Account created. Check your email, confirm it, then return and login.");
 }else{
 const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
 if(error)throw error;
-currentUser=data.user;await loadProfile();closeAuth();showView("profile");toast("Login successful.");
+currentUser=data.user;await loadProfile();await ensureUserData();await loadProfile();closeAuth();showView("profile");toast("Login successful.");
 }
 }catch(e){showAuthMessage(authError(e))}finally{button.disabled=false;updateAuthPanel()}
 }
@@ -215,12 +221,12 @@ return e?.message||"Authentication failed.";
 function showAuthMessage(m){const e=document.getElementById("authMessage");e.textContent=m;e.classList.add("show")}
 function hideAuthMessage(){const e=document.getElementById("authMessage");e.textContent="";e.classList.remove("show")}
 function updateAuthUI(){document.getElementById("authMenuButton").textContent=currentUser?"Logout":"Register / Login";renderProfile()}
-async function logout(){const {error}=await supabaseClient.auth.signOut();if(error)return toast(error.message);currentUser=null;currentProfile=null;currentIndex=-1;currentQueue=[];audio.pause();audio.removeAttribute("src");updateAuthUI();renderProfile();showView("home");toast("Logged out.")}
+async function logout(){const {error}=await supabaseClient.auth.signOut();if(error)return toast(error.message);currentUser=null;currentProfile=null;currentIndex=-1;currentQueue=[];audio.pause();audio.removeAttribute("src");document.getElementById("player").classList.remove("open");updateAuthUI();renderProfile();showView("home");toast("Logged out.")}
 async function loadTracks(){
 const {data,error}=await supabaseClient.from("tracks").select("id,artist_id,title,description,cover_url,audio_url,duration_seconds,play_count,like_count,is_published,created_at,artists(id,user_id,name,username)").eq("is_published",true).order("created_at",{ascending:false});
 if(error){console.error(error);tracks=[];return updateMusicUI()}
 tracks=(data||[]).map(t=>{const a=Array.isArray(t.artists)?t.artists[0]:t.artists;return{id:t.id,artistId:t.artist_id,artistUserId:a?.user_id||"",title:t.title,description:t.description||"",cover:t.cover_url,audio:t.audio_url,duration:formatTime(t.duration_seconds),durationSeconds:t.duration_seconds||0,playCount:t.play_count||0,artist:a?.name||"Unknown Artist",username:a?.username||""}});
-updateMusicUI();
+updateMusicUI();if(tracks.length&&currentIndex<0)selectTrack(0,tracks,false);
 }
 async function loadLikes(){
 if(!currentUser)return;
@@ -241,7 +247,7 @@ let r=await supabaseClient.storage.from("audio").upload(audioPath,audioFile,{cac
 r=await supabaseClient.storage.from("covers").upload(coverPath,coverFile,{cacheControl:"3600",upsert:false,contentType:coverFile.type||"image/jpeg"});if(r.error)throw r.error;
 const audioPublic=supabaseClient.storage.from("audio").getPublicUrl(audioPath).data.publicUrl,coverPublic=supabaseClient.storage.from("covers").getPublicUrl(coverPath).data.publicUrl,duration=await getAudioDuration(audioFile);
 r=await supabaseClient.from("tracks").insert({artist_id:artist.id,title,description,cover_url:coverPublic,audio_url:audioPublic,duration_seconds:Math.round(duration||0),play_count:0,like_count:0,is_published:true});if(r.error)throw r.error;
-toast("Track published successfully.");document.querySelectorAll("#audioFile,#coverFile,#uploadTitle,#uploadArtist,#uploadDescription").forEach(e=>e.value="");await loadTracks();showView("home");
+toast("Track published successfully.");document.querySelectorAll("#audioFile,#coverFile,#uploadTitle,#uploadArtist,#uploadDescription").forEach(e=>e.value="");await loadTracks();if(tracks.length)selectTrack(0,tracks,false);showView("home");
 }catch(e){console.error(e);toast(e.message||"Upload failed.")}finally{button.disabled=false;button.textContent="Publish Track"}
 }
 function getAudioDuration(file){return new Promise(resolve=>{const u=URL.createObjectURL(file),a=document.createElement("audio");a.preload="metadata";a.onloadedmetadata=()=>{const d=a.duration;URL.revokeObjectURL(u);resolve(d)};a.onerror=()=>{URL.revokeObjectURL(u);resolve(0)};a.src=u})}
@@ -254,17 +260,38 @@ function renderCards(id,list=tracks){const c=document.getElementById(id);c.inner
 function renderNewReleases(){renderCards("newReleases")}
 function renderTrending(){renderCards("trending",tracks.slice(0,4))}
 function renderDiscover(){const empty=document.getElementById("discoverEmpty");if(!tracks.length){empty.style.display="block";document.getElementById("discoverMusic").innerHTML="";return}empty.style.display="none";renderCards("discoverMusic")}
+function selectTrack(index,queue=tracks,autoplay=false){
+ if(index<0||index>=tracks.length)return;
+ const selected=tracks[index];
+ currentQueue=(queue||tracks).filter(t=>tracks.some(x=>x.id===t.id));
+ if(!currentQueue.length)currentQueue=tracks.slice();
+ queueIndex=currentQueue.findIndex(t=>t.id===selected.id);
+ currentIndex=index;
+ document.getElementById("featuredCover").src=safeURL(selected.cover);
+ document.getElementById("featuredTitle").textContent=selected.title;
+ document.getElementById("featuredArtist").textContent=selected.artist;
+ document.getElementById("playerTitle").textContent=selected.title;
+ document.getElementById("playerArtist").textContent=selected.artist;
+ const art=document.getElementById("playerArt");
+ art.innerHTML=selected.cover?`<img src="${safeURL(selected.cover)}" style="width:100%;height:100%;object-fit:cover;border-radius:3px">`:"L/S";
+ document.getElementById("player").classList.add("open");
+ syncLikeButton();
+ if(autoplay&&selected.audio){
+   audio.src=selected.audio;audio.load();
+   audio.play().catch(()=>toast("Press play to start."));
+ }
+}
 async function playTrack(index,queue=tracks){
-if(index<0||index>=tracks.length)return;
-const selected=tracks[index];
-currentQueue=queue.filter(t=>tracks.some(x=>x.id===t.id));queueIndex=currentQueue.findIndex(t=>t.id===selected.id);currentIndex=index;
-document.getElementById("featuredCover").src=safeURL(selected.cover);document.getElementById("featuredTitle").textContent=selected.title;document.getElementById("featuredArtist").textContent=selected.artist;document.getElementById("playerTitle").textContent=selected.title;document.getElementById("playerArtist").textContent=selected.artist;
-const art=document.getElementById("playerArt");art.innerHTML=selected.cover?`<img src="${safeURL(selected.cover)}" style="width:100%;height:100%;object-fit:cover;border-radius:3px">`:"L/S";
-syncLikeButton();if(!selected.audio)return toast("Audio file unavailable.");
-audio.src=selected.audio;audio.load();try{await audio.play();countPlay(selected)}catch(e){toast("Press play to start.")}}
+ if(index<0||index>=tracks.length)return;
+ const selected=tracks[index];
+ selectTrack(index,queue,false);
+ if(!selected.audio)return toast("Audio file unavailable.");
+ audio.src=selected.audio;audio.load();
+ try{await audio.play();countPlay(selected)}catch(e){toast("Press play to start.")}
+}
 function syncLikeButton(){document.getElementById("featureLike").classList.toggle("active",currentIndex>=0&&liked.has(tracks[currentIndex]?.id));document.getElementById("featureLike").textContent=currentIndex>=0&&liked.has(tracks[currentIndex]?.id)?"♥":"♡"}
 async function countPlay(track){if(!track?.id)return;try{await supabaseClient.rpc("increment_play_count",{track_id:track.id})}catch(e){}}
-async function togglePlay(){if(currentIndex<0)return tracks.length?playTrack(0):toast("No music available yet.");if(audio.paused)audio.play().catch(()=>toast("Unable to play audio."));else audio.pause()}
+async function togglePlay(){if(currentIndex<0)return tracks.length?playTrack(0):toast("No music available yet.");if(audio.paused){if(!audio.src){const t=tracks[currentIndex];audio.src=t.audio||"";audio.load()}audio.play().catch(()=>toast("Unable to play audio."));}else audio.pause()}
 function startPlaying(){document.getElementById("trackVinyl").classList.add("playing");document.getElementById("lostVinyl").classList.add("playing");document.getElementById("playButton").textContent="Ⅱ";document.getElementById("featurePlay").textContent="Ⅱ"}
 function stopPlaying(){document.getElementById("trackVinyl").classList.remove("playing");document.getElementById("lostVinyl").classList.remove("playing");document.getElementById("playButton").textContent="▶";document.getElementById("featurePlay").textContent="▶"}
 function nextTrack(){if(!currentQueue.length)return;const n=(queueIndex+1)%currentQueue.length;const t=currentQueue[n],i=tracks.findIndex(x=>x.id===t.id);playTrack(i,currentQueue)}
@@ -286,15 +313,15 @@ function clearSearch(){document.getElementById("searchInput").value="";document.
 function renderProfile(){
 const name=document.getElementById("profileName"),username=document.getElementById("profileUsername"),count=document.getElementById("profileTrackCount"),account=document.getElementById("profileAccount"),avatar=document.getElementById("profileAvatar"),actions=document.getElementById("profileActions"),pt=document.getElementById("profileTracks");
 if(!currentUser){name.textContent="LOST SOUND";username.textContent="Independent Music Platform";count.textContent="Login to upload";avatar.src="";avatar.style.display="none";actions.innerHTML=`<button class="primary" id="profileLoginButton">Register / Login</button>`;document.getElementById("profileLoginButton").onclick=()=>openAuth("register");account.innerHTML="";pt.innerHTML="";return}
-const dn=currentProfile?.display_name||currentProfile?.username||currentUser.email.split("@")[0];name.textContent=dn;username.textContent="@"+(currentProfile?.username||"artist");count.textContent=tracks.filter(t=>t.artistUserId===currentUser.id).length+" Tracks";avatar.style.display="block";avatar.src=currentProfile?.avatar_url||"";avatar.onerror=()=>{avatar.removeAttribute("src");avatar.style.display="none"};actions.innerHTML=`<button class="small-btn" id="editProfileButton">Edit Profile</button><button class="small-btn" id="profileLogoutButton">Logout</button>`;document.getElementById("editProfileButton").onclick=openEditProfile;document.getElementById("profileLogoutButton").onclick=logout;account.innerHTML=`<div class="account-box"><div><strong>Account</strong><div class="artist">${escapeHTML(currentUser.email)}</div></div></div>`;const mine=tracks.filter(t=>t.artistUserId===currentUser.id);pt.innerHTML=mine.length?`<div class="section-title" style="margin-bottom:8px">MY TRACKS</div>`+mine.map(t=>trackRow(t,tracks.indexOf(t))).join(""):"<div class='empty-state'>No tracks published yet.</div>";bindTrackClicks(pt)}
+const dn=currentProfile?.display_name||currentProfile?.username||currentUser.email.split("@")[0];name.textContent=dn;username.textContent="@"+(currentProfile?.username||"artist");count.textContent=tracks.filter(t=>t.artistUserId===currentUser.id).length+" Tracks";avatar.style.display="block";avatar.src=currentProfile?.avatar_url?currentProfile.avatar_url+(currentProfile.avatar_url.includes("?")?"&":"?")+"v="+Date.now():"";avatar.onerror=()=>{avatar.removeAttribute("src");avatar.style.display="none"};actions.innerHTML=`<button class="small-btn" id="editProfileButton">Edit Profile</button><button class="small-btn" id="profileLogoutButton">Logout</button>`;document.getElementById("editProfileButton").onclick=openEditProfile;document.getElementById("profileLogoutButton").onclick=logout;account.innerHTML=`<div class="account-box"><div><strong>Account</strong><div class="artist">${escapeHTML(currentUser.email)}</div></div></div>`;const mine=tracks.filter(t=>t.artistUserId===currentUser.id);pt.innerHTML=mine.length?`<div class="section-title" style="margin-bottom:8px">MY TRACKS</div>`+mine.map(t=>trackRow(t,tracks.indexOf(t))).join(""):"<div class='empty-state'>No tracks published yet.</div>";bindTrackClicks(pt)}
 function openEditProfile(){document.getElementById("editUsername").value=currentProfile?.username||"";document.getElementById("editDisplayName").value=currentProfile?.display_name||"";showView("editProfile")}
 async function saveProfile(){
 if(!currentUser)return openAuth("login");
 const username=document.getElementById("editUsername").value.trim().replace(/\s+/g,"").toLowerCase(),displayName=document.getElementById("editDisplayName").value.trim(),file=document.getElementById("profilePhotoFile").files[0];if(!username)return toast("Username is required.");if(!displayName)return toast("Display name is required.");
 let avatarUrl=currentProfile?.avatar_url||null;
 try{
-if(file){const path=currentUser.id+"/avatar-"+Date.now()+"-"+cleanFileName(file.name);const r=await supabaseClient.storage.from("avatars").upload(path,file,{upsert:true,contentType:file.type});if(r.error)throw r.error;avatarUrl=supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl}
-let r=await supabaseClient.from("profiles").upsert({id:currentUser.id,username,display_name:displayName,avatar_url:avatarUrl},{onConflict:"id"});if(r.error)throw r.error;
+if(file){const path=currentUser.id+"/avatar-"+Date.now()+"-"+cleanFileName(file.name);const r=await supabaseClient.storage.from("avatars").upload(path,file,{upsert:false,cacheControl:"0",contentType:file.type});if(r.error)throw r.error;avatarUrl=supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl}
+let r=await supabaseClient.from("profiles").upsert({id:currentUser.id,username,display_name:displayName,avatar_url:avatarUrl},{onConflict:"id"});if(r.error)throw r.error;r=await supabaseClient.auth.updateUser({data:{username,display_name:displayName}});if(r.error)console.warn("Auth metadata:",r.error);
 r=await supabaseClient.from("artists").update({name:displayName,username}).eq("user_id",currentUser.id);if(r.error)throw r.error;
 await loadProfile();await loadTracks();showView("profile");toast("Profile updated.");
 }catch(e){toast(e.message||"Profile update failed.")}
