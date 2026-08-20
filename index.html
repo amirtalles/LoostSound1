@@ -5,25 +5,21 @@
 
 <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width,
-    initial-scale=1,
-    maximum-scale=1,
-    minimum-scale=1,
-    user-scalable=no,
-    viewport-fit=cover"
->
+<meta name="viewport"
+content="width=device-width,
+initial-scale=1,
+maximum-scale=1,
+minimum-scale=1,
+user-scalable=no,
+viewport-fit=cover">
 
 <meta name="theme-color" content="#f4f1eb">
 
 <title>LOST SOUND</title>
 
-<style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-/* =====================================================
-   RESET / MOBILE FIT
-===================================================== */
+<style>
 
 *{
     margin:0;
@@ -32,15 +28,10 @@
     -webkit-tap-highlight-color:transparent;
 }
 
-html,
-body{
+html,body{
     width:100%;
-    max-width:100%;
-    min-width:0;
     min-height:100%;
     overflow-x:hidden;
-    overscroll-behavior-x:none;
-    touch-action:pan-y;
     background:#f4f1eb;
     color:#111;
     font-family:Arial,Helvetica,sans-serif;
@@ -50,13 +41,8 @@ body{
     min-height:100vh;
 }
 
-button,
-input,
-textarea,
-select,
-a{
+button,input,textarea,select{
     font-family:inherit;
-    touch-action:manipulation;
 }
 
 button{
@@ -75,11 +61,6 @@ audio{
     display:none;
 }
 
-
-/* =====================================================
-   VARIABLES
-===================================================== */
-
 :root{
     --bg:#f4f1eb;
     --paper:#faf8f3;
@@ -89,24 +70,11 @@ audio{
     --red:#b51f2a;
 }
 
-
-/* =====================================================
-   APP
-===================================================== */
-
 .app{
     width:100%;
-    max-width:100%;
     min-height:100vh;
-    overflow-x:hidden;
-    padding-bottom:
-    calc(115px + env(safe-area-inset-bottom));
+    padding-bottom:115px;
 }
-
-
-/* =====================================================
-   TOP BAR
-===================================================== */
 
 .topbar{
     width:100%;
@@ -122,7 +90,6 @@ audio{
     z-index:100;
 
     background:rgba(244,241,235,.95);
-
     backdrop-filter:blur(18px);
 
     border-bottom:1px solid var(--line);
@@ -143,34 +110,17 @@ audio{
 .menu{
     width:36px;
     height:36px;
-
     display:grid;
     place-items:center;
-
     font-size:23px;
 }
-
-
-/* =====================================================
-   PAGE
-===================================================== */
 
 .page{
     width:100%;
     max-width:1180px;
-    min-width:0;
-
     margin:auto;
-
     padding:25px 22px;
-
-    overflow-x:hidden;
 }
-
-
-/* =====================================================
-   VIEW
-===================================================== */
 
 .view{
     display:none;
@@ -180,23 +130,11 @@ audio{
     display:block;
 }
 
-
-/* =====================================================
-   HERO
-===================================================== */
-
 .hero{
     width:100%;
-    min-width:0;
-
     display:grid;
-
-    grid-template-columns:
-    minmax(0,1fr)
-    auto;
-
+    grid-template-columns:minmax(0,1fr) auto;
     align-items:end;
-
     margin:20px 0 45px;
 }
 
@@ -207,19 +145,9 @@ audio{
 }
 
 .hero h1{
-    max-width:100%;
-
-    font-size:
-    clamp(
-        55px,
-        11vw,
-        125px
-    );
-
+    font-size:clamp(55px,11vw,125px);
     line-height:.82;
-
     letter-spacing:-.075em;
-
     margin-top:12px;
 }
 
@@ -228,132 +156,52 @@ audio{
     letter-spacing:.15em;
 }
 
-
-/* =====================================================
-   LOST SOUND VINYL
-===================================================== */
-
 .ls-stage{
-
     width:100%;
-
-    min-height:
-    min(
-        520px,
-        90vw
-    );
-
+    min-height:min(520px,90vw);
     position:relative;
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
-    /*
-       IMPORTANT:
-       Visible overflow so the vinyl
-       is never cut by the stage.
-    */
     overflow:visible;
-
 }
 
-
-/* =====================================================
-   MAIN LOST SOUND VINYL
-===================================================== */
-
 .ls-vinyl{
-
     position:absolute;
 
-    width:
-    min(
-        78vw,
-        450px
-    );
-
-    height:
-    min(
-        78vw,
-        450px
-    );
-
-    aspect-ratio:1 / 1;
+    width:min(78vw,450px);
+    height:min(78vw,450px);
 
     border-radius:50%;
 
     left:50%;
     top:50%;
 
-    /*
-       Vinyl moved slightly to the right,
-       but not enough to get cut.
-    */
-    transform:
-    translate(
-        -22%,
-        -50%
-    );
+    transform:translate(-22%,-50%);
 
     background:
-
     radial-gradient(
         circle,
-
         #222 0 5%,
-
         #555 5.5% 6%,
-
         #111 6.5% 12%,
-
         #292929 12.5% 13%,
-
         #080808 13.5% 27%,
-
         #242424 27.5% 28%,
-
         #060606 28.5% 44%,
-
         #252525 44.5% 45%,
-
         #050505 45.5% 61%,
-
         #222 61.5% 62%,
-
         #050505 62.5% 100%
     );
 
-    box-shadow:
-    0 30px 70px
-    rgba(0,0,0,.16);
+    box-shadow:0 30px 70px rgba(0,0,0,.16);
 
     z-index:1;
-
     pointer-events:none;
-
-}
-
-.ls-vinyl::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:18%;
-
-    border-radius:50%;
-
-    border:
-    1px solid
-    rgba(255,255,255,.06);
-
 }
 
 .ls-vinyl::after{
-
     content:"L/S";
 
     position:absolute;
@@ -366,80 +214,48 @@ audio{
     top:50%;
     left:50%;
 
-    transform:
-    translate(-50%,-50%);
+    transform:translate(-50%,-50%);
 
     display:flex;
-
     align-items:center;
-
     justify-content:center;
 
     background:#151515;
-
     color:#eee;
 
     font-size:10px;
-
     letter-spacing:.1em;
-
 }
 
 .ls-vinyl.playing{
-
-    animation:
-    lsRotate
-    4s
-    linear
-    infinite;
-
+    animation:lsRotate 4s linear infinite;
 }
 
 @keyframes lsRotate{
 
     from{
         transform:
-        translate(
-            -22%,
-            -50%
-        )
+        translate(-22%,-50%)
         rotate(0deg);
     }
 
     to{
         transform:
-        translate(
-            -22%,
-            -50%
-        )
+        translate(-22%,-50%)
         rotate(360deg);
     }
 
 }
 
-
-/* =====================================================
-   MAIN LOST SOUND COVER
-===================================================== */
-
 .ls-cover{
-
-    width:
-    min(
-        65vw,
-        350px
-    );
-
+    width:min(65vw,350px);
     aspect-ratio:1;
 
     position:relative;
-
     z-index:2;
 
     display:flex;
-
     flex-direction:column;
-
     justify-content:space-between;
 
     padding:22px;
@@ -449,23 +265,20 @@ audio{
     border-radius:3px;
 
     box-shadow:
-    0 25px 60px
-    rgba(0,0,0,.14);
+    0 25px 60px rgba(0,0,0,.14);
 
     overflow:hidden;
+}
 
+.ls-cover-top,
+.ls-cover-bottom{
+    display:flex;
+    justify-content:space-between;
 }
 
 .ls-cover-top{
-
-    display:flex;
-
-    justify-content:space-between;
-
     font-size:9px;
-
     letter-spacing:.18em;
-
 }
 
 .ls-cover-center{
@@ -473,91 +286,44 @@ audio{
 }
 
 .ls-cover-center strong{
-
     display:block;
-
-    font-size:
-    clamp(
-        35px,
-        10vw,
-        65px
-    );
-
+    font-size:clamp(35px,10vw,65px);
     line-height:.8;
-
     letter-spacing:-.07em;
-
 }
 
 .ls-cover-center span{
-
     display:block;
-
     margin-top:12px;
-
     font-size:9px;
-
     letter-spacing:.35em;
-
 }
 
 .ls-cover-bottom{
-
-    display:flex;
-
-    justify-content:space-between;
-
     align-items:end;
-
     font-size:8px;
-
     letter-spacing:.1em;
-
 }
 
-
-/* =====================================================
-   EMPTY STATE
-===================================================== */
-
 .empty-state{
-
     width:100%;
-
     padding:35px 10px;
-
     text-align:center;
-
     border-top:1px solid var(--line);
-
     border-bottom:1px solid var(--line);
-
 }
 
 .empty-title{
-
     font-size:14px;
-
     font-weight:bold;
-
     margin-bottom:8px;
-
 }
 
 .empty-text{
-
     color:var(--gray);
-
     font-size:12px;
-
     line-height:1.7;
-
 }
-
-
-/* =====================================================
-   MUSIC CONTENT
-===================================================== */
 
 .music-content{
     display:none;
@@ -567,58 +333,28 @@ audio{
     display:block;
 }
 
-
-/* =====================================================
-   FEATURED USER TRACK
-===================================================== */
-
 .featured{
-
     width:100%;
-
     display:grid;
-
-    grid-template-columns:
-    minmax(0,1fr)
-    360px;
-
+    grid-template-columns:minmax(0,1fr) 360px;
     gap:55px;
-
     align-items:center;
-
 }
 
 .track-cover-stage{
-
     min-width:0;
-
     min-height:430px;
-
     position:relative;
-
     display:grid;
-
     place-items:center;
-
     overflow:visible;
-
 }
 
 .track-vinyl{
-
     position:absolute;
 
-    width:
-    min(
-        62vw,
-        400px
-    );
-
-    height:
-    min(
-        62vw,
-        400px
-    );
+    width:min(62vw,400px);
+    height:min(62vw,400px);
 
     border-radius:50%;
 
@@ -630,232 +366,142 @@ audio{
         #050505 4px
     );
 
-    transform:
-    translateX(27%);
+    transform:translateX(27%);
+}
+
+.track-vinyl.playing{
+    animation:
+    trackRotate 4s linear infinite;
+}
+
+@keyframes trackRotate{
+
+    from{
+        transform:translateX(27%) rotate(0deg);
+    }
+
+    to{
+        transform:translateX(27%) rotate(360deg);
+    }
 
 }
 
 .track-cover{
-
     position:relative;
-
     z-index:2;
 
-    width:
-    min(
-        62vw,
-        360px
-    );
-
+    width:min(62vw,360px);
     aspect-ratio:1;
 
     object-fit:cover;
-
     border-radius:4px;
 
     box-shadow:
-    0 25px 60px
-    rgba(0,0,0,.15);
-
+    0 25px 60px rgba(0,0,0,.15);
 }
 
 .track-info h2{
-
     font-size:36px;
-
     line-height:1;
-
     letter-spacing:-.05em;
-
     margin:8px 0;
-
 }
 
 .artist{
-
     color:var(--gray);
-
     font-size:13px;
-
 }
 
-
-/* =====================================================
-   ACTIONS
-===================================================== */
-
 .actions{
-
     display:flex;
-
     align-items:center;
-
     gap:9px;
-
     margin:20px 0;
-
 }
 
 .circle{
-
     width:43px;
     height:43px;
 
     display:grid;
-
     place-items:center;
 
     border:1px solid var(--line);
-
     border-radius:50%;
 
     background:var(--paper);
-
 }
 
 .circle.active{
-
     color:var(--red);
-
     border-color:var(--red);
-
 }
 
-
-/* =====================================================
-   WAVEFORM
-===================================================== */
-
 .wave{
-
     width:100%;
-
     height:45px;
 
     display:flex;
-
     align-items:center;
-
     gap:2px;
 
     overflow:hidden;
-
     margin:20px 0;
-
 }
 
 .wave span{
-
     flex:1;
-
     min-width:2px;
-
     background:#c8c2b9;
-
     border-radius:5px;
-
 }
 
-
-/* =====================================================
-   PROGRESS
-===================================================== */
-
 .progress{
-
     width:100%;
-
     height:3px;
-
     background:var(--line);
-
     cursor:pointer;
-
 }
 
 .progress i{
-
     display:block;
-
     width:0;
-
     height:100%;
-
     background:var(--red);
-
 }
 
 .time{
-
     display:flex;
-
     justify-content:space-between;
-
     margin-top:6px;
-
     color:var(--gray);
-
     font-size:9px;
-
 }
 
-
-/* =====================================================
-   SECTIONS
-===================================================== */
-
 .section{
-
     width:100%;
-
     margin-top:70px;
-
 }
 
 .section-head{
-
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
 
     padding-bottom:10px;
-
     margin-bottom:8px;
 
     border-bottom:1px solid var(--line);
-
 }
 
 .section-title{
-
     font-size:11px;
-
     font-weight:bold;
-
     letter-spacing:.18em;
-
 }
-
-.small{
-
-    color:var(--gray);
-
-    font-size:9px;
-
-}
-
-
-/* =====================================================
-   TRACK ROW
-===================================================== */
 
 .track-row{
-
     width:100%;
-
-    min-width:0;
 
     display:grid;
 
@@ -873,373 +519,227 @@ audio{
     padding:12px 4px;
 
     border-bottom:1px solid var(--line);
-
 }
 
 .number{
-
     color:var(--gray);
-
     font-size:11px;
-
 }
 
 .thumb{
-
     width:52px;
     height:52px;
-
     object-fit:cover;
-
     border-radius:3px;
-
 }
 
 .track-title{
-
     font-size:13px;
-
     font-weight:bold;
-
     overflow:hidden;
-
     white-space:nowrap;
-
     text-overflow:ellipsis;
-
 }
 
 .duration{
-
     color:var(--gray);
-
     font-size:10px;
-
 }
 
 .more{
     font-size:20px;
 }
 
-
-/* =====================================================
-   CARDS
-===================================================== */
-
 .cards{
-
     width:100%;
-
     display:grid;
-
-    grid-template-columns:
-    repeat(4,minmax(0,1fr));
-
+    grid-template-columns:repeat(4,minmax(0,1fr));
     gap:18px;
-
 }
 
 .card{
-
     min-width:0;
-
     cursor:pointer;
-
 }
 
 .card img{
-
     width:100%;
-
     aspect-ratio:1;
-
     object-fit:cover;
-
     border-radius:4px;
-
-    box-shadow:
-    0 12px 30px
-    rgba(0,0,0,.08);
-
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
 }
 
 .card h4{
-
     margin-top:9px;
-
     font-size:13px;
-
 }
 
 .card p{
-
     margin-top:4px;
-
     color:var(--gray);
-
     font-size:11px;
-
-}
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-.search-box{
-
-    width:100%;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:10px;
-
-    margin-top:25px;
-
-    padding:12px 0;
-
-    border-bottom:1px solid var(--black);
-
-}
-
-.search-box input{
-
-    width:100%;
-
-    min-width:0;
-
-    border:0;
-
-    outline:0;
-
-    background:transparent;
-
-    font-size:25px;
-
-}
-
-.search-box button{
-    font-size:22px;
 }
 
 .chips{
-
     display:flex;
-
     flex-wrap:wrap;
-
     gap:8px;
-
     margin:20px 0;
-
 }
 
 .chip{
-
     padding:9px 14px;
-
     border:1px solid var(--line);
-
     border-radius:30px;
-
     font-size:10px;
-
 }
 
+.search-box{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:25px;
+    padding:12px 0;
+    border-bottom:1px solid var(--black);
+}
 
-/* =====================================================
-   PROFILE
-===================================================== */
+.search-box input{
+    width:100%;
+    border:0;
+    outline:0;
+    background:transparent;
+    font-size:25px;
+}
 
 .profile-head{
-
     display:flex;
-
     align-items:center;
-
     gap:25px;
-
     padding-bottom:30px;
-
     border-bottom:1px solid var(--line);
-
 }
 
 .avatar{
-
     width:110px;
     height:110px;
-
     object-fit:cover;
-
     border-radius:50%;
-
     background:#ddd;
-
 }
 
 .profile-head h2{
-
     font-size:40px;
-
     letter-spacing:-.06em;
-
 }
 
 .stats{
-
     display:flex;
-
     flex-wrap:wrap;
-
     gap:15px;
-
     margin-top:12px;
-
     color:var(--gray);
-
     font-size:11px;
-
 }
 
-
-/* =====================================================
-   UPLOAD
-===================================================== */
-
 .upload{
-
     width:100%;
-
     max-width:700px;
-
 }
 
 .upload h1{
-
     margin:15px 0 30px;
-
-    font-size:
-    clamp(
-        48px,
-        10vw,
-        80px
-    );
-
+    font-size:clamp(48px,10vw,80px);
     line-height:.88;
-
     letter-spacing:-.06em;
-
 }
 
 .notice{
-
     padding:14px;
-
     margin-bottom:25px;
-
     border:1px solid var(--line);
-
     color:var(--gray);
-
     font-size:11px;
-
     line-height:1.7;
-
 }
 
 .field{
-
     margin:18px 0;
-
 }
 
 .field label{
-
     display:block;
-
     margin-bottom:8px;
-
     font-size:9px;
-
     font-weight:bold;
-
     letter-spacing:.15em;
-
 }
 
 .field input,
 .field textarea,
 .field select{
-
     width:100%;
-
-    min-width:0;
-
     padding:13px;
-
     outline:0;
-
     background:var(--paper);
-
     border:1px solid var(--line);
-
     border-radius:7px;
-
 }
 
 .primary{
-
     padding:14px 22px;
-
     color:white;
-
     background:var(--black);
-
     border-radius:30px;
-
 }
 
+.auth-box{
+    max-width:500px;
+    margin:40px auto;
+    padding:25px;
+    border:1px solid var(--line);
+    background:var(--paper);
+}
 
-/* =====================================================
-   PLAYER
-===================================================== */
+.auth-box h2{
+    font-size:35px;
+    margin-bottom:20px;
+    letter-spacing:-.05em;
+}
+
+.auth-switch{
+    margin-top:15px;
+    color:var(--gray);
+    font-size:11px;
+}
+
+.auth-switch button{
+    text-decoration:underline;
+}
 
 .player{
-
     position:fixed;
-
     left:0;
     right:0;
     bottom:0;
-
     z-index:200;
 
     width:100%;
 
     padding:
     10px 18px
-    calc(
-        10px +
-        env(safe-area-inset-bottom)
-    );
+    calc(10px + env(safe-area-inset-bottom));
 
     background:rgba(250,248,243,.97);
-
     backdrop-filter:blur(20px);
 
     border-top:1px solid var(--line);
-
 }
 
 .player-inner{
-
     width:100%;
-
     max-width:1180px;
-
     margin:auto;
 
     display:grid;
@@ -1250,56 +750,35 @@ audio{
     auto;
 
     gap:12px;
-
     align-items:center;
-
 }
 
 .player-art{
-
     width:52px;
     height:52px;
-
     object-fit:cover;
-
     border-radius:3px;
-
     background:#ddd;
-
 }
 
 .player-title{
-
     font-size:12px;
-
     font-weight:bold;
-
     overflow:hidden;
-
     white-space:nowrap;
-
     text-overflow:ellipsis;
-
 }
 
 .player-artist{
-
     margin:3px 0 6px;
-
     color:var(--gray);
-
     font-size:10px;
-
 }
 
 .controls{
-
     display:flex;
-
     align-items:center;
-
     gap:14px;
-
 }
 
 .controls button{
@@ -1307,48 +786,25 @@ audio{
 }
 
 .play-button{
-
     width:42px;
     height:42px;
-
     display:grid;
-
     place-items:center;
-
     border-radius:50%;
-
     background:var(--black);
-
     color:white;
-
 }
-
-
-/* =====================================================
-   BOTTOM NAV
-===================================================== */
 
 .bottom-nav{
     display:none;
 }
 
-
-/* =====================================================
-   DRAWER
-===================================================== */
-
 .drawer{
-
     position:fixed;
-
     inset:0;
-
     z-index:500;
-
     display:none;
-
     background:rgba(0,0,0,.4);
-
 }
 
 .drawer.open{
@@ -1356,37 +812,24 @@ audio{
 }
 
 .drawer-panel{
-
     position:absolute;
-
     top:0;
     right:0;
     bottom:0;
 
-    width:
-    min(
-        340px,
-        88vw
-    );
+    width:min(340px,88vw);
 
     padding:25px;
 
     background:var(--paper);
-
     overflow-y:auto;
-
 }
 
 .drawer-head{
-
     display:flex;
-
     align-items:center;
-
     justify-content:space-between;
-
     font-size:20px;
-
 }
 
 .drawer-list{
@@ -1394,32 +837,17 @@ audio{
 }
 
 .drawer-list button{
-
     width:100%;
-
     padding:14px 0;
-
     text-align:left;
-
     border-bottom:1px solid var(--line);
-
     font-size:13px;
-
 }
 
-
-/* =====================================================
-   TOAST
-===================================================== */
-
 .toast{
-
     position:fixed;
-
     left:50%;
-
     bottom:135px;
-
     z-index:1000;
 
     transform:translateX(-50%);
@@ -1427,235 +855,85 @@ audio{
     padding:11px 17px;
 
     background:var(--black);
-
     color:white;
 
     border-radius:30px;
-
     font-size:11px;
 
     white-space:nowrap;
-
 }
 
-
-/* =====================================================
-   TABLET / DESKTOP
-===================================================== */
-
-@media(min-width:801px){
-
-    .bottom-nav{
-        display:none;
-    }
-
+.user-status{
+    font-size:9px;
+    color:var(--gray);
+    margin-top:4px;
 }
 
-
-/* =====================================================
-   MOBILE
-===================================================== */
+.logout-btn{
+    color:var(--red)!important;
+}
 
 @media(max-width:800px){
-
-    html,
-    body{
-
-        width:100%;
-        max-width:100%;
-
-        overflow-x:hidden;
-
-        touch-action:pan-y;
-
-        overscroll-behavior-x:none;
-
-    }
-
-
-    .app{
-
-        width:100%;
-        max-width:100%;
-
-        overflow-x:hidden;
-
-    }
-
 
     .topbar{
         padding:0 16px;
     }
 
-
     .page{
-
-        width:100%;
-        max-width:100%;
-
         padding:18px 15px;
-
-        overflow-x:hidden;
-
     }
-
 
     .hero{
         margin:15px 0 25px;
     }
 
-
     .hero h1{
-
-        font-size:
-        clamp(
-            52px,
-            16vw,
-            70px
-        );
-
+        font-size:clamp(52px,16vw,70px);
     }
-
-
-    .year{
-        font-size:9px;
-    }
-
-
-    /* =================================================
-       MOBILE LOST SOUND STAGE
-    ================================================= */
 
     .ls-stage{
-
-        width:100%;
-
         min-height:86vw;
-
         max-height:470px;
-
-        /*
-           DO NOT CUT THE VINYL
-        */
         overflow:visible;
-
     }
-
-
-    /* =================================================
-       MOBILE LOST SOUND VINYL
-    ================================================= */
 
     .ls-vinyl{
-
-        width:
-        min(
-            78vw,
-            360px
-        );
-
-        height:
-        min(
-            78vw,
-            360px
-        );
-
-        left:50%;
-
-        top:50%;
-
-        /*
-           This is the important fix.
-           The disk stays behind the cover
-           and moves to the right without
-           getting clipped.
-        */
-        transform:
-        translate(
-            -22%,
-            -50%
-        );
-
+        width:min(78vw,360px);
+        height:min(78vw,360px);
     }
-
 
     .ls-cover{
-
-        width:
-        min(
-            70vw,
-            310px
-        );
-
+        width:min(70vw,310px);
     }
-
 
     .featured{
-
         grid-template-columns:1fr;
-
         gap:10px;
-
     }
-
 
     .track-cover-stage{
-
         min-height:84vw;
-
-        overflow:visible;
-
     }
-
 
     .track-vinyl{
-
-        width:
-        min(
-            70vw,
-            330px
-        );
-
-        height:
-        min(
-            70vw,
-            330px
-        );
-
+        width:min(70vw,330px);
+        height:min(70vw,330px);
     }
-
 
     .track-cover{
-
-        width:
-        min(
-            72vw,
-            300px
-        );
-
+        width:min(72vw,300px);
     }
-
 
     .track-info h2{
         font-size:30px;
     }
 
-
     .cards{
-
-        grid-template-columns:
-        repeat(
-            2,
-            minmax(0,1fr)
-        );
-
+        grid-template-columns:repeat(2,minmax(0,1fr));
         gap:15px;
-
     }
 
-
     .track-row{
-
         grid-template-columns:
         25px
         46px
@@ -1663,229 +941,105 @@ audio{
         30px;
 
         gap:9px;
-
     }
-
 
     .thumb{
-
         width:46px;
         height:46px;
-
     }
-
 
     .duration{
         display:none;
     }
 
-
     .profile-head{
-
         align-items:flex-start;
-
         gap:15px;
-
     }
-
 
     .avatar{
-
         width:85px;
         height:85px;
-
     }
-
 
     .profile-head h2{
         font-size:29px;
     }
 
-
     .player{
-
         bottom:58px;
-
         padding:8px 12px;
-
     }
 
-
     .player-inner{
-
         grid-template-columns:
         44px
         minmax(0,1fr)
         auto;
 
         gap:9px;
-
     }
-
 
     .player-art{
-
         width:44px;
         height:44px;
-
     }
-
 
     .controls{
         gap:8px;
     }
-
 
     .controls button:first-child,
     .controls button:last-child{
         display:none;
     }
 
-
     .play-button{
-
         width:40px;
         height:40px;
-
     }
 
-
     .bottom-nav{
-
         position:fixed;
-
         left:0;
         right:0;
         bottom:0;
-
         z-index:300;
 
         width:100%;
 
         height:
-        calc(
-            58px +
-            env(safe-area-inset-bottom)
-        );
+        calc(58px + env(safe-area-inset-bottom));
 
-        padding-bottom:
-        env(safe-area-inset-bottom);
+        padding-bottom:env(safe-area-inset-bottom);
 
         display:flex;
-
         align-items:center;
         justify-content:space-around;
 
         background:rgba(250,248,243,.98);
-
         border-top:1px solid var(--line);
-
     }
-
 
     .bottom-nav button{
-
         flex:1;
-
         height:58px;
-
         color:var(--gray);
-
         font-size:9px;
-
     }
-
 
     .bottom-nav button.active{
-
         color:var(--black);
-
         font-weight:bold;
-
     }
-
 
     .upload h1{
         font-size:50px;
     }
 
-
     .search-box input{
         font-size:21px;
     }
-
-}
-
-
-/* =====================================================
-   VERY SMALL PHONES
-===================================================== */
-
-@media(max-width:360px){
-
-    .page{
-
-        padding-left:12px;
-        padding-right:12px;
-
-    }
-
-
-    .hero h1{
-        font-size:51px;
-    }
-
-
-    .ls-cover{
-        width:250px;
-    }
-
-
-    .ls-vinyl{
-
-        width:300px;
-        height:300px;
-
-        left:50%;
-
-        transform:
-        translate(
-            -20%,
-            -50%
-        );
-
-    }
-
-
-    .track-cover{
-        width:250px;
-    }
-
-}
-
-
-/* =====================================================
-   PREVENT IMAGE / LAYOUT DRAGGING
-===================================================== */
-
-img{
-
-    user-select:none;
-
-    -webkit-user-drag:none;
-
-}
-
-
-/* =====================================================
-   SELECTION
-===================================================== */
-
-::selection{
-
-    background:#111;
-
-    color:#fff;
 
 }
 
@@ -1896,719 +1050,757 @@ img{
 
 <body>
 
-
 <div class="app">
 
 
-<!-- ===================================================
-     HEADER
-=================================================== -->
-
 <header class="topbar">
 
-    <button
-        class="logo"
-        onclick="showView('home')">
+<button class="logo"
+onclick="showView('home')">
+L/S
+</button>
 
-        L/S
+<div class="top-title">
+LOST SOUND
+</div>
 
-    </button>
-
-
-    <div class="top-title">
-
-        LOST SOUND
-
-    </div>
-
-
-    <button
-        class="menu"
-        onclick="openDrawer()">
-
-        ☰
-
-    </button>
+<button class="menu"
+onclick="openDrawer()">
+☰
+</button>
 
 </header>
-
 
 
 <main class="page">
 
 
-<!-- ===================================================
-     HOME
-=================================================== -->
+<!-- HOME -->
+
+<section id="home" class="view active">
+
+<div class="hero">
+
+<div>
+
+<div class="kicker">
+MUSIC STREAMING
+</div>
+
+<h1>
+LOST<br>
+SOUND
+</h1>
+
+</div>
+
+<div class="year">
+2024
+</div>
+
+</div>
+
+
+<div class="ls-stage">
+
+<div id="lostVinyl"
+class="ls-vinyl">
+</div>
+
+<div class="ls-cover">
+
+<div class="ls-cover-top">
+
+<span>L/S</span>
+<span>MUSIC</span>
+
+</div>
+
+<div class="ls-cover-center">
+
+<strong>LOST</strong>
+<strong>SOUND</strong>
+
+<span>
+MUSIC STREAMING
+</span>
+
+</div>
+
+<div class="ls-cover-bottom">
+
+<span>INDEPENDENT</span>
+<span>2024</span>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div id="emptyState"
+class="empty-state">
+
+<div class="empty-title">
+No music here yet.
+</div>
+
+<div class="empty-text">
+Your library is waiting.<br>
+Upload the first track to LOST SOUND.
+</div>
+
+</div>
+
+
+<div id="musicContent"
+class="music-content">
+
+
+<div class="featured"
+style="margin-top:45px">
+
+<div class="track-cover-stage">
+
+<div id="trackVinyl"
+class="track-vinyl">
+</div>
+
+<img id="featuredCover"
+class="track-cover"
+alt="">
+
+</div>
+
+
+<div class="track-info">
+
+<div class="kicker">
+FEATURED TRACK
+</div>
+
+<h2 id="featuredTitle"></h2>
+
+<div id="featuredArtist"
+class="artist">
+</div>
+
+<div class="actions">
+
+<button
+id="featurePlay"
+class="circle"
+onclick="togglePlay()">
+▶
+</button>
+
+<button
+id="featureLike"
+class="circle"
+onclick="toggleLike()">
+♡
+</button>
+
+<button
+class="circle"
+onclick="shareTrack()">
+↗
+</button>
+
+</div>
+
+
+<div id="wave"
+class="wave">
+</div>
+
+
+<div class="time">
+
+<span id="current">
+0:00
+</span>
+
+<span id="duration">
+0:00
+</span>
+
+</div>
+
+
+<div class="progress"
+onclick="seek(event)">
+
+<i id="progress"></i>
+
+</div>
+
+</div>
+
+</div>
+
 
 <section
-    id="home"
-    class="view active">
+id="popularSection"
+class="section">
 
+<div class="section-head">
 
-    <div class="hero">
+<div class="section-title">
+POPULAR
+</div>
 
-        <div>
+</div>
 
-            <div class="kicker">
-                MUSIC STREAMING
-            </div>
-
-
-            <h1>
-                LOST<br>
-                SOUND
-            </h1>
-
-        </div>
-
-
-        <div class="year">
-            2024
-        </div>
-
-    </div>
-
-
-
-    <!-- ALWAYS PRESENT LOST SOUND VINYL -->
-
-    <div class="ls-stage">
-
-        <div
-            id="lostVinyl"
-            class="ls-vinyl">
-        </div>
-
-
-        <div class="ls-cover">
-
-            <div class="ls-cover-top">
-
-                <span>
-                    L/S
-                </span>
-
-                <span>
-                    MUSIC
-                </span>
-
-            </div>
-
-
-            <div class="ls-cover-center">
-
-                <strong>
-                    LOST
-                </strong>
-
-                <strong>
-                    SOUND
-                </strong>
-
-                <span>
-                    MUSIC STREAMING
-                </span>
-
-            </div>
-
-
-            <div class="ls-cover-bottom">
-
-                <span>
-                    INDEPENDENT
-                </span>
-
-                <span>
-                    2024
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-
-    <!-- EMPTY STATE -->
-
-    <div
-        id="emptyState"
-        class="empty-state">
-
-        <div class="empty-title">
-            No music here yet.
-        </div>
-
-
-        <div class="empty-text">
-
-            Your library is waiting.<br>
-            Upload the first track to LOST SOUND.
-
-        </div>
-
-    </div>
-
-
-
-    <!-- REAL USER MUSIC -->
-
-    <div
-        id="musicContent"
-        class="music-content">
-
-
-        <!-- FEATURED -->
-
-        <div
-            class="featured"
-            style="margin-top:45px">
-
-
-            <div class="track-cover-stage">
-
-                <div
-                    id="trackVinyl"
-                    class="track-vinyl">
-                </div>
-
-
-                <img
-                    id="featuredCover"
-                    class="track-cover"
-                    alt="">
-
-            </div>
-
-
-
-            <div class="track-info">
-
-                <div class="kicker">
-                    FEATURED TRACK
-                </div>
-
-
-                <h2 id="featuredTitle"></h2>
-
-
-                <div
-                    id="featuredArtist"
-                    class="artist">
-                </div>
-
-
-                <div class="actions">
-
-                    <button
-                        id="featurePlay"
-                        class="circle"
-                        onclick="togglePlay()">
-                        ▶
-                    </button>
-
-
-                    <button
-                        id="featureLike"
-                        class="circle"
-                        onclick="toggleLike()">
-                        ♡
-                    </button>
-
-
-                    <button
-                        class="circle"
-                        onclick="shareTrack()">
-                        ↗
-                    </button>
-
-
-                    <button
-                        class="circle"
-                        onclick="toast('More options')">
-                        ⋯
-                    </button>
-
-                </div>
-
-
-                <div
-                    id="wave"
-                    class="wave">
-                </div>
-
-
-                <div class="time">
-
-                    <span id="current">
-                        0:00
-                    </span>
-
-                    <span id="duration">
-                        0:00
-                    </span>
-
-                </div>
-
-
-                <div
-                    class="progress"
-                    onclick="seek(event)">
-
-                    <i id="progress"></i>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- POPULAR -->
-
-        <section
-            id="popularSection"
-            class="section">
-
-            <div class="section-head">
-
-                <div class="section-title">
-                    POPULAR
-                </div>
-
-            </div>
-
-
-            <div id="popular"></div>
-
-        </section>
-
-
-
-        <!-- NEW RELEASES -->
-
-        <section
-            id="newSection"
-            class="section">
-
-            <div class="section-head">
-
-                <div class="section-title">
-                    NEW RELEASES
-                </div>
-
-            </div>
-
-
-            <div
-                id="newReleases"
-                class="cards">
-            </div>
-
-        </section>
-
-
-
-        <!-- TRENDING -->
-
-        <section
-            id="trendingSection"
-            class="section">
-
-            <div class="section-head">
-
-                <div class="section-title">
-                    TRENDING
-                </div>
-
-            </div>
-
-
-            <div
-                id="trending"
-                class="cards">
-            </div>
-
-        </section>
-
-
-    </div>
+<div id="popular"></div>
 
 </section>
 
 
-
-<!-- ===================================================
-     DISCOVER
-=================================================== -->
-
 <section
-    id="discover"
-    class="view">
+id="newSection"
+class="section">
 
+<div class="section-head">
 
-    <div class="hero">
+<div class="section-title">
+NEW RELEASES
+</div>
 
-        <div>
+</div>
 
-            <div class="kicker">
-                DISCOVER
-            </div>
-
-            <h1>
-                NEW<br>
-                WORLDS
-            </h1>
-
-        </div>
-
-    </div>
-
-
-    <div class="chips">
-
-        <button class="chip">Electronic</button>
-        <button class="chip">Hip-Hop</button>
-        <button class="chip">Pop</button>
-        <button class="chip">Rock</button>
-        <button class="chip">Ambient</button>
-        <button class="chip">Indie</button>
-        <button class="chip">R&B</button>
-        <button class="chip">Experimental</button>
-        <button class="chip">House</button>
-        <button class="chip">Techno</button>
-
-    </div>
-
-
-    <div
-        id="discoverEmpty"
-        class="empty-state">
-
-        <div class="empty-title">
-            Start discovering something new.
-        </div>
-
-        <div class="empty-text">
-
-            New music uploaded by LOST SOUND users
-            will appear here.
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="discoverMusic"
-        class="cards"
-        style="margin-top:30px">
-    </div>
-
+<div id="newReleases"
+class="cards">
+</div>
 
 </section>
 
 
-
-<!-- ===================================================
-     SEARCH
-=================================================== -->
-
 <section
-    id="search"
-    class="view">
+id="trendingSection"
+class="section">
 
-    <div class="kicker">
-        SEARCH
-    </div>
+<div class="section-head">
 
+<div class="section-title">
+TRENDING
+</div>
 
-    <div class="search-box">
+</div>
 
-        <input
-            id="searchInput"
-            type="search"
-            placeholder="Search music..."
-            oninput="runSearch">
-
-
-        <button onclick="clearSearch()">
-            ×
-        </button>
-
-    </div>
-
-
-    <div
-        id="searchResults"
-        style="margin-top:25px">
-    </div>
+<div id="trending"
+class="cards">
+</div>
 
 </section>
 
 
-
-<!-- ===================================================
-     LIBRARY
-=================================================== -->
-
-<section
-    id="library"
-    class="view">
-
-
-    <div class="hero">
-
-        <div>
-
-            <div class="kicker">
-                YOUR ARCHIVE
-            </div>
-
-            <h1>
-                MY<br>
-                SOUND
-            </h1>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="libraryEmpty"
-        class="empty-state">
-
-        <div class="empty-title">
-            Your library is waiting.
-        </div>
-
-        <div class="empty-text">
-            Like tracks or upload your first song.
-        </div>
-
-    </div>
-
-
-    <div
-        id="liked"
-        style="margin-top:30px">
-    </div>
+</div>
 
 </section>
 
 
-
-<!-- ===================================================
-     PROFILE
-=================================================== -->
+<!-- DISCOVER -->
 
 <section
-    id="profile"
-    class="view">
+id="discover"
+class="view">
+
+<div class="hero">
+
+<div>
+
+<div class="kicker">
+DISCOVER
+</div>
+
+<h1>
+NEW<br>
+WORLDS
+</h1>
+
+</div>
+
+</div>
 
 
-    <div class="profile-head">
+<div class="chips">
 
-        <div
-            class="avatar"
-            style="
-            display:grid;
-            place-items:center;
-            background:#e8e2d7;
-            font-weight:bold;
-            font-size:20px;
-            ">
+<button class="chip"
+onclick="filterGenre('Electronic')">
+Electronic
+</button>
 
-            L/S
+<button class="chip"
+onclick="filterGenre('Hip-Hop')">
+Hip-Hop
+</button>
 
-        </div>
+<button class="chip"
+onclick="filterGenre('Pop')">
+Pop
+</button>
+
+<button class="chip"
+onclick="filterGenre('Rock')">
+Rock
+</button>
+
+<button class="chip"
+onclick="filterGenre('Ambient')">
+Ambient
+</button>
+
+<button class="chip"
+onclick="filterGenre('Indie')">
+Indie
+</button>
+
+<button class="chip"
+onclick="filterGenre('Experimental')">
+Experimental
+</button>
+
+<button class="chip"
+onclick="filterGenre('House')">
+House
+</button>
+
+<button class="chip"
+onclick="filterGenre('Techno')">
+Techno
+</button>
+
+</div>
 
 
-        <div>
+<div id="discoverEmpty"
+class="empty-state">
 
-            <div class="kicker">
-                ARTIST
-            </div>
+<div class="empty-title">
+Start discovering something new.
+</div>
 
-            <h2>
-                LOST SOUND
-            </h2>
+<div class="empty-text">
+New music uploaded by LOST SOUND users
+will appear here.
+</div>
 
-            <div class="artist">
-                Independent Music Platform
-            </div>
-
-
-            <div class="stats">
-
-                <span>Artists</span>
-                <span>Tracks</span>
-                <span>Community</span>
-
-            </div>
-
-        </div>
-
-    </div>
+</div>
 
 
-    <div
-        class="empty-state"
-        style="margin-top:30px">
-
-        <div class="empty-title">
-            Your profile
-        </div>
-
-        <div class="empty-text">
-
-            Artist profiles will appear here
-            after users join LOST SOUND.
-
-        </div>
-
-    </div>
+<div id="discoverMusic"
+class="cards"
+style="margin-top:30px">
+</div>
 
 </section>
 
 
-
-<!-- ===================================================
-     UPLOAD
-=================================================== -->
+<!-- SEARCH -->
 
 <section
-    id="upload"
-    class="view">
+id="search"
+class="view">
+
+<div class="kicker">
+SEARCH
+</div>
+
+<div class="search-box">
+
+<input
+id="searchInput"
+type="search"
+placeholder="Search music..."
+oninput="runSearch()">
+
+<button onclick="clearSearch()">
+×
+</button>
+
+</div>
+
+<div
+id="searchResults"
+style="margin-top:25px">
+</div>
+
+</section>
 
 
-    <div class="upload">
+<!-- LIBRARY -->
 
-        <div class="kicker">
-            CREATOR STUDIO
-        </div>
+<section
+id="library"
+class="view">
 
+<div class="hero">
 
-        <h1>
-            UPLOAD<br>
-            YOUR SOUND
-        </h1>
+<div>
 
+<div class="kicker">
+YOUR ARCHIVE
+</div>
 
-        <div class="notice">
+<h1>
+MY<br>
+SOUND
+</h1>
 
-            Upload your music and artwork.
-            The track will immediately appear
-            inside this browser.
+</div>
 
-        </div>
-
-
-        <div class="field">
-
-            <label>
-                AUDIO FILE
-            </label>
-
-            <input
-                id="audioFile"
-                type="file"
-                accept="audio/*">
-
-        </div>
+</div>
 
 
-        <div class="field">
+<div
+id="libraryEmpty"
+class="empty-state">
 
-            <label>
-                COVER ARTWORK
-            </label>
+<div class="empty-title">
+Your library is waiting.
+</div>
 
-            <input
-                id="coverFile"
-                type="file"
-                accept="image/*">
+<div class="empty-text">
+Like tracks to see them here.
+</div>
 
-        </div>
+</div>
 
+<div
+id="liked"
+style="margin-top:30px">
+</div>
 
-        <div class="field">
-
-            <label>
-                TRACK TITLE
-            </label>
-
-            <input
-                id="uploadTitle"
-                placeholder="Track title">
-
-        </div>
+</section>
 
 
-        <div class="field">
+<!-- PROFILE -->
 
-            <label>
-                ARTIST NAME
-            </label>
+<section
+id="profile"
+class="view">
 
-            <input
-                id="uploadArtist"
-                placeholder="Artist name">
+<div class="profile-head">
 
-        </div>
+<img
+id="profileAvatar"
+class="avatar"
+alt="">
+
+<div>
+
+<div class="kicker">
+ARTIST
+</div>
+
+<h2 id="profileName">
+LOST SOUND
+</h2>
+
+<div
+id="profileUsername"
+class="artist">
+Independent Music Platform
+</div>
+
+<div
+id="profileBio"
+class="user-status">
+</div>
+
+<div class="stats">
+
+<span id="profileTracks">
+0 Tracks
+</span>
+
+<span id="profilePlays">
+0 Plays
+</span>
+
+</div>
+
+</div>
+
+</div>
 
 
-        <div class="field">
+<div
+id="profileEmpty"
+class="empty-state"
+style="margin-top:30px">
 
-            <label>
-                GENRE
-            </label>
+<div class="empty-title">
+Your profile
+</div>
 
-            <select id="uploadGenre">
+<div class="empty-text">
+Sign in to manage your artist profile.
+</div>
 
-                <option>Electronic</option>
-                <option>Hip-Hop</option>
-                <option>Pop</option>
-                <option>Rock</option>
-                <option>Ambient</option>
-                <option>Indie</option>
-                <option>Experimental</option>
-                <option>House</option>
-                <option>Techno</option>
+</div>
 
-            </select>
-
-        </div>
+</section>
 
 
-        <div class="field">
+<!-- LOGIN -->
 
-            <label>
-                DESCRIPTION
-            </label>
+<section
+id="login"
+class="view">
 
-            <textarea
-                id="uploadDescription"
-                rows="4"
-                placeholder="About this track">
-            </textarea>
+<div class="auth-box">
 
-        </div>
+<h2>
+LOST SOUND
+</h2>
+
+<div class="kicker">
+ACCOUNT
+</div>
+
+<div class="field">
+
+<label>
+EMAIL
+</label>
+
+<input
+id="loginEmail"
+type="email"
+placeholder="Your email">
+
+</div>
+
+<div class="field">
+
+<label>
+PASSWORD
+</label>
+
+<input
+id="loginPassword"
+type="password"
+placeholder="Password">
+
+</div>
+
+<button
+class="primary"
+onclick="loginUser()">
+
+Login
+
+</button>
+
+<div class="auth-switch">
+
+Don't have an account?
+
+<button onclick="showView('signup')">
+Create account
+</button>
+
+</div>
+
+</div>
+
+</section>
 
 
-        <button
-            class="primary"
-            onclick="publishTrack()">
+<!-- SIGNUP -->
 
-            Publish Track
+<section
+id="signup"
+class="view">
 
-        </button>
+<div class="auth-box">
 
-    </div>
+<h2>
+JOIN LOST SOUND
+</h2>
+
+<div class="kicker">
+CREATE ACCOUNT
+</div>
+
+<div class="field">
+
+<label>
+EMAIL
+</label>
+
+<input
+id="signupEmail"
+type="email"
+placeholder="Your email">
+
+</div>
+
+<div class="field">
+
+<label>
+PASSWORD
+</label>
+
+<input
+id="signupPassword"
+type="password"
+placeholder="Minimum 6 characters">
+
+</div>
+
+<div class="field">
+
+<label>
+USERNAME
+</label>
+
+<input
+id="signupUsername"
+placeholder="Artist username">
+
+</div>
+
+<button
+class="primary"
+onclick="signupUser()">
+
+Create Account
+
+</button>
+
+<div class="auth-switch">
+
+Already have an account?
+
+<button onclick="showView('login')">
+Login
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- UPLOAD -->
+
+<section
+id="upload"
+class="view">
+
+<div class="upload">
+
+<div class="kicker">
+CREATOR STUDIO
+</div>
+
+<h1>
+UPLOAD<br>
+YOUR SOUND
+</h1>
+
+<div class="notice">
+
+Your audio and cover are uploaded directly
+to LOST SOUND storage and connected to
+your own artist account.
+
+</div>
+
+
+<div class="field">
+
+<label>
+AUDIO FILE
+</label>
+
+<input
+id="audioFile"
+type="file"
+accept="audio/*">
+
+</div>
+
+
+<div class="field">
+
+<label>
+COVER ARTWORK
+</label>
+
+<input
+id="coverFile"
+type="file"
+accept="image/*">
+
+</div>
+
+
+<div class="field">
+
+<label>
+TRACK TITLE
+</label>
+
+<input
+id="uploadTitle"
+placeholder="Track title">
+
+</div>
+
+
+<div class="field">
+
+<label>
+GENRE
+</label>
+
+<select id="uploadGenre">
+
+<option>Electronic</option>
+<option>Hip-Hop</option>
+<option>Pop</option>
+<option>Rock</option>
+<option>Ambient</option>
+<option>Indie</option>
+<option>Experimental</option>
+<option>House</option>
+<option>Techno</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+DESCRIPTION
+</label>
+
+<textarea
+id="uploadDescription"
+rows="4"
+placeholder="About this track">
+</textarea>
+
+</div>
+
+
+<button
+class="primary"
+onclick="publishTrack()">
+
+Publish Track
+
+</button>
+
+</div>
 
 </section>
 
@@ -2616,313 +1808,892 @@ img{
 </main>
 
 
-
-<!-- ===================================================
-     PLAYER
-=================================================== -->
+<!-- PLAYER -->
 
 <div class="player">
 
-    <div class="player-inner">
+<div class="player-inner">
 
+<div
+id="playerArt"
+class="player-art"
+style="
+display:grid;
+place-items:center;
+background:#e8e2d7;
+font-size:10px;
+">
 
-        <div
-            id="playerArt"
-            class="player-art"
-            style="
-            display:grid;
-            place-items:center;
-            background:#e8e2d7;
-            font-size:10px;
-            ">
-
-            L/S
-
-        </div>
-
-
-        <div>
-
-            <div
-                id="playerTitle"
-                class="player-title">
-
-                No track selected
-
-            </div>
-
-
-            <div
-                id="playerArtist"
-                class="player-artist">
-
-                LOST SOUND
-
-            </div>
-
-
-            <div
-                class="progress"
-                onclick="seek(event)">
-
-                <i id="playerProgress"></i>
-
-            </div>
-
-
-            <div class="time">
-
-                <span id="playerCurrent">
-                    0:00
-                </span>
-
-                <span id="playerDuration">
-                    0:00
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <div class="controls">
-
-            <button onclick="previousTrack()">
-                ‹
-            </button>
-
-
-            <button
-                id="playButton"
-                class="play-button"
-                onclick="togglePlay()">
-
-                ▶
-
-            </button>
-
-
-            <button onclick="nextTrack()">
-                ›
-            </button>
-
-        </div>
-
-    </div>
+L/S
 
 </div>
 
 
+<div>
 
-<!-- ===================================================
-     MOBILE NAVIGATION
-=================================================== -->
+<div
+id="playerTitle"
+class="player-title">
+
+No track selected
+
+</div>
+
+<div
+id="playerArtist"
+class="player-artist">
+
+LOST SOUND
+
+</div>
+
+<div
+class="progress"
+onclick="seek(event)">
+
+<i id="playerProgress"></i>
+
+</div>
+
+<div class="time">
+
+<span id="playerCurrent">
+0:00
+</span>
+
+<span id="playerDuration">
+0:00
+</span>
+
+</div>
+
+</div>
+
+
+<div class="controls">
+
+<button onclick="previousTrack()">
+‹
+</button>
+
+<button
+id="playButton"
+class="play-button"
+onclick="togglePlay()">
+▶
+</button>
+
+<button onclick="nextTrack()">
+›
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MOBILE NAV -->
 
 <nav class="bottom-nav">
 
-    <button
-        class="active"
-        data-view="home"
-        onclick="showView('home')">
-        Home
-    </button>
+<button
+class="active"
+data-view="home"
+onclick="showView('home')">
+Home
+</button>
 
-    <button
-        data-view="discover"
-        onclick="showView('discover')">
-        Discover
-    </button>
+<button
+data-view="discover"
+onclick="showView('discover')">
+Discover
+</button>
 
-    <button
-        data-view="search"
-        onclick="showView('search')">
-        Search
-    </button>
+<button
+data-view="search"
+onclick="showView('search')">
+Search
+</button>
 
-    <button
-        data-view="library"
-        onclick="showView('library')">
-        Library
-    </button>
+<button
+data-view="library"
+onclick="showView('library')">
+Library
+</button>
 
-    <button
-        data-view="profile"
-        onclick="showView('profile')">
-        Profile
-    </button>
+<button
+data-view="profile"
+onclick="showView('profile')">
+Profile
+</button>
 
 </nav>
 
 
-
-<!-- ===================================================
-     DRAWER
-=================================================== -->
+<!-- DRAWER -->
 
 <div
-    id="drawer"
-    class="drawer"
-    onclick="closeDrawer()">
+id="drawer"
+class="drawer"
+onclick="closeDrawer()">
 
+<aside
+class="drawer-panel"
+onclick="event.stopPropagation()">
 
-    <aside
-        class="drawer-panel"
-        onclick="event.stopPropagation()">
+<div class="drawer-head">
 
+<strong>
+L/S
+</strong>
 
-        <div class="drawer-head">
-
-            <strong>
-                L/S
-            </strong>
-
-
-            <button onclick="closeDrawer()">
-                ×
-            </button>
-
-        </div>
-
-
-        <div class="drawer-list">
-
-            <button onclick="go('home')">
-                Home
-            </button>
-
-            <button onclick="go('discover')">
-                Discover
-            </button>
-
-            <button onclick="go('search')">
-                Search
-            </button>
-
-            <button onclick="go('library')">
-                Library
-            </button>
-
-            <button onclick="go('profile')">
-                Profile
-            </button>
-
-            <button onclick="go('upload')">
-                Upload
-            </button>
-
-            <button onclick="toast('Following')">
-                Following
-            </button>
-
-            <button onclick="toast('Feed')">
-                Feed
-            </button>
-
-            <button onclick="toast('Playlists')">
-                Playlists
-            </button>
-
-            <button onclick="toast('Albums')">
-                Albums
-            </button>
-
-            <button onclick="toast('Artists')">
-                Artists
-            </button>
-
-            <button onclick="toast('Notifications')">
-                Notifications
-            </button>
-
-            <button onclick="toast('Messages')">
-                Messages
-            </button>
-
-            <button onclick="toast('Listening History')">
-                Listening History
-            </button>
-
-            <button onclick="toast('Likes')">
-                Likes
-            </button>
-
-            <button onclick="toast('Reposts')">
-                Reposts
-            </button>
-
-            <button onclick="toast('Settings')">
-                Settings
-            </button>
-
-            <button onclick="toast('Help')">
-                Help
-            </button>
-
-            <button onclick="toast('Logout')">
-                Logout
-            </button>
-
-        </div>
-
-    </aside>
+<button onclick="closeDrawer()">
+×
+</button>
 
 </div>
 
 
+<div class="drawer-list">
+
+<button onclick="go('home')">
+Home
+</button>
+
+<button onclick="go('discover')">
+Discover
+</button>
+
+<button onclick="go('search')">
+Search
+</button>
+
+<button onclick="go('library')">
+Library
+</button>
+
+<button onclick="go('profile')">
+Profile
+</button>
+
+<button onclick="go('upload')">
+Upload
+</button>
+
+<button
+id="authDrawerButton"
+onclick="go('login')">
+
+Login
+
+</button>
+
+<button
+id="logoutDrawerButton"
+class="logout-btn"
+style="display:none"
+onclick="logoutUser()">
+
+Logout
+
+</button>
+
+</div>
+
+</aside>
+
+</div>
+
 
 <audio
-    id="audio"
-    preload="metadata">
+id="audio"
+preload="metadata">
 </audio>
 
 
 </div>
 
 
-
 <script>
 
 /* =====================================================
-   REAL USER TRACK DATABASE
+   SUPABASE
 ===================================================== */
 
-let tracks = [];
+const SUPABASE_URL =
+"https://iezjmlesxdqtgrzopnyf.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_oZzBug6zzrXVDEaLljsHeQ_EPQOhcnu";
+
+const supabase =
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =====================================================
+   STORAGE BUCKETS
+===================================================== */
+
+const AUDIO_BUCKET = "audio";
+const COVER_BUCKET = "covers";
 
 
 /* =====================================================
    STATE
 ===================================================== */
 
+let tracks = [];
+
 let currentIndex = -1;
 
 let liked = new Set();
 
-let recent = [];
+let currentUser = null;
+
+let currentArtist = null;
 
 
 /* =====================================================
-   ELEMENTS
+   AUDIO
 ===================================================== */
 
 const audio =
-    document.getElementById("audio");
+document.getElementById("audio");
 
 
 /* =====================================================
-   INITIAL UI
+   INIT
 ===================================================== */
 
-function init(){
-
-    updateMusicUI();
+async function init(){
 
     createWaveform();
+
+    const {
+        data
+    } = await supabase.auth.getSession();
+
+    currentUser =
+        data.session
+        ?
+        data.session.user
+        :
+        null;
+
+    await updateAuthUI();
+
+    await loadTracks();
+
+    if(currentUser){
+
+        await loadCurrentArtist();
+
+    }
+
+}
+
+
+supabase.auth.onAuthStateChange(
+    async(event,session)=>{
+
+        currentUser =
+            session
+            ?
+            session.user
+            :
+            null;
+
+        await updateAuthUI();
+
+        if(currentUser){
+
+            await loadCurrentArtist();
+
+        }else{
+
+            currentArtist = null;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   AUTH UI
+===================================================== */
+
+async function updateAuthUI(){
+
+    const loginButton =
+        document.getElementById(
+            "authDrawerButton"
+        );
+
+    const logoutButton =
+        document.getElementById(
+            "logoutDrawerButton"
+        );
+
+    if(currentUser){
+
+        loginButton.style.display =
+            "none";
+
+        logoutButton.style.display =
+            "block";
+
+        await loadProfileUI();
+
+    }else{
+
+        loginButton.style.display =
+            "block";
+
+        logoutButton.style.display =
+            "none";
+
+    }
 
 }
 
 
 /* =====================================================
-   MUSIC UI
+   SIGNUP
+===================================================== */
+
+async function signupUser(){
+
+    const email =
+        document
+        .getElementById("signupEmail")
+        .value
+        .trim();
+
+    const password =
+        document
+        .getElementById("signupPassword")
+        .value;
+
+    const username =
+        document
+        .getElementById("signupUsername")
+        .value
+        .trim();
+
+    if(!email || !password || !username){
+
+        toast(
+            "Complete all fields."
+        );
+
+        return;
+
+    }
+
+    if(password.length < 6){
+
+        toast(
+            "Password must be at least 6 characters."
+        );
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+    await supabase.auth.signUp({
+
+        email,
+        password,
+
+        options:{
+            data:{
+                username:username
+            }
+        }
+
+    });
+
+
+    if(error){
+
+        console.error(error);
+
+        toast(error.message);
+
+        return;
+
+    }
+
+
+    if(data.user){
+
+        const {
+            error:profileError
+        } =
+        await supabase
+        .from("profiles")
+        .upsert({
+
+            id:data.user.id,
+
+            username:username,
+
+            display_name:username,
+
+            role:"artist"
+
+        });
+
+
+        if(profileError){
+
+            console.error(
+                profileError
+            );
+
+        }
+
+    }
+
+
+    toast(
+        "Account created."
+    );
+
+    showView("profile");
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+async function loginUser(){
+
+    const email =
+        document
+        .getElementById("loginEmail")
+        .value
+        .trim();
+
+    const password =
+        document
+        .getElementById("loginPassword")
+        .value;
+
+
+    if(!email || !password){
+
+        toast(
+            "Enter email and password."
+        );
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+    await supabase.auth.signInWithPassword({
+
+        email,
+        password
+
+    });
+
+
+    if(error){
+
+        console.error(error);
+
+        toast(error.message);
+
+        return;
+
+    }
+
+
+    currentUser =
+        data.user;
+
+    await loadCurrentArtist();
+
+    await loadTracks();
+
+    toast(
+        "Welcome back."
+    );
+
+    showView("home");
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logoutUser(){
+
+    await supabase.auth.signOut();
+
+    currentUser = null;
+
+    currentArtist = null;
+
+    tracks = [];
+
+    currentIndex = -1;
+
+    audio.pause();
+
+    audio.src = "";
+
+    updateMusicUI();
+
+    closeDrawer();
+
+    toast(
+        "Logged out."
+    );
+
+}
+
+
+/* =====================================================
+   CURRENT ARTIST
+===================================================== */
+
+async function loadCurrentArtist(){
+
+    if(!currentUser){
+
+        currentArtist = null;
+
+        return;
+
+    }
+
+
+    const {
+        data,
+        error
+    } =
+    await supabase
+    .from("artists")
+    .select("*")
+    .eq(
+        "user_id",
+        currentUser.id
+    )
+    .maybeSingle();
+
+
+    if(error){
+
+        console.error(
+            "Artist load error:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    currentArtist =
+        data || null;
+
+
+    await loadProfileUI();
+
+}
+
+
+/* =====================================================
+   PROFILE UI
+===================================================== */
+
+async function loadProfileUI(){
+
+    if(!currentUser){
+
+        return;
+
+    }
+
+
+    if(!currentArtist){
+
+        document.getElementById(
+            "profileName"
+        ).textContent =
+            "Your Artist Profile";
+
+        document.getElementById(
+            "profileUsername"
+        ).textContent =
+            currentUser.email;
+
+        document.getElementById(
+            "profileBio"
+        ).textContent =
+            "Create your artist profile by publishing your first track.";
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "profileName"
+    ).textContent =
+        currentArtist.name ||
+        currentArtist.username ||
+        "Artist";
+
+
+    document.getElementById(
+        "profileUsername"
+    ).textContent =
+        currentArtist.username
+        ?
+        "@"+currentArtist.username
+        :
+        "";
+
+
+    document.getElementById(
+        "profileBio"
+    ).textContent =
+        currentArtist.bio || "";
+
+
+    const artistTracks =
+        tracks.filter(
+            track =>
+            track.artist_id ===
+            currentArtist.id
+        );
+
+
+    document.getElementById(
+        "profileTracks"
+    ).textContent =
+        artistTracks.length +
+        " Tracks";
+
+
+    const totalPlays =
+        artistTracks.reduce(
+            (sum,track)=>
+            sum +
+            Number(
+                track.play_count || 0
+            ),
+            0
+        );
+
+
+    document.getElementById(
+        "profilePlays"
+    ).textContent =
+        totalPlays +
+        " Plays";
+
+
+    if(currentArtist.avatar_url){
+
+        document.getElementById(
+            "profileAvatar"
+        ).src =
+            currentArtist.avatar_url;
+
+    }
+
+}
+
+
+/* =====================================================
+   LOAD TRACKS
+===================================================== */
+
+async function loadTracks(){
+
+    const {
+        data,
+        error
+    } =
+    await supabase
+    .from("tracks")
+    .select(`
+        id,
+        artist_id,
+        title,
+        description,
+        cover_url,
+        audio_url,
+        duration_seconds,
+        play_count,
+        like_count,
+        is_published,
+        created_at
+    `)
+    .eq(
+        "is_published",
+        true
+    )
+    .order(
+        "created_at",
+        {
+            ascending:false
+        }
+    );
+
+
+    if(error){
+
+        console.error(
+            "Tracks error:",
+            error
+        );
+
+        toast(
+            "Could not load music."
+        );
+
+        return;
+
+    }
+
+
+    tracks =
+    data || [];
+
+
+    await attachArtists();
+
+    updateMusicUI();
+
+    await loadLikedTracks();
+
+}
+
+
+/* =====================================================
+   ATTACH ARTISTS
+===================================================== */
+
+async function attachArtists(){
+
+    if(!tracks.length){
+
+        return;
+
+    }
+
+
+    const ids =
+    [
+        ...new Set(
+            tracks.map(
+                track =>
+                track.artist_id
+            )
+        )
+    ];
+
+
+    const {
+        data,
+        error
+    } =
+    await supabase
+    .from("artists")
+    .select(`
+        id,
+        name,
+        username,
+        avatar_url
+    `)
+    .in(
+        "id",
+        ids
+    );
+
+
+    if(error){
+
+        console.error(error);
+
+        return;
+
+    }
+
+
+    const artistMap =
+    new Map(
+        (data || [])
+        .map(
+            artist =>
+            [
+                artist.id,
+                artist
+            ]
+        )
+    );
+
+
+    tracks =
+    tracks.map(
+        track=>{
+
+            const artist =
+            artistMap.get(
+                track.artist_id
+            );
+
+
+            return {
+
+                ...track,
+
+                artist:
+                artist
+                ?
+                (
+                    artist.name ||
+                    artist.username ||
+                    "Unknown Artist"
+                )
+                :
+                "Unknown Artist"
+
+            };
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE MUSIC UI
 ===================================================== */
 
 function updateMusicUI(){
@@ -2930,10 +2701,12 @@ function updateMusicUI(){
     const hasMusic =
         tracks.length > 0;
 
+
     const empty =
         document.getElementById(
             "emptyState"
         );
+
 
     const content =
         document.getElementById(
@@ -2949,6 +2722,8 @@ function updateMusicUI(){
         content.classList.remove(
             "visible"
         );
+
+        renderDiscover();
 
         return;
 
@@ -2980,44 +2755,45 @@ function updateMusicUI(){
 
 function renderPopular(){
 
-    const section =
-        document.getElementById(
-            "popularSection"
-        );
-
-    if(tracks.length === 0){
-
-        section.style.display =
-            "none";
-
-        return;
-
-    }
-
-
-    section.style.display =
-        "block";
-
-
     const container =
         document.getElementById(
             "popular"
         );
 
 
+    const sorted =
+    [...tracks]
+    .sort(
+        (a,b)=>
+        Number(
+            b.play_count || 0
+        )
+        -
+        Number(
+            a.play_count || 0
+        )
+    );
+
+
     container.innerHTML =
-        tracks.map(
-            (track,index)=>`
+    sorted.map(
+        track=>{
+
+            const index =
+            tracks.indexOf(track);
+
+
+            return `
 
             <div class="track-row">
 
                 <span class="number">
-                    ${String(index+1).padStart(2,"0")}
+                    ♪
                 </span>
 
                 <img
                     class="thumb"
-                    src="${track.cover}"
+                    src="${safeURL(track.cover_url)}"
                     alt="">
 
                 <div
@@ -3035,14 +2811,14 @@ function renderPopular(){
                 </div>
 
                 <span class="duration">
-                    ${track.duration || "0:00"}
+                    ${formatTime(track.duration_seconds)}
                 </span>
 
                 <button
                     class="more"
                     onclick="
                     event.stopPropagation();
-                    toast('More options')
+                    toast('${Number(track.play_count || 0)} plays')
                     ">
 
                     ⋯
@@ -3051,8 +2827,10 @@ function renderPopular(){
 
             </div>
 
-            `
-        ).join("");
+            `;
+
+        }
+    ).join("");
 
 }
 
@@ -3063,26 +2841,6 @@ function renderPopular(){
 
 function renderNewReleases(){
 
-    const section =
-        document.getElementById(
-            "newSection"
-        );
-
-
-    if(tracks.length === 0){
-
-        section.style.display =
-            "none";
-
-        return;
-
-    }
-
-
-    section.style.display =
-        "block";
-
-
     const container =
         document.getElementById(
             "newReleases"
@@ -3090,15 +2848,23 @@ function renderNewReleases(){
 
 
     container.innerHTML =
-        tracks.map(
-            (track,index)=>`
+    tracks
+    .slice(0,8)
+    .map(
+        track=>{
+
+            const index =
+            tracks.indexOf(track);
+
+
+            return `
 
             <article
                 class="card"
                 onclick="playTrack(${index})">
 
                 <img
-                    src="${track.cover}"
+                    src="${safeURL(track.cover_url)}"
                     alt="">
 
                 <h4>
@@ -3111,8 +2877,11 @@ function renderNewReleases(){
 
             </article>
 
-            `
-        ).join("");
+            `;
+
+        }
+    )
+    .join("");
 
 }
 
@@ -3123,26 +2892,6 @@ function renderNewReleases(){
 
 function renderTrending(){
 
-    const section =
-        document.getElementById(
-            "trendingSection"
-        );
-
-
-    if(tracks.length === 0){
-
-        section.style.display =
-            "none";
-
-        return;
-
-    }
-
-
-    section.style.display =
-        "block";
-
-
     const container =
         document.getElementById(
             "trending"
@@ -3150,19 +2899,37 @@ function renderTrending(){
 
 
     const list =
-        tracks.slice(0,4);
+    [...tracks]
+    .sort(
+        (a,b)=>
+        Number(
+            b.play_count || 0
+        )
+        -
+        Number(
+            a.play_count || 0
+        )
+    )
+    .slice(0,8);
 
 
     container.innerHTML =
-        list.map(
-            (track,index)=>`
+    list
+    .map(
+        track=>{
+
+            const index =
+            tracks.indexOf(track);
+
+
+            return `
 
             <article
                 class="card"
                 onclick="playTrack(${index})">
 
                 <img
-                    src="${track.cover}"
+                    src="${safeURL(track.cover_url)}"
                     alt="">
 
                 <h4>
@@ -3175,8 +2942,11 @@ function renderTrending(){
 
             </article>
 
-            `
-        ).join("");
+            `;
+
+        }
+    )
+    .join("");
 
 }
 
@@ -3185,12 +2955,13 @@ function renderTrending(){
    DISCOVER
 ===================================================== */
 
-function renderDiscover(){
+function renderDiscover(list=tracks){
 
     const empty =
         document.getElementById(
             "discoverEmpty"
         );
+
 
     const container =
         document.getElementById(
@@ -3198,7 +2969,7 @@ function renderDiscover(){
         );
 
 
-    if(tracks.length === 0){
+    if(!list.length){
 
         empty.style.display =
             "block";
@@ -3216,15 +2987,21 @@ function renderDiscover(){
 
 
     container.innerHTML =
-        tracks.map(
-            (track,index)=>`
+    list.map(
+        track=>{
+
+            const index =
+            tracks.indexOf(track);
+
+
+            return `
 
             <article
                 class="card"
                 onclick="playTrack(${index})">
 
                 <img
-                    src="${track.cover}"
+                    src="${safeURL(track.cover_url)}"
                     alt="">
 
                 <h4>
@@ -3237,8 +3014,61 @@ function renderDiscover(){
 
             </article>
 
-            `
-        ).join("");
+            `;
+
+        }
+    ).join("");
+
+}
+
+
+/* =====================================================
+   GENRE
+===================================================== */
+
+async function filterGenre(genre){
+
+    const {
+        data,
+        error
+    } =
+    await supabase
+    .from("tracks")
+    .select("*")
+    .eq(
+        "is_published",
+        true
+    )
+    .order(
+        "created_at",
+        {
+            ascending:false
+        }
+    );
+
+
+    if(error){
+
+        toast(
+            "Could not filter music."
+        );
+
+        return;
+
+    }
+
+
+    /*
+       Your current tracks table does not have
+       a genre column.
+
+       Therefore we don't pretend the database
+       has one yet.
+    */
+
+    toast(
+        "Genre filtering will be enabled after adding genre."
+    );
 
 }
 
@@ -3247,13 +3077,15 @@ function renderDiscover(){
    PLAY TRACK
 ===================================================== */
 
-function playTrack(index){
+async function playTrack(index){
 
     if(
         index < 0 ||
         index >= tracks.length
     ){
+
         return;
+
     }
 
 
@@ -3268,7 +3100,7 @@ function playTrack(index){
     document.getElementById(
         "featuredCover"
     ).src =
-        track.cover;
+        safeURL(track.cover_url);
 
 
     document.getElementById(
@@ -3292,18 +3124,13 @@ function playTrack(index){
     playerArt.innerHTML =
         "";
 
-    playerArt.style.background =
-        "none";
-
 
     const image =
-        document.createElement(
-            "img"
-        );
+        document.createElement("img");
 
 
     image.src =
-        track.cover;
+        safeURL(track.cover_url);
 
 
     image.style.width =
@@ -3336,33 +3163,43 @@ function playTrack(index){
         track.artist;
 
 
-    if(track.audio){
+    if(!track.audio_url){
 
-        audio.src =
-            track.audio;
+        toast(
+            "Audio is not available."
+        );
 
-        audio.load();
-
-        audio.play()
-            .then(()=>{
-                startPlaying();
-            })
-            .catch(()=>{
-                toast(
-                    "Press play to start"
-                );
-            });
+        return;
 
     }
 
 
-    recent =
-        [
-            track.id,
-            ...recent.filter(
-                id=>id !== track.id
-            )
-        ].slice(0,10);
+    audio.src =
+        track.audio_url;
+
+
+    audio.load();
+
+
+    try{
+
+        await audio.play();
+
+        startPlaying();
+
+        incrementPlayCount(
+            track.id
+        );
+
+    }catch(error){
+
+        console.log(error);
+
+        toast(
+            "Press play to start."
+        );
+
+    }
 
 }
 
@@ -3371,13 +3208,13 @@ function playTrack(index){
    PLAY / PAUSE
 ===================================================== */
 
-function togglePlay(){
+async function togglePlay(){
 
     if(currentIndex === -1){
 
-        if(tracks.length > 0){
+        if(tracks.length){
 
-            playTrack(0);
+            await playTrack(0);
 
         }else{
 
@@ -3405,9 +3242,17 @@ function togglePlay(){
 
     if(audio.paused){
 
-        audio.play();
+        try{
 
-        startPlaying();
+            await audio.play();
+
+            startPlaying();
+
+        }catch(error){
+
+            console.error(error);
+
+        }
 
     }else{
 
@@ -3427,36 +3272,36 @@ function togglePlay(){
 function startPlaying(){
 
     document
-        .getElementById(
-            "trackVinyl"
-        )
-        .classList.add(
-            "playing"
-        );
+    .getElementById(
+        "trackVinyl"
+    )
+    .classList.add(
+        "playing"
+    );
 
 
     document
-        .getElementById(
-            "lostVinyl"
-        )
-        .classList.add(
-            "playing"
-        );
+    .getElementById(
+        "lostVinyl"
+    )
+    .classList.add(
+        "playing"
+    );
 
 
     document
-        .getElementById(
-            "playButton"
-        )
-        .textContent =
+    .getElementById(
+        "playButton"
+    )
+    .textContent =
         "Ⅱ";
 
 
     document
-        .getElementById(
-            "featurePlay"
-        )
-        .textContent =
+    .getElementById(
+        "featurePlay"
+    )
+    .textContent =
         "Ⅱ";
 
 }
@@ -3465,36 +3310,35 @@ function startPlaying(){
 function stopPlaying(){
 
     document
-        .getElementById(
-            "trackVinyl"
-        )
-        .classList.remove(
-            "playing"
-        );
+    .getElementById(
+        "trackVinyl"
+    )
+    .classList.remove(
+        "playing"
+    );
 
 
     document
-        .getElementById(
-            "lostVinyl"
-        )
-        .classList.remove(
-            "playing"
-        );
+    .getElementById(
+        "lostVinyl"
+    )
+    .classList.remove(
+        "playing"
+    );
 
 
     document
-        .getElementById(
-            "playButton"
-        )
-        .textContent =
+    .getElementById(
+        "playButton"
+    )
+    .textContent =
         "▶";
 
 
     document
-        .getElementById(
-            "featurePlay"
-        )
-        .textContent =
+    .getElementById(
+        "featurePlay"
+    ).textContent =
         "▶";
 
 }
@@ -3506,11 +3350,7 @@ function stopPlaying(){
 
 function nextTrack(){
 
-    if(tracks.length === 0){
-
-        toast(
-            "No tracks yet."
-        );
+    if(!tracks.length){
 
         return;
 
@@ -3522,8 +3362,11 @@ function nextTrack(){
         ?
         0
         :
-        (currentIndex + 1)
-        % tracks.length;
+        (
+            currentIndex + 1
+        )
+        %
+        tracks.length;
 
 
     playTrack(next);
@@ -3537,11 +3380,7 @@ function nextTrack(){
 
 function previousTrack(){
 
-    if(tracks.length === 0){
-
-        toast(
-            "No tracks yet."
-        );
+    if(!tracks.length){
 
         return;
 
@@ -3587,9 +3426,7 @@ audio.addEventListener(
 
 audio.addEventListener(
     "loadedmetadata",
-    ()=>{
-        updateProgress();
-    }
+    updateProgress
 );
 
 
@@ -3605,7 +3442,9 @@ function updateProgress(){
         (
             audio.currentTime /
             audio.duration
-        ) * 100
+        )
+        *
+        100
         :
         0;
 
@@ -3663,7 +3502,9 @@ function updateProgress(){
 function seek(event){
 
     if(!audio.duration){
+
         return;
+
     }
 
 
@@ -3682,850 +3523,4 @@ function seek(event){
 
 
     audio.currentTime =
-        percent *
-        audio.duration;
-
-}
-
-
-/* =====================================================
-   FORMAT TIME
-===================================================== */
-
-function formatTime(seconds){
-
-    if(!isFinite(seconds)){
-        return "0:00";
-    }
-
-
-    const minutes =
-        Math.floor(
-            seconds / 60
-        );
-
-
-    const secondsPart =
-        Math.floor(
-            seconds % 60
-        );
-
-
-    return (
-        minutes +
-        ":" +
-        String(
-            secondsPart
-        ).padStart(
-            2,
-            "0"
-        )
-    );
-
-}
-
-
-/* =====================================================
-   WAVEFORM
-===================================================== */
-
-function createWaveform(){
-
-    const wave =
-        document.getElementById(
-            "wave"
-        );
-
-
-    let html = "";
-
-
-    for(
-        let i=0;
-        i<80;
-        i++
-    ){
-
-        const height =
-            5 +
-            Math.floor(
-                Math.random()*30
-            );
-
-
-        html += `
-            <span
-                style="
-                height:${height}px
-                ">
-            </span>
-        `;
-
-    }
-
-
-    wave.innerHTML =
-        html;
-
-}
-
-
-/* =====================================================
-   LIKE
-===================================================== */
-
-function toggleLike(){
-
-    if(currentIndex === -1){
-
-        toast(
-            "Select a track first."
-        );
-
-        return;
-
-    }
-
-
-    const track =
-        tracks[currentIndex];
-
-
-    if(liked.has(track.id)){
-
-        liked.delete(
-            track.id
-        );
-
-    }else{
-
-        liked.add(
-            track.id
-        );
-
-    }
-
-
-    document
-        .getElementById(
-            "featureLike"
-        )
-        .classList.toggle(
-            "active",
-            liked.has(track.id)
-        );
-
-
-    renderLibrary();
-
-}
-
-
-/* =====================================================
-   LIBRARY
-===================================================== */
-
-function renderLibrary(){
-
-    const empty =
-        document.getElementById(
-            "libraryEmpty"
-        );
-
-
-    const container =
-        document.getElementById(
-            "liked"
-        );
-
-
-    const likedTracks =
-        tracks.filter(
-            track =>
-            liked.has(track.id)
-        );
-
-
-    if(likedTracks.length === 0){
-
-        empty.style.display =
-            "block";
-
-        container.innerHTML =
-            "";
-
-        return;
-
-    }
-
-
-    empty.style.display =
-        "none";
-
-
-    container.innerHTML =
-        likedTracks.map(
-            (track)=>`
-
-            <div class="track-row">
-
-                <span class="number">
-                    ♡
-                </span>
-
-
-                <img
-                    class="thumb"
-                    src="${track.cover}"
-                    alt="">
-
-
-                <div
-                    onclick="
-                    playTrack(
-                        ${tracks.indexOf(track)}
-                    )"
-                    style="min-width:0">
-
-                    <div class="track-title">
-                        ${escapeHTML(track.title)}
-                    </div>
-
-
-                    <div class="artist">
-                        ${escapeHTML(track.artist)}
-                    </div>
-
-                </div>
-
-
-                <span></span>
-
-
-                <button class="more">
-                    ⋯
-                </button>
-
-            </div>
-
-            `
-        ).join("");
-
-}
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-function runSearch(){
-
-    const query =
-        document.getElementById(
-            "searchInput"
-        )
-        .value
-        .trim()
-        .toLowerCase();
-
-
-    const container =
-        document.getElementById(
-            "searchResults"
-        );
-
-
-    if(!query){
-
-        container.innerHTML =
-            tracks.length === 0
-            ?
-            `
-            <div class="empty-state">
-
-                <div class="empty-title">
-                    Nothing to search yet.
-                </div>
-
-                <div class="empty-text">
-                    Upload music to start searching.
-                </div>
-
-            </div>
-            `
-            :
-            "";
-
-        return;
-
-    }
-
-
-    const results =
-        tracks.filter(
-            track =>
-            (
-                track.title +
-                " " +
-                track.artist +
-                " " +
-                track.genre
-            )
-            .toLowerCase()
-            .includes(query)
-        );
-
-
-    if(results.length === 0){
-
-        container.innerHTML = `
-
-            <div class="empty-state">
-
-                <div class="empty-title">
-                    No results.
-                </div>
-
-                <div class="empty-text">
-                    Try another search.
-                </div>
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    container.innerHTML =
-        results.map(
-            track=>`
-
-            <div class="track-row">
-
-                <span class="number">
-                    ♪
-                </span>
-
-
-                <img
-                    class="thumb"
-                    src="${track.cover}"
-                    alt="">
-
-
-                <div
-                    onclick="
-                    playTrack(
-                        ${tracks.indexOf(track)}
-                    )">
-
-                    <div class="track-title">
-                        ${escapeHTML(track.title)}
-                    </div>
-
-
-                    <div class="artist">
-                        ${escapeHTML(track.artist)}
-                    </div>
-
-                </div>
-
-
-                <span></span>
-
-
-                <button class="more">
-                    ⋯
-                </button>
-
-            </div>
-
-            `
-        ).join("");
-
-}
-
-
-function clearSearch(){
-
-    document.getElementById(
-        "searchInput"
-    ).value = "";
-
-
-    document.getElementById(
-        "searchResults"
-    ).innerHTML = "";
-
-}
-
-
-/* =====================================================
-   UPLOAD
-===================================================== */
-
-function publishTrack(){
-
-    const audioFile =
-        document.getElementById(
-            "audioFile"
-        ).files[0];
-
-
-    const coverFile =
-        document.getElementById(
-            "coverFile"
-        ).files[0];
-
-
-    const title =
-        document.getElementById(
-            "uploadTitle"
-        ).value.trim();
-
-
-    const artist =
-        document.getElementById(
-            "uploadArtist"
-        ).value.trim();
-
-
-    const genre =
-        document.getElementById(
-            "uploadGenre"
-        ).value;
-
-
-    const description =
-        document.getElementById(
-            "uploadDescription"
-        ).value.trim();
-
-
-    if(!audioFile){
-
-        toast(
-            "Please select an audio file."
-        );
-
-        return;
-
-    }
-
-
-    if(!title){
-
-        toast(
-            "Please enter a track title."
-        );
-
-        return;
-
-    }
-
-
-    if(!artist){
-
-        toast(
-            "Please enter an artist name."
-        );
-
-        return;
-
-    }
-
-
-    const audioURL =
-        URL.createObjectURL(
-            audioFile
-        );
-
-
-    const coverURL =
-        coverFile
-        ?
-        URL.createObjectURL(
-            coverFile
-        )
-        :
-        createDefaultArtwork();
-
-
-    const newTrack = {
-
-        id:
-            Date.now(),
-
-        title:
-            title,
-
-        artist:
-            artist,
-
-        genre:
-            genre,
-
-        description:
-            description,
-
-        cover:
-            coverURL,
-
-        audio:
-            audioURL,
-
-        duration:
-            "0:00",
-
-        createdAt:
-            new Date().toISOString()
-
-    };
-
-
-    tracks.unshift(
-        newTrack
-    );
-
-
-    updateMusicUI();
-
-
-    document.getElementById(
-        "audioFile"
-    ).value = "";
-
-
-    document.getElementById(
-        "coverFile"
-    ).value = "";
-
-
-    document.getElementById(
-        "uploadTitle"
-    ).value = "";
-
-
-    document.getElementById(
-        "uploadArtist"
-    ).value = "";
-
-
-    document.getElementById(
-        "uploadDescription"
-    ).value = "";
-
-
-    showView("home");
-
-
-    playTrack(0);
-
-
-    toast(
-        "Track added to LOST SOUND."
-    );
-
-}
-
-
-/* =====================================================
-   DEFAULT USER ARTWORK
-===================================================== */
-
-function createDefaultArtwork(){
-
-    const svg = `
-
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="800"
-        height="800">
-
-        <rect
-            width="800"
-            height="800"
-            fill="#e8e2d7"/>
-
-        <text
-            x="400"
-            y="365"
-            text-anchor="middle"
-            font-size="82"
-            font-family="Arial"
-            font-weight="bold"
-            fill="#111">
-
-            LOST
-
-        </text>
-
-        <text
-            x="400"
-            y="445"
-            text-anchor="middle"
-            font-size="82"
-            font-family="Arial"
-            font-weight="bold"
-            fill="#111">
-
-            SOUND
-
-        </text>
-
-        <text
-            x="400"
-            y="510"
-            text-anchor="middle"
-            font-size="18"
-            letter-spacing="8"
-            font-family="Arial"
-            fill="#111">
-
-            MUSIC STREAMING
-
-        </text>
-
-    </svg>
-
-    `;
-
-
-    return URL.createObjectURL(
-        new Blob(
-            [svg],
-            {
-                type:"image/svg+xml"
-            }
-        )
-    );
-
-}
-
-
-/* =====================================================
-   NAVIGATION
-===================================================== */
-
-function showView(view){
-
-    document
-        .querySelectorAll(".view")
-        .forEach(
-            element =>
-            element.classList.remove(
-                "active"
-            )
-        );
-
-
-    const target =
-        document.getElementById(
-            view
-        );
-
-
-    if(target){
-
-        target.classList.add(
-            "active"
-        );
-
-    }
-
-
-    document
-        .querySelectorAll(
-            ".bottom-nav button"
-        )
-        .forEach(
-            button=>{
-
-                button.classList.toggle(
-                    "active",
-                    button.dataset.view === view
-                );
-
-            }
-        );
-
-
-    window.scrollTo(
-        0,
-        0
-    );
-
-}
-
-
-function go(view){
-
-    closeDrawer();
-
-    showView(view);
-
-}
-
-
-/* =====================================================
-   DRAWER
-===================================================== */
-
-function openDrawer(){
-
-    document
-        .getElementById(
-            "drawer"
-        )
-        .classList.add(
-            "open"
-        );
-
-}
-
-
-function closeDrawer(){
-
-    document
-        .getElementById(
-            "drawer"
-        )
-        .classList.remove(
-            "open"
-        );
-
-}
-
-
-/* =====================================================
-   SHARE
-===================================================== */
-
-function shareTrack(){
-
-    if(currentIndex === -1){
-
-        toast(
-            "Select a track first."
-        );
-
-        return;
-
-    }
-
-
-    const track =
-        tracks[currentIndex];
-
-
-    const url =
-        location.href +
-        "#track-" +
-        track.id;
-
-
-    if(navigator.share){
-
-        navigator.share({
-
-            title:
-                track.title,
-
-            text:
-                track.artist +
-                " — LOST SOUND",
-
-            url:url
-
-        }).catch(()=>{});
-
-    }else if(navigator.clipboard){
-
-        navigator.clipboard
-            .writeText(url);
-
-        toast(
-            "Track link copied."
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-function toast(message){
-
-    const old =
-        document.querySelector(
-            ".toast"
-        );
-
-
-    if(old){
-        old.remove();
-    }
-
-
-    const element =
-        document.createElement(
-            "div"
-        );
-
-
-    element.className =
-        "toast";
-
-
-    element.textContent =
-        message;
-
-
-    document.body.appendChild(
-        element
-    );
-
-
-    setTimeout(
-        ()=>{
-            element.remove();
-        },
-        1800
-    );
-
-}
-
-
-/* =====================================================
-   SECURITY
-===================================================== */
-
-function escapeHTML(value){
-
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* =====================================================
-   START
-===================================================== */
-
-init();
-
-</script>
-
-
-</body>
-</html>
+       
