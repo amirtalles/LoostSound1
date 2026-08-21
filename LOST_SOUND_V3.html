@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#f4f1eb">
+<title>LOST SOUND</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#f4f1eb;--paper:#faf8f3;--black:#111;--gray:#77736c;--line:#d9d4ca;--red:#b51f2a}
+html,body{width:100%;min-height:100%;background:var(--bg);color:var(--black);font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+body{min-height:100vh}button,input,textarea,select{font-family:inherit}button{border:0;background:none;cursor:pointer}img{max-width:100%;display:block}audio{display:none}
+.app{min-height:100vh;padding-bottom:120px}
+.topbar{height:70px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;background:rgba(244,241,235,.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.logo{font-size:20px;font-weight:800;letter-spacing:.08em}.top-title{font-size:10px;letter-spacing:.25em;font-weight:bold}.menu{width:38px;height:38px;display:grid;place-items:center;font-size:22px}
+.page{width:100%;max-width:1180px;margin:auto;padding:25px 22px}.view{display:none}.view.active{display:block}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;margin:20px 0 45px}.kicker{font-size:10px;font-weight:bold;letter-spacing:.18em}.hero h1{font-size:clamp(55px,11vw,125px);line-height:.82;letter-spacing:-.075em;margin-top:12px}.year{font-size:11px;letter-spacing:.15em}
+.ls-stage{width:100%;min-height:min(520px,90vw);position:relative;display:flex;align-items:center;justify-content:center;overflow:visible}
+.ls-vinyl{position:absolute;width:min(78vw,450px);height:min(78vw,450px);border-radius:50%;left:50%;top:50%;transform:translate(-22%,-50%);background:radial-gradient(circle,#222 0 5%,#555 5.5% 6%,#111 6.5% 12%,#292929 12.5% 13%,#080808 13.5% 27%,#242424 27.5% 28%,#060606 28.5% 44%,#252525 44.5% 45%,#050505 45.5% 61%,#222 61.5% 62%,#050505 62.5% 100%);box-shadow:0 30px 70px rgba(0,0,0,.16);z-index:1;pointer-events:none}
+.ls-vinyl:after{content:"L/S";position:absolute;width:54px;height:54px;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;background:#151515;color:#eee;font-size:10px;letter-spacing:.1em}
+.ls-vinyl.playing{animation:rotateVinyl 4s linear infinite}@keyframes rotateVinyl{from{transform:translate(-22%,-50%) rotate(0)}to{transform:translate(-22%,-50%) rotate(360deg)}}
+.ls-cover{width:min(65vw,350px);aspect-ratio:1;position:relative;z-index:2;overflow:hidden;border-radius:3px;background:#111;box-shadow:0 25px 60px rgba(0,0,0,.14)}
+.ls-cover video{width:100%;height:100%;object-fit:cover;display:block;filter:none}
+.empty-state{width:100%;padding:35px 10px;text-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.empty-title{font-size:14px;font-weight:bold;margin-bottom:8px}.empty-text{color:var(--gray);font-size:12px;line-height:1.7}
+.music-content{display:none}.music-content.visible{display:block}.featured{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:55px;align-items:center}
+.track-cover-stage{min-height:430px;position:relative;display:grid;place-items:center}.track-vinyl{position:absolute;width:min(62vw,400px);height:min(62vw,400px);border-radius:50%;background:repeating-radial-gradient(circle,#090909 0,#292929 2px,#050505 4px);transform:translateX(27%)}.track-vinyl.playing{animation:trackRotate 4s linear infinite}@keyframes trackRotate{from{transform:translateX(27%) rotate(0)}to{transform:translateX(27%) rotate(360deg)}}.track-cover{position:relative;z-index:2;width:min(62vw,360px);aspect-ratio:1;object-fit:cover;border-radius:4px;box-shadow:0 25px 60px rgba(0,0,0,.15);cursor:pointer}
+.track-info h2{font-size:36px;line-height:1;margin:8px 0}.artist{color:var(--gray);font-size:13px}.actions{display:flex;align-items:center;gap:9px;margin:20px 0}.circle{width:43px;height:43px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:var(--paper)}.circle.active{color:var(--red);border-color:var(--red)}
+.wave{width:100%;height:45px;display:flex;align-items:center;gap:2px;overflow:hidden;margin:20px 0}.wave span{flex:1;min-width:2px;background:#c8c2b9;border-radius:5px}.progress{width:100%;height:3px;background:var(--line);cursor:pointer}.progress i{display:block;width:0;height:100%;background:var(--red)}.time{display:flex;justify-content:space-between;margin-top:6px;color:var(--gray);font-size:9px}
+.section{margin-top:70px}.section-head{display:flex;justify-content:space-between;padding-bottom:10px;margin-bottom:8px;border-bottom:1px solid var(--line)}.section-title{font-size:11px;font-weight:bold;letter-spacing:.18em}
+.track-row{width:100%;display:grid;grid-template-columns:40px 52px minmax(0,1fr) auto 35px;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}.number{color:var(--gray);font-size:11px}.thumb{width:52px;height:52px;object-fit:cover;border-radius:3px}.track-title{font-size:13px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.duration{color:var(--gray);font-size:10px}.more{font-size:20px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.card{min-width:0;cursor:pointer}.card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px}.card h4{margin-top:9px;font-size:13px}.card p{margin-top:4px;color:var(--gray);font-size:11px}
+.search-box{display:flex;align-items:center;gap:10px;margin-top:25px;padding:12px 0;border-bottom:1px solid var(--black)}.search-box input{width:100%;border:0;outline:0;background:transparent;font-size:25px}.search-box button{font-size:22px}
+.avatar-wrap{position:relative;width:110px;height:110px;flex:0 0 auto}.avatar-wrap .avatar{position:absolute;inset:0}.avatar-fallback{position:absolute;inset:0;display:grid;place-items:center;border-radius:50%;background:#111;color:#fff;font-size:22px;font-weight:800;letter-spacing:.05em}.profile-head{display:flex;align-items:center;gap:25px;padding-bottom:30px;border-bottom:1px solid var(--line)}.avatar{width:110px;height:110px;object-fit:cover;border-radius:50%;background:#ddd;border:1px solid var(--line);flex:0 0 auto}.profile-head h2{font-size:40px;letter-spacing:-.06em}.stats{display:flex;gap:15px;margin-top:12px;color:var(--gray);font-size:11px}
+.profile-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}.small-btn{padding:9px 14px;border:1px solid var(--line);border-radius:20px;font-size:10px;background:var(--paper)}
+.upload{width:100%;max-width:700px}.upload h1{margin:15px 0 30px;font-size:clamp(48px,10vw,80px);line-height:.88;letter-spacing:-.06em}.notice{padding:14px;margin-bottom:25px;border:1px solid var(--line);color:var(--gray);font-size:11px;line-height:1.7}.field{margin:18px 0}.field label{display:block;margin-bottom:8px;font-size:9px;font-weight:bold;letter-spacing:.15em}.field input,.field textarea,.field select{width:100%;padding:13px;outline:0;background:var(--paper);border:1px solid var(--line);border-radius:7px}.primary{padding:14px 22px;color:white;background:var(--black);border-radius:30px}
+.player{display:none;position:fixed;left:0;right:0;bottom:58px;z-index:350;padding:10px 18px calc(10px + env(safe-area-inset-bottom));background:rgba(250,248,243,.97);backdrop-filter:blur(20px);border-top:1px solid var(--line)}
+.player.open{display:block}.player-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;align-items:center}.player-art{width:52px;height:52px;object-fit:cover;border-radius:3px;background:#e8e2d7}.player-title{font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.player-artist{margin:3px 0 6px;color:var(--gray);font-size:10px}.controls{display:flex;align-items:center;gap:14px}.controls button{font-size:20px}.play-button{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:var(--black);color:white}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:300;height:calc(58px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);display:flex;align-items:center;justify-content:space-around;background:rgba(250,248,243,.98);border-top:1px solid var(--line)}.bottom-nav button{flex:1;height:58px;color:var(--gray);font-size:9px}.bottom-nav button.active{color:var(--black);font-weight:bold}
+.drawer{position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,.4)}.drawer.open{display:block}.drawer-panel{position:absolute;top:0;right:0;bottom:0;width:min(340px,88vw);padding:25px;background:var(--paper);overflow-y:auto}.drawer-head{display:flex;align-items:center;justify-content:space-between;font-size:20px}.drawer-list{margin-top:30px}.drawer-list button{width:100%;padding:14px 0;text-align:left;border-bottom:1px solid var(--line);font-size:13px}
+.toast{position:fixed;left:50%;bottom:135px;z-index:2000;transform:translateX(-50%);padding:11px 17px;background:#111;color:white;border-radius:30px;font-size:11px;white-space:nowrap;max-width:90vw}
+.auth-overlay{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px)}.auth-overlay.open{display:flex}.auth-panel{width:100%;max-width:420px;max-height:90vh;overflow:auto;padding:28px;background:var(--paper);border-radius:12px;box-shadow:0 30px 100px rgba(0,0,0,.25)}.auth-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.auth-logo{font-size:20px;font-weight:800;letter-spacing:.08em}.auth-close{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;font-size:20px}.auth-title{font-size:38px;line-height:.9;letter-spacing:-.06em;margin-bottom:10px}.auth-subtitle{color:var(--gray);font-size:12px;line-height:1.6;margin-bottom:25px}.auth-field{margin:14px 0}.auth-field label{display:block;margin-bottom:7px;font-size:9px;font-weight:bold;letter-spacing:.15em}.auth-field input{width:100%;padding:14px;border:1px solid var(--line);border-radius:7px;outline:0;background:white}.auth-submit{width:100%;padding:14px;margin-top:10px;border-radius:30px;background:#111;color:white;font-weight:bold}.auth-switch{margin-top:18px;text-align:center;color:var(--gray);font-size:11px}.auth-switch button{color:#111;font-weight:bold;text-decoration:underline}.auth-message{display:none;margin-bottom:15px;padding:11px;border:1px solid var(--line);font-size:11px;line-height:1.5}.auth-message.show{display:block}.account-box{display:flex;align-items:center;gap:10px;margin-top:20px;padding:15px;border:1px solid var(--line);border-radius:8px}.account-box button{margin-left:auto;padding:8px 12px;background:#111;color:white;border-radius:20px;font-size:10px}
+@media(max-width:800px){.page{padding:18px 15px}.hero{margin:15px 0 25px}.hero h1{font-size:clamp(52px,16vw,70px)}.ls-stage{min-height:86vw;max-height:470px}.ls-vinyl{width:min(78vw,360px);height:min(78vw,360px)}.ls-cover{width:min(70vw,310px)}.featured{grid-template-columns:1fr;gap:10px}.track-cover-stage{min-height:84vw}.track-vinyl{width:min(70vw,330px);height:min(70vw,330px)}.track-cover{width:min(72vw,300px)}.track-info h2{font-size:30px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.track-row{grid-template-columns:25px 46px minmax(0,1fr) 30px;gap:9px}.thumb{width:46px;height:46px}.duration{display:none}.profile-head{align-items:flex-start;gap:15px}.avatar{width:85px;height:85px}.avatar-wrap{width:85px;height:85px}.profile-head h2{font-size:29px}.player{bottom:58px;padding:8px 12px}.player-inner{grid-template-columns:44px minmax(0,1fr) auto;gap:9px}.player-art{width:44px;height:44px}.controls{gap:8px}.controls button:first-child,.controls button:last-child{display:none}.play-button{width:40px;height:40px}.auth-panel{padding:23px}.auth-title{font-size:34px}}
+
+const STORY_BACKGROUND_URL="story-background.mp4";
+
+/* LOST SOUND navigation / channel / sharing additions */
+#siteBackButton{visibility:hidden;opacity:.35;transition:.2s}
+#siteBackButton.visible{visibility:visible;opacity:1}
+.channel-hero{display:flex;align-items:center;gap:20px;padding:10px 0 28px;border-bottom:1px solid var(--line)}
+.channel-avatar{width:105px;height:105px;border-radius:50%;object-fit:cover;background:#111;flex:0 0 auto;border:1px solid var(--line)}
+.channel-meta{min-width:0}
+.channel-meta h2{font-size:clamp(30px,7vw,58px);line-height:.9;letter-spacing:-.06em;margin:5px 0}
+.channel-id{font-size:11px;color:var(--gray)}
+.channel-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.channel-actions .small-btn{background:var(--paper)}
+.channel-track-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--gray);font-size:9px;margin-top:4px}
+.search-group-title{font-size:10px;letter-spacing:.16em;font-weight:bold;margin:25px 0 8px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.artist-result{display:flex;align-items:center;gap:14px;padding:13px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.artist-result img,.artist-result .artist-fallback{width:54px;height:54px;border-radius:50%;object-fit:cover;flex:0 0 auto}
+.artist-fallback{display:grid;place-items:center;background:#111;color:#fff;font-weight:800}
+.artist-result strong{font-size:14px}.artist-result small{display:block;color:var(--gray);margin-top:4px;font-size:10px}
+.story-note{font-size:10px;color:var(--gray);line-height:1.6;margin-top:10px}
+.story-loading{position:fixed;inset:0;z-index:6000;background:rgba(0,0,0,.55);display:grid;place-items:center;color:#fff;font-size:12px}
+@media(max-width:800px){.channel-hero{align-items:flex-start}.channel-avatar{width:82px;height:82px}.channel-meta h2{font-size:30px}}
+
+
+.share-choice-backdrop{position:fixed;inset:0;z-index:7000;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;justify-content:center;padding:18px}
+.share-choice{width:min(520px,100%);background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 20px 70px rgba(0,0,0,.25)}
+.share-choice h3{font-size:20px;margin:0 0 5px;letter-spacing:-.03em}
+.share-choice p{font-size:10px;color:var(--gray);margin:0 0 15px}
+.share-choice button{width:100%;min-height:48px;margin-top:8px;border:1px solid var(--line);background:var(--paper);border-radius:12px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.share-choice button.primary{background:#111;color:#fff;border-color:#111}
+.share-choice button.cancel{background:transparent;color:var(--gray)}
+
+
+.profile-edit-wrap{position:relative;display:inline-block}
+.profile-pencil{width:38px;height:38px;border:1px solid var(--line);background:var(--paper);border-radius:50%;font-size:17px;cursor:pointer}
+.profile-pencil-menu{position:absolute;right:0;top:46px;z-index:3000;min-width:165px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:6px;box-shadow:0 14px 40px rgba(0,0,0,.14)}
+.profile-pencil-menu button{display:block;width:100%;border:0;background:transparent;text-align:left;padding:11px 12px;border-radius:8px;font:inherit;font-size:11px;cursor:pointer}
+.profile-pencil-menu button:hover{background:rgba(0,0,0,.05)}
+.profile-pencil-menu .logout-item{color:#a33}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar"><div style="display:flex;align-items:center;gap:8px"><button id="siteBackButton" class="menu" aria-label="Back" title="Back">‹</button><button id="logoButton" class="logo">L/S</button></div><div class="top-title">LOST SOUND</div><button id="menuButton" class="menu">☰</button></header>
+
+<main class="page">
+<section id="home" class="view active">
+<div class="hero"><div><div class="kicker">MUSIC STREAMING</div><h1>LOST<br>SOUND</h1></div><div class="year">2024</div></div>
+<div class="ls-stage"><div id="lostVinyl" class="ls-vinyl"></div><div class="ls-cover">
+<video id="introCoverVideo" autoplay muted loop playsinline preload="auto">
+<source src="assets/lost-cover.mp4" type="video/mp4">
+</video></div></div>
+<div id="emptyState" class="empty-state"><div class="empty-title">No music here yet.</div><div class="empty-text">Your library is waiting.<br>Upload the first track to LOST SOUND.</div></div>
+<div id="musicContent" class="music-content">
+<div class="featured" style="margin-top:45px"><div class="track-cover-stage"><div id="trackVinyl" class="track-vinyl"></div><img id="featuredCover" class="track-cover" alt="Track cover"></div>
+<div class="track-info"><div class="kicker">FEATURED TRACK</div><h2 id="featuredTitle">Select a track</h2><div id="featuredArtist" class="artist">LOST SOUND</div><div class="actions"><button id="featurePlay" class="circle">▶</button><button id="featureLike" class="circle">♡</button><button id="shareButton" class="circle">↗</button></div><div id="wave" class="wave"></div><div class="time"><span id="current">0:00</span><span id="duration">0:00</span></div><div id="mainProgress" class="progress"><i id="progress"></i></div></div></div>
+<section class="section"><div class="section-head"><div class="section-title">POPULAR</div></div><div id="popular"></div></section>
+<section class="section"><div class="section-head"><div class="section-title">NEW RELEASES</div></div><div id="newReleases" class="cards"></div></section>
+<section class="section"><div class="section-head"><div class="section-title">TRENDING</div></div><div id="trending" class="cards"></div></section>
+</div></section>
+
+<section id="discover" class="view"><div class="hero"><div><div class="kicker">DISCOVER</div><h1>NEW<br>WORLDS</h1></div></div><div id="discoverEmpty" class="empty-state"><div class="empty-title">Start discovering something new.</div><div class="empty-text">Published music from LOST SOUND users will appear here.</div></div><div id="discoverMusic" class="cards" style="margin-top:30px"></div></section>
+
+<section id="search" class="view"><div class="kicker">SEARCH</div><div class="search-box"><input id="searchInput" type="search" placeholder="Search music..."><button id="clearSearch">×</button></div><div id="searchResults" style="margin-top:25px"></div></section>
+
+<section id="library" class="view"><div class="hero"><div><div class="kicker">YOUR ARCHIVE</div><h1>MY<br>SOUND</h1></div></div><div id="libraryEmpty" class="empty-state"><div class="empty-title">Your library is waiting.</div><div class="empty-text">Login and like tracks to build your library.</div></div><div id="liked" style="margin-top:30px"></div></section>
+
+<section id="profile" class="view">
+        <div class="profile-edit-wrap" style="position:absolute;right:18px;top:18px;z-index:20">
+          <button id="profilePencilButton" class="profile-pencil" aria-label="Profile menu">✎</button>
+          <div id="profilePencilMenu" class="profile-pencil-menu" hidden>
+            <button id="profileEditMenu">Edit Profile</button>
+            <button id="profileLogoutMenu" class="logout-item">Logout</button>
+          </div>
+        </div><div id="profileContent"><div class="profile-head"><div id="profileAvatarWrap" class="avatar-wrap"><img id="profileAvatar" class="avatar" alt="Profile"><div id="profileAvatarFallback" class="avatar-fallback">L/S</div></div><div><div class="kicker">ARTIST</div><h2 id="profileName">LOST SOUND</h2><div id="profileUsername" class="artist">Independent Music Platform</div><div class="stats"><span id="profileTrackCount">0 Tracks</span></div><div id="profileActions" class="profile-actions"></div></div></div><div id="profileAccount"></div><div id="profileTracks" style="margin-top:35px"></div></div></section>
+
+<section id="artist" class="view">
+      <div id="artistPage"></div>
+    </section>
+
+<section id="upload" class="view"><div class="upload"><div class="kicker">CREATOR STUDIO</div><h1>UPLOAD<br>YOUR SOUND</h1><div class="notice">Login or register first. Your tracks are connected to your own account.</div><div class="field"><label>AUDIO FILE</label><input id="audioFile" type="file" accept="audio/*"></div><div class="field"><label>COVER ARTWORK</label><input id="coverFile" type="file" accept="image/*"></div><div class="field"><label>TRACK TITLE</label><input id="uploadTitle" placeholder="Track title"></div><div class="field"><label>ARTIST NAME</label><input id="uploadArtist" placeholder="Artist name"></div><div class="field"><label>GENRE</label><select id="uploadGenre"><option>Electronic</option><option>Hip-Hop</option><option>Pop</option><option>Rock</option><option>Ambient</option><option>Indie</option><option>R&B</option><option>Experimental</option><option>House</option><option>Techno</option></select></div><div class="field"><label>DESCRIPTION</label><textarea id="uploadDescription" rows="4" placeholder="About this track"></textarea></div><button id="publishButton" class="primary">Publish Track</button></div></section>
+
+<section id="editProfile" class="view"><div class="upload"><div class="kicker">ACCOUNT</div><h1>EDIT<br>PROFILE</h1><div class="field"><label>PROFILE PHOTO</label><input id="profilePhotoFile" type="file" accept="image/*"></div><div class="field"><label>USERNAME</label><input id="editUsername" placeholder="username"></div><div class="field"><label>DISPLAY NAME</label><input id="editDisplayName" placeholder="Your name"></div><button id="saveProfileButton" class="primary">Save Profile</button></div></section>
+</main>
+
+<div id="player" class="player"><div class="player-inner"><div id="playerArt" class="player-art"></div><div><div id="playerTitle" class="player-title">No track selected</div><div id="playerArtist" class="player-artist">LOST SOUND</div><div id="playerProgressBar" class="progress"><i id="playerProgress"></i></div><div class="time"><span id="playerCurrent">0:00</span><span id="playerDuration">0:00</span></div></div><div class="controls"><button id="previousButton">‹</button><button id="playButton" class="play-button">▶</button><button id="nextButton">›</button></div></div></div>
+
+<nav class="bottom-nav"><button class="active" data-view="home">Home</button><button data-view="discover">Discover</button><button data-view="search">Search</button><button data-view="library">Library</button><button data-view="profile">Profile</button></nav>
+
+<div id="drawer" class="drawer"><aside class="drawer-panel"><div class="drawer-head"><strong>L/S</strong><button id="closeDrawer">×</button></div><div class="drawer-list"><button data-go="home">Home</button><button data-go="discover">Discover</button><button data-go="search">Search</button><button data-go="library">Library</button><button data-go="profile">Profile</button><button data-go="upload">Upload</button><button id="authMenuButton">Register / Login</button></div></aside></div>
+
+<div id="authOverlay" class="auth-overlay"><div class="auth-panel"><div class="auth-top"><div class="auth-logo">L/S</div><button id="authClose" class="auth-close">×</button></div><div class="kicker">LOST SOUND ACCOUNT</div><h2 id="authTitle" class="auth-title">REGISTER</h2><div id="authSubtitle" class="auth-subtitle">Create your Lost Sound account and start uploading your music.</div><div id="authMessage" class="auth-message"></div><div class="auth-field"><label>EMAIL</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></div><div class="auth-field"><label>PASSWORD</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Minimum 6 characters"></div><div id="confirmPasswordField" class="auth-field" style="display:none"><label>CONFIRM PASSWORD</label><input id="authPasswordConfirm" type="password" autocomplete="new-password" placeholder="Repeat new password"></div><div id="usernameField" class="auth-field"><label>USERNAME</label><input id="authUsername" type="text" autocomplete="username" placeholder="Your username"></div><div id="displayNameField" class="auth-field"><label>DISPLAY NAME</label><input id="authDisplayName" type="text" placeholder="Your artist name"></div><button id="authSubmit" class="auth-submit">CREATE ACCOUNT</button><div id="forgotWrap" style="text-align:center;margin-top:14px"><button id="forgotButton" style="font-size:11px;text-decoration:underline">Forgot password?</button></div><div class="auth-switch"><span id="authSwitchText">Already have an account?</span> <button id="authSwitchButton">Login</button></div></div></div>
+
+<audio id="audio" preload="metadata"></audio>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://iezjmlesxdqtgrzopnyf.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_oZzBug6zzrXVDEaLljsHeQ_EPQOhcnu";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let tracks=[],artists=[],currentIndex=-1,currentQueue=[],queueIndex=-1,liked=new Set(),currentUser=null,currentProfile=null,authMode="register",pendingReset=false;
+const audio=document.getElementById("audio");
+
+document.addEventListener("DOMContentLoaded",async()=>{
+bindButtons();createWaveform();setupIntroVideo();await checkSession();await loadArtists();await loadTracks();await loadLikes();renderLibrary();restoreRoute();
+});
+
+function setupIntroVideo(){
+const v=document.getElementById("introCoverVideo");
+v.addEventListener("ended",()=>{v.currentTime=0;v.play().catch(()=>{})});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&v.paused)v.play().catch(()=>{})});
+}
+function bindButtons(){
+document.getElementById("siteBackButton").onclick=goBack;document.getElementById("logoButton").onclick=()=>navigate("home");
+document.getElementById("menuButton").onclick=openDrawer;
+document.getElementById("closeDrawer").onclick=closeDrawer;
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>navigate(b.dataset.view));
+document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{closeDrawer();navigate(b.dataset.go)});
+document.getElementById("authMenuButton").onclick=()=>{closeDrawer();currentUser?logout():openAuth("login")};
+document.getElementById("authClose").onclick=closeAuth;
+document.getElementById("authSubmit").onclick=submitAuth;
+document.getElementById("authSwitchButton").onclick=switchAuth;
+document.getElementById("forgotButton").onclick=forgotPassword;
+document.getElementById("publishButton").onclick=publishTrack;
+document.getElementById("playButton").onclick=togglePlay;
+document.getElementById("featurePlay").onclick=togglePlay;
+document.getElementById("featureLike").onclick=toggleLike;
+document.getElementById("shareButton").onclick=shareTrack;
+document.getElementById("previousButton").onclick=previousTrack;
+document.getElementById("nextButton").onclick=nextTrack;
+document.getElementById("mainProgress").onclick=seek;
+document.getElementById("playerProgressBar").onclick=seek;
+document.getElementById("searchInput").oninput=()=>{runSearch();syncSearchURL()};
+document.getElementById("clearSearch").onclick=()=>{clearSearch();syncSearchURL()};
+document.getElementById("featuredCover").onclick=()=>currentIndex>=0?togglePlay():playTrack(0);
+document.getElementById("saveProfileButton").onclick=saveProfile;
+audio.onplay=startPlaying;audio.onpause=stopPlaying;audio.onended=nextTrack;audio.ontimeupdate=updateProgress;audio.onloadedmetadata=updateProgress;
+}
+
+async function ensureUserData(){
+ if(!currentUser)return;
+ const username=(currentProfile?.username||currentUser.user_metadata?.username||(currentUser.email||"user").split("@")[0]).replace(/\s+/g,"").toLowerCase();
+ const displayName=currentProfile?.display_name||currentUser.user_metadata?.display_name||username;
+
+ // Create/update the profile row for THIS auth user. Never create another auth account.
+ const profileResult=await supabaseClient.from("profiles").upsert({
+   id:currentUser.id,
+   username,
+   display_name:displayName,
+   role:currentProfile?.role||"artist"
+ },{onConflict:"id"});
+ if(profileResult.error)console.error("profiles upsert:",profileResult.error);
+
+ // Make sure the artist row is linked to the same auth user.
+ let artistResult=await supabaseClient.from("artists").select("id,user_id,name,username").eq("user_id",currentUser.id).maybeSingle();
+ if(artistResult.error)console.error("artists read:",artistResult.error);
+ if(!artistResult.data){
+   const r=await supabaseClient.from("artists").insert({
+     user_id:currentUser.id,
+     name:displayName,
+     username
+   });
+   if(r.error&&!String(r.error.message||"").toLowerCase().includes("duplicate")){
+     console.error("artist insert:",r.error);
+   }
+ }
+}
+
+async function checkSession(){
+ const {data,error}=await supabaseClient.auth.getSession();
+ if(error){console.error("getSession:",error);currentUser=null;currentProfile=null;updateAuthUI();return}
+ currentUser=data?.session?.user||null;
+ if(currentUser){
+   try{await ensureUserData();await loadProfile()}catch(e){console.error("session data:",e)}
+ }
+ updateAuthUI();
+ supabaseClient.auth.onAuthStateChange((event,session)=>{
+   currentUser=session?.user||null;
+   if(event==="PASSWORD_RECOVERY"){pendingReset=true;setTimeout(()=>openAuth("reset"),0);return}
+   setTimeout(async()=>{
+     if(currentUser){
+       try{await ensureUserData();await loadProfile();await loadArtists();await loadTracks();await loadLikes();renderLibrary();applyRoute(false)}catch(e){console.error("auth state data:",e)}
+     }else{currentProfile=null;liked=new Set()}
+     updateAuthUI();
+   },0);
+ });
+ const hash=new URLSearchParams(location.hash.replace("#","?"));
+ if(location.hash.includes("type=recovery")||hash.get("type")==="recovery"){pendingReset=true;setTimeout(()=>openAuth("reset"),0)}
+}
+
+async function loadProfile(){
+ if(!currentUser)return;
+ const {data,error}=await supabaseClient.from("profiles").select("*").eq("id",currentUser.id).maybeSingle();
+ if(error)console.error("Profile:",error);
+ currentProfile=data||{
+   id:currentUser.id,
+   username:(currentUser.user_metadata?.username||(currentUser.email||"user").split("@")[0]).replace(/\s+/g,"").toLowerCase(),
+   display_name:currentUser.user_metadata?.display_name||(currentUser.email||"user").split("@")[0],
+   avatar_url:null
+ };
+ renderProfile();
+}
+
+async function createUserData(){
+if(!currentUser)return;
+const username=(document.getElementById("authUsername").value.trim()||currentUser.email.split("@")[0]).replace(/\s+/g,"").toLowerCase();
+const displayName=document.getElementById("authDisplayName").value.trim()||username;
+await supabaseClient.from("profiles").upsert({id:currentUser.id,username,display_name:displayName,role:"artist"},{onConflict:"id"});
+await supabaseClient.from("artists").upsert({user_id:currentUser.id,name:displayName,username},{onConflict:"user_id"});
+await loadProfile();
+}
+function openAuth(mode){authMode=mode;updateAuthPanel();document.getElementById("authOverlay").classList.add("open")}
+function closeAuth(){document.getElementById("authOverlay").classList.remove("open")}
+function updateAuthPanel(){
+const register=authMode==="register",login=authMode==="login",reset=authMode==="reset";
+document.getElementById("authTitle").textContent=register?"REGISTER":login?"LOGIN":"RESET PASSWORD";
+document.getElementById("authSubtitle").textContent=register?"Create your Lost Sound account and start uploading your music.":login?"Login to your Lost Sound account.":"Set a new password for your Lost Sound account.";
+document.getElementById("usernameField").style.display=register?"block":"none";
+document.getElementById("displayNameField").style.display=register?"block":"none";
+document.getElementById("authPassword").placeholder=reset?"New password (minimum 6 characters)":"Minimum 6 characters";document.getElementById("confirmPasswordField").style.display=reset?"block":"none";
+document.getElementById("authSubmit").textContent=register?"CREATE ACCOUNT":login?"LOGIN":"UPDATE PASSWORD";
+document.getElementById("authSwitchText").textContent=register?"Already have an account?":"Don't have an account?";
+document.getElementById("authSwitchButton").textContent=register?"Login":"Register";
+document.getElementById("forgotWrap").style.display=login?"block":"none";
+hideAuthMessage();
+}
+function switchAuth(){authMode=authMode==="register"?"login":"register";updateAuthPanel()}
+async function submitAuth(){
+const email=document.getElementById("authEmail").value.trim(),password=document.getElementById("authPassword").value;
+if(authMode==="reset"){const confirm=document.getElementById("authPasswordConfirm").value;if(password.length<6)return showAuthMessage("Password must be at least 6 characters.");if(password!==confirm)return showAuthMessage("Passwords do not match.");const {error}=await supabaseClient.auth.updateUser({password});if(error)return showAuthMessage(authError(error));pendingReset=false;document.getElementById("authPassword").value="";document.getElementById("authPasswordConfirm").value="";closeAuth();history.replaceState({},document.title,location.pathname);toast("Password updated successfully.");return}
+if(!email)return showAuthMessage("Please enter your email.");
+if(password.length<6)return showAuthMessage("Password must be at least 6 characters.");
+const button=document.getElementById("authSubmit");button.disabled=true;button.textContent="PLEASE WAIT...";
+try{
+if(authMode==="register"){
+const username=(document.getElementById("authUsername").value.trim()||email.split("@")[0]).replace(/\s+/g,"").toLowerCase();
+const displayName=document.getElementById("authDisplayName").value.trim()||username;
+const {data,error}=await supabaseClient.auth.signUp({email,password,options:{emailRedirectTo:location.origin+location.pathname,data:{username,display_name:displayName}}});
+if(error)throw error;
+if(data.session){currentUser=data.user;await ensureUserData();await loadProfile();await loadArtists();closeAuth();navigate("profile");toast("Account created successfully.")}
+else showAuthMessage("Account created. Check your email, confirm it, then return and login.");
+}else{
+const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+if(error)throw error;
+currentUser=data.user;try{await ensureUserData()}catch(e){console.error("ensureUserData:",e)}await loadProfile();await loadArtists();await loadTracks();closeAuth();toast("Login successful.");applyRoute(false);
+}
+}catch(e){showAuthMessage(authError(e))}finally{button.disabled=false;updateAuthPanel()}
+}
+async function forgotPassword(){
+const email=document.getElementById("authEmail").value.trim();
+if(!email)return showAuthMessage("Enter your email first.");
+const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname+"#type=recovery"});
+if(error)return showAuthMessage(authError(error));
+showAuthMessage("Password reset email sent. Check your inbox.");
+}
+function authError(e){
+const m=(e?.message||"").toLowerCase();
+if(m.includes("invalid login"))return"Email or password is incorrect.";
+if(m.includes("email not confirmed"))return"Please confirm your email before logging in.";
+if(m.includes("already registered"))return"This email is already registered.";
+if(m.includes("invalid email"))return"Please enter a valid email address.";
+if(m.includes("password"))return"Password is invalid or too short.";
+return e?.message||"Authentication failed.";
+}
+function showAuthMessage(m){const e=document.getElementById("authMessage");e.textContent=m;e.classList.add("show")}
+function hideAuthMessage(){const e=document.getElementById("authMessage");e.textContent="";e.classList.remove("show")}
+function updateAuthUI(){document.getElementById("authMenuButton").textContent=currentUser?"Logout":"Register / Login";renderProfile()}
+async function logout(){const {error}=await supabaseClient.auth.signOut();if(error)return toast(error.message);currentUser=null;currentProfile=null;currentIndex=-1;currentQueue=[];audio.pause();audio.removeAttribute("src");document.getElementById("player").classList.remove("open");updateAuthUI();renderProfile();showView("home");toast("Logged out.")}
+
+async function loadArtists(){
+  try{
+    const {data,error}=await supabaseClient.from("artists").select("id,user_id,name,username").order("name",{ascending:true});
+    if(error){console.error("artists:",error);artists=[];return}
+    const rows=data||[];
+    const ids=rows.map(a=>a.user_id).filter(Boolean);
+    let profiles=[];
+    if(ids.length){
+      const pr=await supabaseClient.from("profiles").select("id,avatar_url,display_name,username").in("id",ids);
+      if(!pr.error)profiles=pr.data||[];
+    }
+    const pmap=new Map(profiles.map(p=>[p.id,p]));
+    artists=rows.map(a=>{const p=pmap.get(a.user_id)||{};return{
+      id:a.id,userId:a.user_id,name:a.name||p.display_name||a.username||"Artist",
+      username:a.username||p.username||"",avatar:p.avatar_url||""
+    }});
+  }catch(e){console.error("loadArtists:",e);artists=[]}
+}
+
+async function loadTracks(){
+const {data,error}=await supabaseClient.from("tracks").select("id,artist_id,title,description,cover_url,audio_url,duration_seconds,play_count,like_count,is_published,created_at,artists(id,user_id,name,username)").eq("is_published",true).order("created_at",{ascending:false});
+if(error){console.error(error);tracks=[];return updateMusicUI()}
+tracks=(data||[]).map(t=>{const a=Array.isArray(t.artists)?t.artists[0]:t.artists;return{id:t.id,artistId:t.artist_id,artistUserId:a?.user_id||"",title:t.title,description:t.description||"",cover:t.cover_url,audio:t.audio_url,duration:formatTime(t.duration_seconds),durationSeconds:t.duration_seconds||0,playCount:t.play_count||0,artist:a?.name||"Unknown Artist",username:a?.username||"",createdAt:t.created_at,audioUrl:t.audio_url}});
+updateMusicUI();if(tracks.length&&currentIndex<0){const p=new URLSearchParams(location.search);const rid=p.get("id");const ri=rid?tracks.findIndex(t=>String(t.id)===String(rid)):-1;if(ri>=0)selectTrack(ri,tracks,false);else if(!p.get("view"))selectTrack(0,tracks,false);}
+}
+async function loadLikes(){
+if(!currentUser)return;
+const {data}=await supabaseClient.from("track_likes").select("track_id").eq("user_id",currentUser.id);
+liked=new Set((data||[]).map(x=>x.track_id));if(currentIndex>=0)syncLikeButton();
+}
+async function publishTrack(){
+if(!currentUser){openAuth("login");toast("Please login first.");return}
+const audioFile=document.getElementById("audioFile").files[0],coverFile=document.getElementById("coverFile").files[0],title=document.getElementById("uploadTitle").value.trim(),artistName=document.getElementById("uploadArtist").value.trim(),description=document.getElementById("uploadDescription").value.trim();
+if(!audioFile)return toast("Select an audio file first.");if(!coverFile)return toast("Select a cover first.");if(!title)return toast("Enter a track title.");if(!artistName)return toast("Enter artist name.");
+const button=document.getElementById("publishButton");button.disabled=true;button.textContent="UPLOADING...";
+try{
+let {data:artist,error}=await supabaseClient.from("artists").select("*").eq("user_id",currentUser.id).maybeSingle();
+if(error)throw error;
+if(!artist){const r=await supabaseClient.from("artists").insert({user_id:currentUser.id,name:artistName,username:currentProfile?.username||artistName}).select().single();if(r.error)throw r.error;artist=r.data}
+const base=currentUser.id+"/"+crypto.randomUUID(),audioPath=base+"-"+cleanFileName(audioFile.name),coverPath=currentUser.id+"/"+crypto.randomUUID()+"-"+cleanFileName(coverFile.name);
+let r=await supabaseClient.storage.from("audio").upload(audioPath,audioFile,{cacheControl:"3600",upsert:false,contentType:audioFile.type||"audio/mpeg"});if(r.error)throw r.error;
+r=await supabaseClient.storage.from("covers").upload(coverPath,coverFile,{cacheControl:"3600",upsert:false,contentType:coverFile.type||"image/jpeg"});if(r.error)throw r.error;
+const audioPublic=supabaseClient.storage.from("audio").getPublicUrl(audioPath).data.publicUrl,coverPublic=supabaseClient.storage.from("covers").getPublicUrl(coverPath).data.publicUrl,duration=await getAudioDuration(audioFile);
+r=await supabaseClient.from("tracks").insert({artist_id:artist.id,title,description,cover_url:coverPublic,audio_url:audioPublic,duration_seconds:Math.round(duration||0),play_count:0,like_count:0,is_published:true});if(r.error)throw r.error;
+toast("Track published successfully.");document.querySelectorAll("#audioFile,#coverFile,#uploadTitle,#uploadArtist,#uploadDescription").forEach(e=>e.value="");await loadArtists();await loadTracks();if(tracks.length)selectTrack(0,tracks,false);navigate("home");
+}catch(e){console.error(e);toast(e.message||"Upload failed.")}finally{button.disabled=false;button.textContent="Publish Track"}
+}
+function getAudioDuration(file){return new Promise(resolve=>{const u=URL.createObjectURL(file),a=document.createElement("audio");a.preload="metadata";a.onloadedmetadata=()=>{const d=a.duration;URL.revokeObjectURL(u);resolve(d)};a.onerror=()=>{URL.revokeObjectURL(u);resolve(0)};a.src=u})}
+function cleanFileName(n){return String(n).replace(/[^a-zA-Z0-9._-]/g,"_")}
+function updateMusicUI(){const empty=document.getElementById("emptyState"),content=document.getElementById("musicContent");if(!tracks.length){empty.style.display="block";content.classList.remove("visible")}else{empty.style.display="none";content.classList.add("visible");renderPopular();renderNewReleases();renderTrending()}renderDiscover()}
+function renderPopular(){const c=document.getElementById("popular");c.innerHTML=tracks.map((t,i)=>trackRow(t,i)).join("");bindTrackClicks(c)}
+function trackRow(t,i){
+ const date=formatDate(t.createdAt);
+ return`<div class="track-row"><span class="number">${String(i+1).padStart(2,"0")}</span><img class="thumb" src="${safeURL(t.cover)}">
+ <div class="track-click" data-index="${i}" style="min-width:0;cursor:pointer">
+   <div class="track-title">${escapeHTML(t.title)}</div>
+   <div class="artist">${escapeHTML(t.artist)}</div>
+   <div class="channel-track-meta"><span>${escapeHTML(date)}</span><span>•</span><span>${Number(t.playCount||0).toLocaleString()} plays</span></div>
+ </div>
+ <span class="duration">${t.duration}</span><button class="more" data-share-track="${escapeHTML(t.id)}">⋯</button></div>`}
+function bindTrackClicks(c){c.querySelectorAll(".track-click").forEach(e=>e.onclick=()=>{const i=Number(e.dataset.index);playTrack(i);if(tracks[i])navigate("track",{trackId:tracks[i].id})})}
+function renderCards(id,list=tracks){const c=document.getElementById(id);c.innerHTML=list.map(t=>{const i=tracks.indexOf(t);return`<article class="card" data-index="${i}"><img src="${safeURL(t.cover)}"><h4>${escapeHTML(t.title)}</h4><p>${escapeHTML(t.artist)}</p></article>`}).join("");c.querySelectorAll(".card").forEach(e=>e.onclick=()=>playTrack(Number(e.dataset.index)))}
+function renderNewReleases(){renderCards("newReleases")}
+function renderTrending(){renderCards("trending",tracks.slice(0,4))}
+function renderDiscover(){const empty=document.getElementById("discoverEmpty");if(!tracks.length){empty.style.display="block";document.getElementById("discoverMusic").innerHTML="";return}empty.style.display="none";renderCards("discoverMusic")}
+function selectTrack(index,queue=tracks,autoplay=false){
+ if(index<0||index>=tracks.length)return;
+ const selected=tracks[index];
+ currentQueue=(queue||tracks).filter(t=>tracks.some(x=>x.id===t.id));
+ if(!currentQueue.length)currentQueue=tracks.slice();
+ queueIndex=currentQueue.findIndex(t=>t.id===selected.id);
+ currentIndex=index;
+ selected._playCountedSession=false;
+ document.getElementById("featuredCover").src=safeURL(selected.cover);
+ document.getElementById("featuredTitle").textContent=selected.title;
+ document.getElementById("featuredArtist").textContent=selected.artist;
+ document.getElementById("playerTitle").textContent=selected.title;
+ document.getElementById("playerArtist").textContent=selected.artist;
+ const art=document.getElementById("playerArt");
+ art.innerHTML=selected.cover?`<img src="${safeURL(selected.cover)}" style="width:100%;height:100%;object-fit:cover;border-radius:3px">`:"L/S";
+ document.getElementById("player").classList.add("open");
+ syncLikeButton();
+ if(autoplay&&selected.audio){
+   audio.src=selected.audio;audio.load();
+   audio.play().catch(()=>toast("Press play to start."));
+ }
+}
+async function playTrack(index,queue=tracks){
+ if(index<0||index>=tracks.length)return;
+ const selected=tracks[index];
+ selectTrack(index,queue,false);
+ if(!selected.audio)return toast("Audio file unavailable.");
+ audio.src=selected.audio;audio.load();
+ try{await audio.play();await countPlay(selected)}catch(e){toast("Press play to start.")}
+}
+function syncLikeButton(){document.getElementById("featureLike").classList.toggle("active",currentIndex>=0&&liked.has(tracks[currentIndex]?.id));document.getElementById("featureLike").textContent=currentIndex>=0&&liked.has(tracks[currentIndex]?.id)?"♥":"♡"}
+async function countPlay(track){
+ if(!track?.id)return;
+ if(track._playCountedSession)return;
+ track._playCountedSession=true;
+
+ // Immediate UI update.
+ track.playCount=Number(track.playCount||0)+1;
+ updateTrackPlayCountUI(track);
+
+ try{
+   const {data,error}=await supabaseClient.rpc("increment_play_count",{track_id:track.id});
+   if(error)throw error;
+   if(typeof data==="number")track.playCount=data;
+   else if(Array.isArray(data)&&typeof data[0]==="number")track.playCount=data[0];
+   updateTrackPlayCountUI(track);
+ }catch(rpcError){
+   console.warn("increment_play_count RPC failed:",rpcError);
+   try{
+     const {data:row,error:readError}=await supabaseClient.from("tracks").select("play_count").eq("id",track.id).single();
+     if(readError)throw readError;
+     const next=Number(row?.play_count||0)+1;
+     const {error:updateError}=await supabaseClient.from("tracks").update({play_count:next}).eq("id",track.id);
+     if(updateError)throw updateError;
+     track.playCount=next;
+     updateTrackPlayCountUI(track);
+   }catch(updateError){
+     console.error("Play count update failed:",updateError);
+     try{
+       const {data:row}=await supabaseClient.from("tracks").select("play_count").eq("id",track.id).single();
+       if(row){track.playCount=Number(row.play_count||0);updateTrackPlayCountUI(track)}
+     }catch(e){}
+     toast("Play count could not be saved.");
+   }
+ }
+}
+function updateTrackPlayCountUI(track){
+ const value=Number(track.playCount||0).toLocaleString()+" plays";
+ document.querySelectorAll("[data-play-count-id]").forEach(el=>{
+   if(el.getAttribute("data-play-count-id")===String(track.id))el.textContent=value;
+ });
+ // Re-render the visible track lists so the count is persistent everywhere.
+ const active=document.querySelector(".view.active")?.id;
+ if(active==="home" && typeof updateMusicUI==="function")updateMusicUI();
+ else if(active==="search" && typeof runSearch==="function")runSearch();
+ else if(active==="artist"){
+   const id=new URLSearchParams(location.search).get("artist");
+   if(id && typeof renderArtistChannel==="function")renderArtistChannel(id);
+ }
+}
+function togglePlay(){if(currentIndex<0)return tracks.length?playTrack(0):toast("No music available yet.");if(audio.paused){if(!audio.src){const t=tracks[currentIndex];audio.src=t.audio||"";audio.load()}audio.play().then(()=>countPlay(tracks[currentIndex])).catch(()=>toast("Unable to play audio."));}else audio.pause()}
+function startPlaying(){document.getElementById("trackVinyl").classList.add("playing");document.getElementById("lostVinyl").classList.add("playing");document.getElementById("playButton").textContent="Ⅱ";document.getElementById("featurePlay").textContent="Ⅱ"}
+function stopPlaying(){document.getElementById("trackVinyl").classList.remove("playing");document.getElementById("lostVinyl").classList.remove("playing");document.getElementById("playButton").textContent="▶";document.getElementById("featurePlay").textContent="▶"}
+function nextTrack(){if(!currentQueue.length)return;const n=(queueIndex+1)%currentQueue.length;const t=currentQueue[n],i=tracks.findIndex(x=>x.id===t.id);playTrack(i,currentQueue)}
+function previousTrack(){if(!currentQueue.length)return;const n=queueIndex<=0?currentQueue.length-1:queueIndex-1;const t=currentQueue[n],i=tracks.findIndex(x=>x.id===t.id);playTrack(i,currentQueue)}
+function updateProgress(){const p=audio.duration?(audio.currentTime/audio.duration)*100:0;document.getElementById("progress").style.width=p+"%";document.getElementById("playerProgress").style.width=p+"%";document.getElementById("current").textContent=formatTime(audio.currentTime);document.getElementById("playerCurrent").textContent=formatTime(audio.currentTime);document.getElementById("duration").textContent=formatTime(audio.duration);document.getElementById("playerDuration").textContent=formatTime(audio.duration)}
+function seek(e){if(!audio.duration)return;const r=e.currentTarget.getBoundingClientRect();audio.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*audio.duration}
+function formatTime(s){if(!isFinite(s)||s<0)return"0:00";return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0")}
+function createWaveform(){const w=document.getElementById("wave");w.innerHTML=Array.from({length:80},()=>`<span style="height:${5+Math.floor(Math.random()*30)}px"></span>`).join("")}
+async function toggleLike(){
+if(currentIndex<0)return toast("Select a track first.");if(!currentUser)return openAuth("login");
+const id=tracks[currentIndex].id;
+if(liked.has(id)){const {error}=await supabaseClient.from("track_likes").delete().eq("user_id",currentUser.id).eq("track_id",id);if(!error)liked.delete(id)}
+else{const {error}=await supabaseClient.from("track_likes").insert({user_id:currentUser.id,track_id:id});if(!error)liked.add(id)}
+syncLikeButton();renderLibrary()
+}
+function renderLibrary(){const empty=document.getElementById("libraryEmpty"),c=document.getElementById("liked"),lt=tracks.filter(t=>liked.has(t.id));if(!lt.length){empty.style.display="block";c.innerHTML="";return}empty.style.display="none";c.innerHTML=lt.map(t=>trackRow(t,tracks.indexOf(t))).join("");bindTrackClicks(c)}
+function runSearch(){
+ const q=document.getElementById("searchInput").value.trim().toLowerCase(),c=document.getElementById("searchResults");
+ if(!q){c.innerHTML="";return}
+ const ar=artists.filter(a=>(a.name+" "+a.username).toLowerCase().includes(q));
+ const tr=tracks.filter(t=>(t.title+" "+t.artist+" "+t.description).toLowerCase().includes(q));
+ let out="";
+ if(ar.length)out+=`<div class="search-group-title">ARTISTS / CHANNELS</div>`+ar.map(artistResultHTML).join("");
+ if(tr.length)out+=`<div class="search-group-title">TRACKS</div>`+tr.map(t=>trackRow(t,tracks.indexOf(t))).join("");
+ c.innerHTML=out||`<div class="empty-state"><div class="empty-title">No results.</div><div class="empty-text">Try another search.</div></div>`;
+ bindTrackClicks(c);
+ c.querySelectorAll("[data-artist-id]").forEach(e=>e.onclick=()=>navigate("artist",{artistId:e.dataset.artistId}));
+ c.querySelectorAll("[data-share-track]").forEach(e=>e.onclick=ev=>{ev.stopPropagation();const i=tracks.findIndex(t=>t.id===e.dataset.shareTrack);if(i>=0){selectTrack(i);shareTrack()}})
+}
+function artistResultHTML(a){
+ const initials=String(a.name||"A").trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
+ const av=a.avatar?`<img src="${safeURL(a.avatar)}" alt="">`:`<div class="artist-fallback">${escapeHTML(initials)}</div>`;
+ return`<div class="artist-result" data-artist-id="${escapeHTML(a.id)}">${av}<div><strong>${escapeHTML(a.name)}</strong><small>@${escapeHTML(a.username||"artist")} • Channel</small></div></div>`
+}
+
+function clearSearch(){document.getElementById("searchInput").value="";document.getElementById("searchResults").innerHTML=""}
+
+function formatDate(v){
+ try{return v?new Intl.DateTimeFormat(undefined,{year:"numeric",month:"short",day:"numeric"}).format(new Date(v)):"Unknown date"}
+ catch(e){return "Unknown date"}
+}
+function artistById(id){return artists.find(a=>String(a.id)===String(id))}
+function renderArtistChannel(id){
+ const a=artistById(id),c=document.getElementById("artistPage");
+ if(!a){c.innerHTML=`<div class="empty-state"><div class="empty-title">Channel not found.</div></div>`;return}
+ const mine=tracks.filter(t=>String(t.artistId)===String(a.id)).sort((x,y)=>new Date(y.createdAt||0)-new Date(x.createdAt||0));
+ const initials=String(a.name||"A").trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase();
+ const av=a.avatar?`<img class="channel-avatar" src="${safeURL(a.avatar)}" alt="${escapeHTML(a.name)}">`:`<div class="channel-avatar artist-fallback">${escapeHTML(initials)}</div>`;
+ c.innerHTML=`
+ <div class="kicker">ARTIST CHANNEL</div>
+ <div class="channel-hero">
+   ${av}<div class="channel-meta"><div class="kicker">@${escapeHTML(a.username||"artist")}</div><h2>${escapeHTML(a.name)}</h2>
+   <div class="channel-id">CHANNEL ID: ${escapeHTML(a.username||a.id)}</div>
+   <div class="channel-actions"><button class="small-btn" id="shareProfileButton">↗ Share Profile</button><button class="small-btn" id="copyChannelButton">Copy Channel ID</button></div></div>
+ </div>
+ <section class="section"><div class="section-head"><div class="section-title">RELEASES</div><div class="artist">${mine.length} Tracks</div></div>
+ ${mine.length?mine.map((t,i)=>trackRow(t,tracks.indexOf(t))).join(""):`<div class="empty-state"><div class="empty-title">No tracks yet.</div><div class="empty-text">This channel has no published tracks.</div></div>`}</section>`;
+ const list=c.querySelectorAll(".track-click");list.forEach(e=>e.onclick=()=>{const i=Number(e.dataset.index);playTrack(i);navigate("track",{trackId:tracks[i]?.id})});
+ c.querySelectorAll("[data-share-track]").forEach(e=>e.onclick=ev=>{ev.stopPropagation();const i=tracks.findIndex(t=>t.id===e.dataset.shareTrack);if(i>=0){selectTrack(i);shareTrack()}})
+ document.getElementById("shareProfileButton").onclick=()=>shareProfile(a);
+ document.getElementById("copyChannelButton").onclick=()=>copyText(a.username||a.id,"Channel ID copied.");
+}
+function copyText(value,msg="Copied."){
+ if(navigator.clipboard?.writeText)navigator.clipboard.writeText(String(value)).then(()=>toast(msg)).catch(()=>fallbackCopy(value,msg));
+ else fallbackCopy(value,msg);
+}
+function fallbackCopy(value,msg){const ta=document.createElement("textarea");ta.value=value;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast(msg)}catch(e){toast("Copy failed.")}ta.remove()}
+async function shareProfile(a){
+ const url=new URL(location.href);url.search="";url.hash="";url.searchParams.set("view","artist");url.searchParams.set("artist",a.id);
+ showShareChoice({
+   title:"Share Profile",
+   subtitle:`${a.name} • LOST SOUND`,
+   onStory:()=>createAndShareStory({type:"profile",artist:a,url:url.href}),
+   onShare:async()=>{if(navigator.share){try{await navigator.share({title:a.name,text:`${a.name} — LOST SOUND`,url:url.href})}catch(e){}}else copyText(url.href,"Profile link copied.")},
+   onCopy:()=>copyText(url.href,"Profile link copied.")
+ });
+}
+function showShareChoice({title,subtitle,onStory,onShare,onCopy}){
+ document.getElementById("shareChoiceBackdrop")?.remove();
+ const b=document.createElement("div");
+ b.id="shareChoiceBackdrop";
+ b.className="share-choice-backdrop";
+ b.innerHTML=`<div class="share-choice" role="dialog" aria-modal="true">
+   <h3>${escapeHTML(title)}</h3>
+   <p>${escapeHTML(subtitle)}</p>
+   <button class="primary" data-action="story">Instagram Story • 15 sec</button>
+   <button data-action="share">Share Link</button>
+   <button data-action="copy">Copy Link</button>
+   <button class="cancel" data-action="cancel">Cancel</button>
+ </div>`;
+ document.body.appendChild(b);
+ const close=()=>b.remove();
+ b.addEventListener("click",e=>{if(e.target===b)close()});
+ b.querySelector('[data-action="cancel"]').onclick=close;
+ b.querySelector('[data-action="story"]').onclick=async()=>{close();await onStory()};
+ b.querySelector('[data-action="share"]').onclick=async()=>{close();await onShare()};
+ b.querySelector('[data-action="copy"]').onclick=()=>{close();onCopy()};
+}
+async function createAndShareStory({type,artist,track,url}){
+ if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){return}
+ const overlay=document.createElement("div");overlay.className="story-loading";overlay.textContent="Creating 15-second story…";document.body.appendChild(overlay);
+ try{
+   const canvas=document.createElement("canvas"),ctx=canvas.getContext("2d");
+   canvas.width=720;canvas.height=1280;
+   const stream=canvas.captureStream(30);
+   const mime=["video/mp4;codecs=h264","video/webm;codecs=vp9","video/webm"].find(x=>MediaRecorder.isTypeSupported(x))||"";
+   if(!mime)throw new Error("Video recording is not supported");
+   const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:5000000});
+   const chunks=[];rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+   const done=new Promise((resolve,reject)=>{rec.onstop=resolve;rec.onerror=reject});
+   rec.start();
+
+   const bg=document.createElement("video");
+   bg.src=STORY_BACKGROUND_URL;bg.muted=true;bg.loop=true;bg.playsInline=true;bg.crossOrigin="anonymous";
+   await bg.play().catch(()=>{});
+   const img=new Image();img.crossOrigin="anonymous";
+   img.src=type==="track"?(track?.cover||""):(artist?.avatar||"");
+   await new Promise(r=>{img.onload=r;img.onerror=r});
+
+   let audio=null,audioCtx=null,dest=null,source=null;
+   if(type==="track"&&track?.audioUrl){
+     audio=document.createElement("audio");audio.src=track.audioUrl;audio.crossOrigin="anonymous";audio.preload="auto";
+     audio.currentTime=0;audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+     dest=audioCtx.createMediaStreamDestination();source=audioCtx.createMediaElementSource(audio);source.connect(dest);
+     audio.play().catch(()=>{});
+     for(const tr of dest.stream.getAudioTracks())stream.addTrack(tr);
+   }
+
+   const start=performance.now(),duration=15000;
+   function draw(now){
+     const elapsed=now-start,p=Math.min(elapsed/duration,1),t=elapsed/1000;
+     if(bg.readyState>=2){
+       const scale=Math.max(canvas.width/bg.videoWidth,canvas.height/bg.videoHeight);
+       const w=bg.videoWidth*scale,h=bg.videoHeight*scale;
+       ctx.drawImage(bg,(canvas.width-w)/2,(canvas.height-h)/2,w,h);
+       ctx.fillStyle="rgba(0,0,0,.30)";ctx.fillRect(0,0,canvas.width,canvas.height);
+     }else{
+       ctx.fillStyle="#090909";ctx.fillRect(0,0,720,1280);
+     }
+
+     ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="700 22px Arial";ctx.fillText("LOST SOUND",360,90);
+
+     if(type==="track"){
+       const cx=360,cy=590,r=265;
+       ctx.save();ctx.translate(cx,cy);ctx.rotate(t*Math.PI/2);
+       ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.fillStyle="#111";ctx.fill();
+       for(let rr=55;rr<r;rr+=28){ctx.beginPath();ctx.arc(0,0,rr,0,Math.PI*2);ctx.strokeStyle="rgba(255,255,255,.12)";ctx.lineWidth=2;ctx.stroke()}
+       ctx.restore();
+       if(img.complete&&img.naturalWidth)drawImageCover(ctx,img,260,490,200,200);
+       ctx.fillStyle="#fff";ctx.font="700 42px Arial";ctx.fillText(track?.title||"Track",360,930);
+       ctx.font="24px Arial";ctx.fillStyle="#e0dbd3";ctx.fillText(track?.artist||artist?.name||"",360,970);
+       ctx.font="17px Arial";ctx.fillText(`${Number(track?.playCount||0).toLocaleString()} PLAYS  •  ${formatDate(track?.createdAt)}`,360,1025);
+       ctx.font="16px Arial";ctx.fillText(`CHANNEL ID  ${artist?.username||track?.username||""}`,360,1080);
+     }else{
+       if(img.complete&&img.naturalWidth){ctx.save();ctx.shadowBlur=35;ctx.shadowColor="rgba(255,255,255,.18)";drawImageCover(ctx,img,170,390,380,380);ctx.restore()}
+       ctx.fillStyle="#fff";ctx.font="700 46px Arial";ctx.fillText(artist?.name||"Artist",360,875);
+       ctx.font="20px Arial";ctx.fillStyle="#e0dbd3";ctx.fillText(`CHANNEL ID  ${artist?.username||artist?.id||""}`,360,925);
+       ctx.font="18px Arial";ctx.fillText("LISTEN ON LOST SOUND",360,995);
+     }
+     ctx.fillStyle="rgba(255,255,255,.7)";ctx.font="13px Arial";ctx.fillText("15 SEC",360,1200);
+     if(p<1)requestAnimationFrame(draw);else{if(audio){audio.pause();audio.currentTime=0}if(audioCtx)audioCtx.close();bg.pause();rec.stop()}
+   }
+   requestAnimationFrame(draw);await done;
+   const blob=new Blob(chunks,{type:mime}),ext=mime.includes("mp4")?"mp4":"webm";
+   const file=new File([blob],`lost-sound-${type}-${Date.now()}.${ext}`,{type:blob.type});
+   if(navigator.share&&navigator.canShare?.({files:[file]})){
+     await navigator.share({title:type==="track"?track.title:artist.name,text:"LOST SOUND • Instagram Story",url,files:[file]});
+     toast("Choose Instagram in the share sheet.");
+   }else{
+     const aEl=document.createElement("a");aEl.href=URL.createObjectURL(blob);aEl.download=file.name;aEl.click();
+     setTimeout(()=>URL.revokeObjectURL(aEl.href),2000);
+     toast("15-second story created. Open Instagram and add the video to Story.");
+   }
+ }catch(e){console.warn("story:",e);toast("Story video could not be created on this browser.")}
+ finally{overlay.remove()}
+}
+function drawImageCover(ctx,img,x,y,w,h){
+ const s=Math.max(w/img.naturalWidth,h/img.naturalHeight),nw=img.naturalWidth*s,nh=img.naturalHeight*s;
+ ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.drawImage(img,x+(w-nw)/2,y+(h-nh)/2,nw,nh);ctx.restore();
+}
+
+function renderProfile(){
+const name=document.getElementById("profileName"),username=document.getElementById("profileUsername"),count=document.getElementById("profileTrackCount"),account=document.getElementById("profileAccount"),avatar=document.getElementById("profileAvatar"),fallback=document.getElementById("profileAvatarFallback"),actions=document.getElementById("profileActions"),pt=document.getElementById("profileTracks");
+if(!currentUser){name.textContent="LOST SOUND";username.textContent="Independent Music Platform";count.textContent="Login to upload";avatar.removeAttribute("src");avatar.style.display="none";fallback.textContent="L/S";fallback.style.display="grid";actions.innerHTML=`<button class="primary" id="profileLoginButton">Register / Login</button>`;document.getElementById("profileLoginButton").onclick=()=>openAuth("register");account.innerHTML="";pt.innerHTML="";return}
+const dn=currentProfile?.display_name||currentProfile?.username||currentUser.email.split("@")[0];
+const un=currentProfile?.username||"artist";
+name.textContent=dn;username.textContent="@"+un;count.textContent=tracks.filter(t=>t.artistUserId===currentUser.id).length+" Tracks";
+const initials=String(dn).trim().split(/\s+/).map(x=>x[0]).join("").slice(0,2).toUpperCase()||"LS";
+fallback.textContent=initials;
+fallback.style.display="grid";
+const avatarUrl=currentProfile?.avatar_url||"";
+if(avatarUrl){avatar.style.display="block";avatar.src=avatarUrl+(avatarUrl.includes("?")?"&":"?")+"v="+Date.now();avatar.onerror=()=>{avatar.removeAttribute("src");avatar.style.display="none";fallback.style.display="grid"};avatar.onload=()=>{fallback.style.display="none"};}else{avatar.removeAttribute("src");avatar.style.display="none";}
+actions.innerHTML=`<button class="small-btn" id="editProfileButton">Edit Profile</button><button class="small-btn" id="profileLogoutButton">Logout</button>`;document.getElementById("editProfileButton").onclick=openEditProfile;document.getElementById("profileLogoutButton").onclick=logout;account.innerHTML=`<div class="account-box"><div><strong>Account</strong><div class="artist">${escapeHTML(currentUser.email)}</div></div></div>`;const mine=tracks.filter(t=>t.artistUserId===currentUser.id);pt.innerHTML=mine.length?`<div class="section-title" style="margin-bottom:8px">MY TRACKS</div>`+mine.map(t=>trackRow(t,tracks.indexOf(t))).join(""):"<div class='empty-state'>No tracks published yet.</div>";bindTrackClicks(pt)}
+function openEditProfile(){document.getElementById("editUsername").value=currentProfile?.username||"";document.getElementById("editDisplayName").value=currentProfile?.display_name||"";showView("editProfile")}
+async function saveProfile(){
+if(!currentUser)return openAuth("login");
+const username=document.getElementById("editUsername").value.trim().replace(/\s+/g,"").toLowerCase(),displayName=document.getElementById("editDisplayName").value.trim(),file=document.getElementById("profilePhotoFile").files[0];if(!username)return toast("Username is required.");if(!displayName)return toast("Display name is required.");
+let avatarUrl=currentProfile?.avatar_url||null;
+try{
+if(file){
+ if(!file.type.startsWith("image/"))return toast("Please choose an image file.");
+ if(file.size>5*1024*1024)return toast("Profile photo must be under 5 MB.");
+ const path=currentUser.id+"/avatar-"+Date.now()+"-"+cleanFileName(file.name);
+ const r=await supabaseClient.storage.from("avatars").upload(path,file,{upsert:false,cacheControl:"3600",contentType:file.type});
+ if(r.error){
+   const msg=String(r.error.message||r.error.error_description||"");
+   if(msg.toLowerCase().includes("bucket not found")) throw new Error('Profile photo storage is not set up yet. Create the public "avatars" bucket in Supabase Storage, then try again.');
+   throw r.error;
+ }
+ avatarUrl=supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+}
+let r=await supabaseClient.from("profiles").upsert({id:currentUser.id,username,display_name:displayName,avatar_url:avatarUrl},{onConflict:"id"});if(r.error)throw r.error;
+r=await supabaseClient.auth.updateUser({data:{username,display_name:displayName}});if(r.error)console.warn("Auth metadata:",r.error);
+r=await supabaseClient.from("artists").update({name:displayName,username}).eq("user_id",currentUser.id);if(r.error)throw r.error;
+await loadProfile();await loadArtists();await loadTracks();document.getElementById("profilePhotoFile").value="";navigate("profile");toast("Profile updated.");
+}catch(e){console.error("saveProfile:",e);toast(e.message||"Profile update failed.")}
+}
+function showView(view,scroll=true){
+ document.querySelectorAll(".view").forEach(e=>e.classList.remove("active"));
+ document.getElementById(view)?.classList.add("active");
+ document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+ updateBackButton();
+ if(scroll)window.scrollTo(0,0);
+}
+function navigate(view,opts={}){
+ const u=new URL(location.href);
+ u.search="";
+ u.hash="";
+ if(view&&view!=="home")u.searchParams.set("view",view);
+ if(view==="artist"&&opts.artistId)u.searchParams.set("artist",opts.artistId);
+ if(view==="track"&&opts.trackId)u.searchParams.set("id",opts.trackId);
+ if(view==="search"){const q=document.getElementById("searchInput")?.value.trim();if(q)u.searchParams.set("q",q)}
+ history.pushState({view,...opts},"",u.href);
+ applyRoute(false);
+}
+function applyRoute(fromPop=true){
+ const p=new URLSearchParams(location.search),view=p.get("view")||"home";
+ if(view==="artist"){
+   showView("artist",!fromPop);renderArtistChannel(p.get("artist"));return;
+ }
+ if(view==="search"){
+   showView("search",!fromPop);
+   const q=p.get("q")||"";document.getElementById("searchInput").value=q;runSearch();return;
+ }
+ if(view==="track"){
+   showView("home",!fromPop);
+   const id=p.get("id"),i=tracks.findIndex(t=>String(t.id)===String(id));
+   if(i>=0){selectTrack(i);window.scrollTo(0,0)}
+   return;
+ }
+ showView(view||"home",!fromPop);
+}
+function restoreRoute(){applyRoute(false)}
+function syncSearchURL(){
+ const u=new URL(location.href),q=document.getElementById("searchInput").value.trim();
+ u.search="";if(q){u.searchParams.set("view","search");u.searchParams.set("q",q)}
+ history.replaceState(history.state,"",u.href);updateBackButton();
+}
+function goBack(){
+ if(history.length>1){history.back();return}
+ navigate("home");
+}
+function updateBackButton(){
+ const b=document.getElementById("siteBackButton");if(!b)return;
+ const view=new URLSearchParams(location.search).get("view");
+ b.classList.toggle("visible",!!view);
+}
+window.addEventListener("popstate",()=>applyRoute(true));
+function openDrawer(){document.getElementById("drawer").classList.add("open")}function closeDrawer(){document.getElementById("drawer").classList.remove("open")}
+async function shareTrack(){
+ if(currentIndex<0)return toast("Select a track first.");
+ const t=tracks[currentIndex],a=artistById(t.artistId);
+ const url=new URL(location.href);url.search="";url.hash="";url.searchParams.set("view","track");url.searchParams.set("id",t.id);
+ showShareChoice({
+   title:"Share Track",
+   subtitle:`${t.title} • ${t.artist}`,
+   onStory:()=>createAndShareStory({type:"track",artist:a||{name:t.artist,username:t.username},track:t,url:url.href}),
+   onShare:async()=>{if(navigator.share){try{await navigator.share({title:t.title,text:t.artist+" — LOST SOUND",url:url.href})}catch(e){}}else copyText(url.href,"Track link copied.")},
+   onCopy:()=>copyText(url.href,"Track link copied.")
+ });
+}
+
+function toast(m){document.querySelector(".toast")?.remove();const e=document.createElement("div");e.className="toast";e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2500)}
+function escapeHTML(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function safeURL(v){if(!v)return"";return String(v).replace(/"/g,"%22").replace(/'/g,"%27")}
+</script>
+</body>
+</html>
+<script>
+
+(function wireProfilePencil(){
+ const btn=document.getElementById("profilePencilButton");
+ const menu=document.getElementById("profilePencilMenu");
+ if(!btn||!menu)return;
+ btn.onclick=(e)=>{e.stopPropagation();menu.hidden=!menu.hidden};
+ document.addEventListener("click",()=>{menu.hidden=true});
+ const edit=document.getElementById("profileEditMenu");
+ const logout=document.getElementById("profileLogoutMenu");
+ if(edit)edit.onclick=()=>{menu.hidden=true;if(typeof openProfileEdit==="function")openProfileEdit();else if(typeof showView==="function")showView("profile")};
+ if(logout)logout.onclick=async()=>{menu.hidden=true;if(typeof logoutUser==="function")await logoutUser();else if(typeof supabaseClient!=="undefined"){await supabaseClient.auth.signOut();location.reload()}};
+})();
+
+</script>
