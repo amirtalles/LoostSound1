@@ -647,10 +647,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadArtists();
   await loadTracks();
   await loadLikes();
+  restorePlayerState();
   applyRoute(false);
 });
 
-// THEME SYSTEM (NIGHT / MORNING)
+// THEME SYSTEM
 function initTheme(){
   const savedTheme = localStorage.getItem("ls_theme") || "night";
   setTheme(savedTheme);
@@ -888,7 +889,7 @@ async function loadTracks(){
         duration: formatSeconds(t.duration_seconds || 0),
         artist: a?.name || "Unknown Artist",
         username: a?.username || "",
-        plays: t.play_count || 0,
+        plays: Number(t.play_count || 0),
         date: formatDate(t.created_at)
       };
     });
@@ -1071,7 +1072,7 @@ function renderLibrary(){
   bindTrackClicks(c);
 }
 
-function selectTrack(i){
+function selectTrack(i, autoplay = false){
   if (i < 0 || i >= tracks.length) return;
   currentIndex = i;
   currentTrackObj = tracks[i];
@@ -1101,22 +1102,35 @@ function selectTrack(i){
   }
 
   updateFullLikeBtn();
+
+  if (currentTrackObj.audio && (!audio.src || !audio.src.includes(currentTrackObj.audio))) {
+    audio.src = currentTrackObj.audio;
+    audio.load();
+    if (autoplay) {
+      audio.play().catch(()=>{});
+    }
+  }
+
+  // ذخیره وضعیت برای جلوگیری از پریدن بعد رفرش
+  try {
+    localStorage.setItem("ls_current_track_id", currentTrackObj.id);
+  } catch(e){}
 }
 
 function playIndex(i){
   if (i < 0 || i >= tracks.length) return;
-  selectTrack(i);
-  if (currentTrackObj.audio) {
-    audio.src = currentTrackObj.audio;
-    audio.load();
-    audio.play().catch(()=>{});
-  }
+  selectTrack(i, true);
+  audio.play().catch(()=>{});
   renderLatestList();
 }
 
 function togglePlay(){
   if (currentIndex < 0) { if (tracks.length) playIndex(0); return; }
-  if (audio.paused) audio.play().catch(()=>{}); else audio.pause();
+  if (audio.paused) {
+    audio.play().catch(()=>{});
+  } else {
+    audio.pause();
+  }
 }
 
 function nextTrack(){ if (tracks.length) playIndex((currentIndex + 1) % tracks.length); }
@@ -1145,13 +1159,48 @@ function updateProgress(){
   document.getElementById("fullScrubFill").style.width = pct + "%";
   document.getElementById("fullCurrentTime").textContent = formatSeconds(audio.currentTime);
   document.getElementById("fullDuration").textContent = formatSeconds(audio.duration);
+
+  // ذخیره ثانیه جاری آهنگ در LocalStorage
+  if (Math.floor(audio.currentTime) % 2 === 0) {
+    try {
+      localStorage.setItem("ls_current_seek", audio.currentTime);
+    } catch(e){}
+  }
 }
 
+// ثبت دقیق و مطمئن Play Count در دیتابیس Supabase
 async function countPlay(track){
   if (!track?.id) return;
   track.plays = Number(track.plays || 0) + 1;
-  document.querySelectorAll(`[data-play-count-id="${track.id}"]`).forEach(el => el.textContent = `${track.plays} plays`);
-  try { await supabaseClient.rpc("increment_play_count", { track_id: track.id }); } catch(e){}
+  document.querySelectorAll(`[data-play-count-id="${track.id}"]`).forEach(el => {
+    el.textContent = `${Number(track.plays).toLocaleString()} plays`;
+  });
+
+  try {
+    // روش مستقیم آپدیت برای اطمینان از ذخیره ۱۰۰٪
+    const { data: currentData } = await supabaseClient.from("tracks").select("play_count").eq("id", track.id).single();
+    const updatedCount = Number(currentData?.play_count || 0) + 1;
+    await supabaseClient.from("tracks").update({ play_count: updatedCount }).eq("id", track.id);
+  } catch(e){
+    console.error("Count sync error:", e);
+  }
+}
+
+// بازیابی وضعیت پخش موزیک پس از رفرش صفحه
+function restorePlayerState(){
+  try {
+    const savedTrackId = localStorage.getItem("ls_current_track_id");
+    if (savedTrackId && tracks.length) {
+      const idx = tracks.findIndex(t => String(t.id) === String(savedTrackId));
+      if (idx >= 0) {
+        selectTrack(idx, false);
+        const savedSeek = parseFloat(localStorage.getItem("ls_current_seek") || "0");
+        if (savedSeek > 0) {
+          audio.currentTime = savedSeek;
+        }
+      }
+    }
+  } catch(e){}
 }
 
 function seekAudio(e){
