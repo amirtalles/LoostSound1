@@ -71,6 +71,20 @@ audio{display:none}
 
 .app{min-height:100vh;padding-bottom:135px}
 
+/* PULL TO REFRESH SPINNER */
+.pull-spinner{
+  display:none;
+  text-align:center;
+  padding:10px 0;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gray);
+  background:var(--paper-sub);
+  border-bottom:1px solid var(--line);
+}
+
 /* TOPBAR */
 .topbar{height:54px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;background:var(--bg);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);transition:background 0.28s ease}
 .top-left{position:relative;display:flex;align-items:center;gap:8px}
@@ -443,6 +457,9 @@ audio{display:none}
 
 <div class="app">
 
+  <!-- PULL REFRESH INDICATOR -->
+  <div id="pullRefreshSpinner" class="pull-spinner">UPDATING FEED...</div>
+
   <!-- TOPBAR -->
   <header class="topbar">
     <div class="top-left">
@@ -486,7 +503,7 @@ audio{display:none}
         <div class="hero-vinyl-stage">
           <div id="heroVinyl" class="stage-vinyl"></div>
           <div class="stage-cover">
-            <video id="introCoverVideo" autoplay muted loop playsinline preload="auto">
+            <video id="introCoverVideo" autoplay muted loop playsinline preload="metadata" poster="assets/icon.png">
               <source src="assets/lost-cover.mp4" type="video/mp4">
             </video>
           </div>
@@ -710,6 +727,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
   setupIntroVideo();
   bindButtons();
+  setupPullToRefresh();
   
   await checkSession();
   await loadArtists();
@@ -764,6 +782,44 @@ function restoreMemoryAfterPicker(){
   if(fv && document.getElementById("fullPlayerOverlay").classList.contains("open")) fv.play().catch(()=>{});
 }
 
+// PULL TO REFRESH LOGIC
+function setupPullToRefresh(){
+  let touchStartY = 0;
+  let isPulling = false;
+
+  window.addEventListener('touchstart', (e) => {
+    if (window.scrollY === 0) {
+      touchStartY = e.touches[0].clientY;
+      isPulling = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isPulling) return;
+    const touchCurrentY = e.touches[0].clientY;
+    const pullDistance = touchCurrentY - touchStartY;
+    
+    if (pullDistance > 75 && window.scrollY === 0) {
+      const spinner = document.getElementById("pullRefreshSpinner");
+      if (spinner) spinner.style.display = "block";
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', async () => {
+    if (!isPulling) return;
+    isPulling = false;
+    const spinner = document.getElementById("pullRefreshSpinner");
+    
+    if (spinner && spinner.style.display === "block") {
+      await loadArtists();
+      await loadTracks();
+      await loadLikes();
+      spinner.style.display = "none";
+      toast("Archive Updated!");
+    }
+  });
+}
+
 function bindButtons(){
   const logoBtn = document.getElementById("brandLogoBtn"), popup = document.getElementById("socialPopup");
   if (logoBtn && popup) {
@@ -801,7 +857,7 @@ function bindButtons(){
   document.getElementById("saveTrackButton").onclick = saveTrackEdit;
   document.getElementById("searchInput").oninput = runSearch;
 
-  // حل مسدودیت باز شدن فایل‌پیکر و گالری در موبایل
+  // حل مشکل مسدود شدن باز شدن فایل‌پیکر و گالری در موبایل
   document.querySelectorAll("input[type='file']").forEach(inp => {
     inp.removeAttribute("capture");
     inp.addEventListener("click", (e) => {
