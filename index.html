@@ -23,11 +23,25 @@ button{border:0;background:none;cursor:pointer}
 img{max-width:100%;display:block}
 audio{display:none}
 
-/* SPLASH PRELOADER */
-.splash-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .35s ease,visibility .35s ease}
-.splash-screen.hide{opacity:0;visibility:hidden;pointer-events:none}
-.splash-logo{font-size:22px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;margin-bottom:16px}
-.splash-spinner{width:26px;height:26px;border:2px solid var(--line);border-top-color:#000;border-radius:50%;animation:splashSpin .6s linear infinite}
+/* PURE CSS AUTO-HIDE PRELOADER (FATAL-PROOF) */
+.splash-screen{
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  z-index:99999;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  animation:autoFadeSplash 0.5s ease-out 0.6s forwards;
+}
+@keyframes autoFadeSplash{
+  0%{opacity:1;visibility:visible;}
+  100%{opacity:0;visibility:hidden;display:none;}
+}
+.splash-logo{font-size:20px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;margin-bottom:14px}
+.splash-spinner{width:24px;height:24px;border:2px solid var(--line);border-top-color:#000;border-radius:50%;animation:splashSpin .6s linear infinite}
 @keyframes splashSpin{to{transform:rotate(360deg)}}
 
 .app{min-height:100vh;padding-bottom:120px}
@@ -124,7 +138,7 @@ audio{display:none}
 </head>
 <body>
 
-<!-- SPLASH SCREEN PRELOADER -->
+<!-- AUTO HIDING SPLASH PRELOADER -->
 <div id="splashScreen" class="splash-screen">
   <div class="splash-logo">LOST SOUND</div>
   <div class="splash-spinner"></div>
@@ -270,41 +284,28 @@ audio{display:none}
 <script>
 const SUPABASE_URL="https://iezjmlesxdqtgrzopnyf.supabase.co";
 const SUPABASE_KEY="sb_publishable_oZzBug6zzrXVDEaLljsHeQ_EPQOhcnu";
-const supabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let supabase = null;
+try {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch (e) {
+  console.warn("Supabase init error:", e);
+}
 
 let tracks=[],currentIndex=-1;
 let listeningSeconds=0,lastAudioTime=0,currentTrackObj=null;
 const audio=document.getElementById("audio");
 
-document.addEventListener("DOMContentLoaded",async()=>{
+document.addEventListener("DOMContentLoaded", async () => {
   setupIntroVideo();
   bindEvents();
   
-  // تایمر اضطراری: در صورت کندی اینترنت یا خطای سرور، لودر حداکثر بعد از 1.2 ثانیه باز می‌شود
-  const fallbackTimer=setTimeout(()=>{
-    hideSplashScreen();
-  },1200);
-
-  try{
+  try {
     await loadTracks();
     restoreLastState();
-  }catch(err){
-    console.warn("Init load warning:",err);
-  }finally{
-    clearTimeout(fallbackTimer);
-    hideSplashScreen();
+  } catch(err) {
+    console.warn("Tracks load error:", err);
   }
 });
-
-function hideSplashScreen(){
-  const splash=document.getElementById("splashScreen");
-  if(splash && !splash.classList.contains("hide")){
-    splash.classList.add("hide");
-    setTimeout(()=>{
-      splash.remove();
-    },350);
-  }
-}
 
 function setupIntroVideo(){
   const v=document.getElementById("introCoverVideo");
@@ -315,24 +316,35 @@ function setupIntroVideo(){
 
 function bindEvents(){
   const logoBtn=document.getElementById("brandLogoBtn"),popup=document.getElementById("socialPopup");
-  logoBtn.onclick=(e)=>{e.stopPropagation();popup.classList.toggle("show")};
-  document.addEventListener("click",()=>popup.classList.remove("show"));
+  if(logoBtn && popup){
+    logoBtn.onclick=(e)=>{e.stopPropagation();popup.classList.toggle("show")};
+    document.addEventListener("click",()=>popup.classList.remove("show"));
+  }
 
   document.querySelectorAll("[data-view]").forEach(btn=>{
     btn.onclick=()=>switchView(btn.dataset.view);
   });
-  document.getElementById("openUploadBtn").onclick=()=>switchView("upload");
-  document.getElementById("dockPlayBtn").onclick=togglePlay;
-  document.getElementById("dockProgressWrap").onclick=seekAudio;
+  const openUp = document.getElementById("openUploadBtn");
+  if(openUp) openUp.onclick=()=>switchView("upload");
+  
+  const playBtn = document.getElementById("dockPlayBtn");
+  if(playBtn) playBtn.onclick=togglePlay;
+  
+  const progWrap = document.getElementById("dockProgressWrap");
+  if(progWrap) progWrap.onclick=seekAudio;
 
   audio.ontimeupdate=updateProgress;
   audio.onplay=()=>{
-    document.getElementById("dockPlayBtn").textContent="Ⅱ";
-    document.getElementById("heroVinyl").classList.add("playing");
+    const dBtn = document.getElementById("dockPlayBtn");
+    const hVnl = document.getElementById("heroVinyl");
+    if(dBtn) dBtn.textContent="Ⅱ";
+    if(hVnl) hVnl.classList.add("playing");
   };
   audio.onpause=()=>{
-    document.getElementById("dockPlayBtn").textContent="▶";
-    document.getElementById("heroVinyl").classList.remove("playing");
+    const dBtn = document.getElementById("dockPlayBtn");
+    const hVnl = document.getElementById("heroVinyl");
+    if(dBtn) dBtn.textContent="▶";
+    if(hVnl) hVnl.classList.remove("playing");
     saveAudioState();
   };
   audio.onended=nextTrack;
@@ -340,13 +352,15 @@ function bindEvents(){
 
 function switchView(viewId){
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-  document.getElementById(viewId)?.classList.add("active");
+  const target = document.getElementById(viewId);
+  if(target) target.classList.add("active");
   document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n.dataset.view===viewId));
   window.scrollTo(0,0);
-  localStorage.setItem("ls_last_view",viewId);
+  try{ localStorage.setItem("ls_last_view",viewId); }catch(e){}
 }
 
 async function loadTracks(){
+  if(!supabase) return;
   const {data,error}=await supabase.from("tracks").select("*,artists(*)").order("created_at",{ascending:false});
   if(error||!data)return;
   tracks=data.map(t=>({
@@ -395,12 +409,17 @@ function playIndex(i,autoplay=true){
     audio.play().catch(()=>{});
   }
 
-  document.getElementById("dockTitle").textContent=currentTrackObj.title;
-  document.getElementById("dockArtist").textContent=currentTrackObj.artist;
-  document.getElementById("dockImg").src=currentTrackObj.cover;
-  document.getElementById("dockPlayer").classList.add("open");
+  const dTitle = document.getElementById("dockTitle");
+  const dArt = document.getElementById("dockArtist");
+  const dImg = document.getElementById("dockImg");
+  const dPlayer = document.getElementById("dockPlayer");
 
-  localStorage.setItem("ls_last_track_id",currentTrackObj.id);
+  if(dTitle) dTitle.textContent=currentTrackObj.title;
+  if(dArt) dArt.textContent=currentTrackObj.artist;
+  if(dImg) dImg.src=currentTrackObj.cover;
+  if(dPlayer) dPlayer.classList.add("open");
+
+  try{ localStorage.setItem("ls_last_track_id",currentTrackObj.id); }catch(e){}
 }
 
 function togglePlay(){
@@ -428,9 +447,13 @@ function updateProgress(){
   lastAudioTime=audio.currentTime;
 
   const pct=(audio.currentTime/audio.duration)*100;
-  document.getElementById("dockProgressBar").style.width=pct+"%";
-  document.getElementById("dockCurrentTime").textContent=formatSeconds(audio.currentTime);
-  document.getElementById("dockDuration").textContent=formatSeconds(audio.duration);
+  const pBar = document.getElementById("dockProgressBar");
+  const cTime = document.getElementById("dockCurrentTime");
+  const dTime = document.getElementById("dockDuration");
+
+  if(pBar) pBar.style.width=pct+"%";
+  if(cTime) cTime.textContent=formatSeconds(audio.currentTime);
+  if(dTime) dTime.textContent=formatSeconds(audio.duration);
 
   if(Math.floor(audio.currentTime)%3===0){
     saveAudioState();
@@ -439,29 +462,31 @@ function updateProgress(){
 
 function saveAudioState(){
   if(currentTrackObj && audio.currentTime>0){
-    localStorage.setItem("ls_last_seek_time",audio.currentTime);
+    try{ localStorage.setItem("ls_last_seek_time",audio.currentTime); }catch(e){}
   }
 }
 
 function restoreLastState(){
-  const lastView=localStorage.getItem("ls_last_view")||"home";
-  switchView(lastView);
+  try{
+    const lastView=localStorage.getItem("ls_last_view")||"home";
+    switchView(lastView);
 
-  const lastTrackId=localStorage.getItem("ls_last_track_id");
-  if(lastTrackId && tracks.length){
-    const foundIdx=tracks.findIndex(t=>String(t.id)===String(lastTrackId));
-    if(foundIdx>=0){
-      playIndex(foundIdx,false);
-      const lastSeek=parseFloat(localStorage.getItem("ls_last_seek_time")||"0");
-      if(lastSeek>0){
-        audio.currentTime=lastSeek;
+    const lastTrackId=localStorage.getItem("ls_last_track_id");
+    if(lastTrackId && tracks.length){
+      const foundIdx=tracks.findIndex(t=>String(t.id)===String(lastTrackId));
+      if(foundIdx>=0){
+        playIndex(foundIdx,false);
+        const lastSeek=parseFloat(localStorage.getItem("ls_last_seek_time")||"0");
+        if(lastSeek>0){
+          audio.currentTime=lastSeek;
+        }
       }
     }
-  }
+  }catch(e){}
 }
 
 async function countPlay(track){
-  if(!track?.id)return;
+  if(!track?.id || !supabase)return;
   track.plays=Number(track.plays||0)+1;
   renderTracks();
 
