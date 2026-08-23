@@ -8,11 +8,14 @@ on:
 
 jobs:
   build-apk:
+
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
+
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -20,13 +23,21 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Create Android project
+
+      - name: Create Android Project
         run: |
+
           mkdir -p app/src/main/java/com/lostsound/app
           mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/drawable
+
+
+          cp app-icon.png app/src/main/res/drawable/app_icon.png
+
 
           cat > settings.gradle <<'EOF'
           pluginManagement {
@@ -45,9 +56,10 @@ jobs:
               }
           }
 
-          rootProject.name = "LostSound"
+          rootProject.name="LostSound"
           include(":app")
           EOF
+
 
           cat > build.gradle <<'EOF'
           plugins {
@@ -55,118 +67,174 @@ jobs:
           }
           EOF
 
+
           cat > app/build.gradle <<'EOF'
           plugins {
               id 'com.android.application'
           }
 
           android {
+
               namespace 'com.lostsound.app'
               compileSdk 35
 
               defaultConfig {
+
                   applicationId "com.lostsound.app"
                   minSdk 23
                   targetSdk 35
-                  versionCode 1
-                  versionName "1.0"
+
+                  versionCode 2
+                  versionName "1.1"
               }
           }
           EOF
 
+
           cat > app/src/main/res/values/styles.xml <<'EOF'
           <resources>
+
               <style name="AppTheme"
-                  parent="android:style/Theme.Material.Light.NoActionBar">
+              parent="android:style/Theme.Material.Light.NoActionBar">
+
                   <item name="android:fontFamily">sans</item>
-                  <item name="android:colorAccent">#111111</item>
+                  <item name="android:colorAccent">#000000</item>
                   <item name="android:statusBarColor">#000000</item>
                   <item name="android:navigationBarColor">#000000</item>
-                  <item name="android:windowLightStatusBar">false</item>
+
               </style>
+
           </resources>
           EOF
+
 
           cat > app/src/main/AndroidManifest.xml <<'EOF'
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
               <uses-permission android:name="android.permission.INTERNET"/>
 
+
               <application
+
                   android:theme="@style/AppTheme"
                   android:label="LOST SOUND"
+                  android:icon="@drawable/app_icon"
                   android:usesCleartextTraffic="true">
 
+
                   <activity
+
                       android:name=".MainActivity"
                       android:screenOrientation="portrait"
                       android:exported="true">
 
+
                       <intent-filter>
+
                           <action android:name="android.intent.action.MAIN"/>
+
                           <category android:name="android.intent.category.LAUNCHER"/>
+
                       </intent-filter>
+
 
                   </activity>
 
+
               </application>
+
 
           </manifest>
           EOF
 
+
+
           cat > app/src/main/java/com/lostsound/app/MainActivity.java <<'EOF'
           package com.lostsound.app;
 
+
           import android.app.Activity;
           import android.os.Bundle;
-          import android.webkit.WebSettings;
           import android.webkit.WebView;
+          import android.webkit.WebSettings;
           import android.webkit.WebViewClient;
+
 
           public class MainActivity extends Activity {
 
-              private WebView webView;
+
+              WebView webView;
+
 
               @Override
-              protected void onCreate(Bundle savedInstanceState) {
+
+              protected void onCreate(Bundle savedInstanceState){
+
                   super.onCreate(savedInstanceState);
+
 
                   webView = new WebView(this);
 
+
                   WebSettings settings = webView.getSettings();
+
+
                   settings.setJavaScriptEnabled(true);
                   settings.setDomStorageEnabled(true);
                   settings.setDatabaseEnabled(true);
                   settings.setMediaPlaybackRequiresUserGesture(false);
 
+
                   webView.setWebViewClient(new WebViewClient());
 
+
                   webView.loadUrl(
-                      "https://amirtalles.github.io/LoostSound1/"
+                    "https://amirtalles.github.io/LoostSound1/"
                   );
 
+
                   setContentView(webView);
+
               }
 
+
+
               @Override
-              public void onBackPressed() {
-                  if (webView.canGoBack()) {
+
+              public void onBackPressed(){
+
+                  if(webView.canGoBack()){
+
                       webView.goBack();
-                  } else {
+
+                  }else{
+
                       super.onBackPressed();
+
                   }
+
               }
+
+
           }
           EOF
 
-      - name: Set up Gradle
+
+
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+
+
 
       - name: Build APK
         run: gradle assembleDebug --no-daemon
 
+
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
+
           name: Lost-Sound-APK
+
           path: app/build/outputs/apk/debug/app-debug.apk
