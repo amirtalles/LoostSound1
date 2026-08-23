@@ -2,189 +2,489 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <title>LOST SOUND | پلتفرم پخش و انتشار موسیقی مستقل</title>
+
+  <!-- متاتگ‌های پیشرفته سئو (SEO) -->
+  <meta name="description" content="LOST SOUND پلتفرم اختصاصی کشف، استریم و انتشار آنلاین موسیقی برای هنرمندان و شنوندگان مستقل.">
+  <meta name="keywords" content="Lost Sound, موزیک, دانلود آهنگ, استریم موزیک, پلتفرم هنرمندان مستقل, پخش آنلاین آهنگ">
+  <meta name="author" content="LOST SOUND">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / متا تگ برای شبکه‌های اجتماعی و گوگل -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://amirtalles.github.io/LoostSound1/">
+  <meta property="og:title" content="LOST SOUND | پلتفرم استریم و انتشار موسیقی">
+  <meta property="og:description" content="موسیقی‌های مستقل را کشف کنید، قطعات خود را منتشر کنید و با آرتیست‌ها در ارتباط باشید.">
+  <meta property="og:image" content="assets/icon.png">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LOST SOUND">
+  <meta name="twitter:description" content="پلتفرم پخش آنلاین و استودیو آپلود موسیقی مستقل.">
+  <meta name="twitter:image" content="assets/icon.png">
+
+  <!-- متاتگ‌های PWA و فول‌اسکرین موبایل -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0d0d0d">
-  <title>LOST SOUND</title>
+  <meta name="theme-color" content="#09090b">
 
-  <!-- ادغام مستقیم مانیفست فول‌اسکرین در یک خط -->
-  <link rel="manifest" href='data:application/manifest+json,{"id":"com.lostsound.music","name":"LOST SOUND","short_name":"LOST SOUND","start_url":"./index.html","scope":"./","display":"fullscreen","display_override":["fullscreen","standalone"],"background_color":"#0d0d0d","theme_color":"#0d0d0d","orientation":"portrait","icons":[{"src":"assets/icon.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"assets/icon.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'>
-
+  <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="assets/icon.png">
   <link rel="apple-touch-icon" href="assets/icon.png">
 
-  <!-- کتابخانه Supabase -->
+  <!-- فونت‌ها و اسکریپت Supabase -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Vazirmatn:wght@300;400;500;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    :root {
+      --bg: #09090b;
+      --card-bg: rgba(22, 22, 26, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #22c55e;
+      --primary-hover: #16a34a;
+      --text: #f4f4f5;
+      --text-muted: #9ca3af;
+      --radius: 16px;
+      --bottom-bar-height: 72px;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
     }
+
     body {
-      background-color: #0d0d0d;
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      padding-bottom: calc(var(--bottom-bar-height) + 30px);
       overflow-x: hidden;
+      user-select: none;
     }
+
     header {
-      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 9, 11, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #141414;
-      border-bottom: 1px solid #222;
     }
-    .logo {
-      font-weight: 900;
-      letter-spacing: 2px;
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 1.5px;
       color: #fff;
     }
+
+    .brand img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
     .container {
-      padding: 20px;
-      flex: 1;
-      max-width: 600px;
+      max-width: 580px;
       margin: 0 auto;
       width: 100%;
-    }
-    .card {
-      background: #181818;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid #282828;
-    }
-    .card h3 {
-      margin-bottom: 15px;
-      font-size: 1.1rem;
-      color: #1db954;
-    }
-    .field {
-      margin-bottom: 16px;
+      padding: 24px 16px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 20px;
     }
-    label {
-      font-size: 0.85rem;
-      color: #aaa;
+
+    .view-section {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
     }
-    input[type="text"], input[type="email"], input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      background: #242424;
-      border: 1px solid #333;
-      border-radius: 8px;
-      color: #fff;
-      font-size: 1rem;
-      outline: none;
+
+    .view-section.active {
+      display: flex;
     }
-    input[type="file"] {
-      width: 100%;
-      padding: 10px;
-      background: #242424;
-      border: 1px dashed #444;
-      border-radius: 8px;
-      color: #aaa;
-      cursor: pointer;
+
+    /* طراحی مینیمال فرم ثبت‌نام و کارت‌ها */
+    .card-auth {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-    .btn {
-      width: 100%;
-      padding: 14px;
-      background: #1db954;
-      color: #000;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .btn:active {
-      opacity: 0.8;
-      transform: scale(0.98);
-    }
-    .status-msg {
-      margin-top: 10px;
-      font-size: 0.9rem;
+
+    .auth-header {
       text-align: center;
-      min-height: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .auth-header h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .auth-header p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* دکمه گوگل */
+    .btn-google {
+      background: #ffffff;
+      color: #121212;
+      border: none;
+      border-radius: 12px;
+      padding: 13px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      width: 100%;
+      transition: transform 0.15s, opacity 0.2s;
+    }
+
+    .btn-google:active {
+      transform: scale(0.98);
+      opacity: 0.9;
+    }
+
+    .btn-google svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 0.8rem;
+      margin: 4px 0;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .divider span {
+      padding: 0 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+      border-color: rgba(34, 197, 94, 0.6);
+    }
+
+    input[type="file"] {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed var(--card-border);
+      border-radius: 12px;
+      padding: 12px;
+      color: var(--text-muted);
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+      font-weight: 700;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      text-align: center;
+      transition: background 0.2s;
+      width: 100%;
+    }
+
+    .btn-primary:active {
+      background: var(--primary-hover);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-align: center;
+      padding: 4px;
+    }
+
+    .btn-ghost:hover {
+      color: #fff;
+    }
+
+    .toast {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      display: none;
+      text-align: center;
+      font-weight: 500;
+    }
+    .toast.success { background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); display: block; }
+    .toast.error { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); display: block; }
+
+    /* پلیر پایینی */
+    .player-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-bar-height);
+      background: rgba(14, 14, 18, 0.92);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 200;
+    }
+
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .player-info img {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .play-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #000;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
+  <!-- هدر بالا -->
   <header>
-    <div class="logo">LOST SOUND</div>
-    <div id="authStatus" style="font-size: 0.85rem; color: #888;">مهمان</div>
+    <div class="brand">
+      <img src="assets/icon.png" alt="Lost Sound" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100'">
+      <span>LOST SOUND</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" id="btnNavHome">اکتشاف</button>
+      <button class="btn-icon" id="btnNavStudio">استودیو</button>
+      <button class="btn-icon" id="btnNavAuth">حساب من</button>
+    </div>
   </header>
 
-  <div class="container">
-    
-    <!-- بخش ورود و ثبت‌نام -->
-    <div class="card" id="authSection">
-      <h3>حساب کاربری</h3>
-      <div class="field">
-        <label>ایمیل</label>
-        <input type="email" id="emailInput" placeholder="example@mail.com">
+  <main class="container">
+
+    <!-- بخش اول: ورود و ثبت‌نام مینیمال با گوگل -->
+    <section class="view-section active" id="viewAuth">
+      <div class="card-auth">
+        <div class="auth-header">
+          <h2 id="authTitle">خوش آمدید</h2>
+          <p>به دنیای موزیک‌های اختصاصی LOST SOUND وارد شوید</p>
+        </div>
+
+        <div id="authToast" class="toast"></div>
+
+        <!-- دکمه جیمیل مستقیم -->
+        <button class="btn-google" id="btnGoogleAuth">
+          <svg viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          ورود سریع با حساب گوگل
+        </button>
+
+        <div class="divider">
+          <span>یا از طریق ایمیل</span>
+        </div>
+
+        <div class="field">
+          <label>ایمیل</label>
+          <input type="email" id="authEmail" placeholder="example@domain.com">
+        </div>
+
+        <div class="field">
+          <label>رمز عبور</label>
+          <input type="password" id="authPassword" placeholder="حداقل ۶ کاراکتر">
+        </div>
+
+        <button class="btn-primary" id="btnAuthRegister">ایجاد حساب جدید</button>
+        <button class="btn-ghost" id="btnAuthLogin">ورود به حساب موجود</button>
       </div>
-      <div class="field">
-        <label>رمز عبور</label>
-        <input type="password" id="passwordInput" placeholder="حداقل ۶ کاراکتر">
+    </section>
+
+    <!-- بخش دوم: خانه و فید موزیک -->
+    <section class="view-section" id="viewHome">
+      <div class="card-auth" style="padding: 20px;">
+        <h2>منتخب روز</h2>
+        <p style="color:var(--text-muted); font-size:0.9rem;">قطعات جدید ضبط شده در کامیونیتی</p>
       </div>
-      <button class="btn" id="btnRegister">ثبت‌نام مستقیم</button>
-      <button class="btn" style="background:#333; color:#fff;" id="btnLogin">ورود به حساب</button>
-      <div class="status-msg" id="authMessage"></div>
+    </section>
+
+    <!-- بخش سوم: استودیو و آپلود کاور و قطعه -->
+    <section class="view-section" id="viewStudio">
+      <div class="card-auth">
+        <h2>استودیو آرتیست</h2>
+        <div id="studioToast" class="toast"></div>
+
+        <div class="field">
+          <label>نام اثر</label>
+          <input type="text" id="trackTitle" placeholder="عنوان موزیک...">
+        </div>
+
+        <div class="field">
+          <label>آرتیست</label>
+          <input type="text" id="trackArtist" placeholder="نام هنری شما...">
+        </div>
+
+        <div class="field">
+          <label>کاور آرت (مربعی)</label>
+          <input type="file" id="coverFile" accept="image/png, image/jpeg, image/jpg, image/webp">
+        </div>
+
+        <div class="field">
+          <label>فایل آهنگ (صوتی)</label>
+          <input type="file" id="audioFile" accept="audio/mp3, audio/wav, audio/mpeg, audio/*">
+        </div>
+
+        <button class="btn-primary" id="btnPublishTrack">انتشار قطعه</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- پلیر پایین صفحه -->
+  <div class="player-bar">
+    <div class="player-info">
+      <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100" alt="Cover">
+      <div>
+        <div style="font-size:0.9rem; font-weight:700;">LOST SOUND</div>
+        <div style="font-size:0.75rem; color:var(--text-muted);">آماده پخش</div>
+      </div>
     </div>
-
-    <!-- بخش آپلود رسانه با رفع مشکل گالری -->
-    <div class="card" id="uploadSection">
-      <h3>آپلود موزیک و کاور</h3>
-      
-      <div class="field">
-        <label>انتخاب کاور موزیک (تصویر):</label>
-        <input type="file" id="coverFile" accept="image/png, image/jpeg, image/jpg, image/webp">
-      </div>
-
-      <div class="field">
-        <label>انتخاب فایل صوتی:</label>
-        <input type="file" id="audioFile" accept="audio/mp3, audio/wav, audio/mpeg, audio/*">
-      </div>
-
-      <button class="btn" id="btnUpload">آپلود در پلتفرم</button>
-      <div class="status-msg" id="uploadMessage"></div>
-    </div>
-
+    <button class="play-btn" id="btnGlobalPlay">▶</button>
   </div>
 
+  <audio id="globalAudio"></audio>
+
   <script>
-    // ۱. فعال‌سازی Service Worker به صورت داخلی (Inline Blob)
-    if ("serviceWorker" in navigator) {
-      const swCode = `
-        self.addEventListener('install', e => self.skipWaiting());
-        self.addEventListener('activate', e => clients.claim());
-        self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Offline'))));
-      `;
-      const blob = new Blob([swCode], { type: 'text/javascript' });
-      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    // ۱. مقداردهی اتصال Supabase
+    const SUPABASE_URL = "https://your-project.supabase.co";
+    const SUPABASE_KEY = "your-anon-key";
+    let sbClient = null;
+    if (SUPABASE_URL.indexOf("your-project") === -1) {
+      sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     }
 
-    // ۲. تنظیم اتصال Supabase
-    const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"; // آدرس سوپابیس شما
-    const SUPABASE_KEY = "YOUR_ANON_KEY"; // کلید عمومی سوپابیس شما
-    const supabase = (SUPABASE_URL.indexOf("YOUR_PROJECT") === -1) 
-      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
-      : null;
+    // ۲. جابجایی بین تب‌ها
+    const viewHome = document.getElementById("viewHome");
+    const viewStudio = document.getElementById("viewStudio");
+    const viewAuth = document.getElementById("viewAuth");
 
-    // ۳. تضمین باز شدن بی‌درنگ گالری گوشی هنگام لمس
+    function switchView(view) {
+      [viewHome, viewStudio, viewAuth].forEach(v => v.classList.remove("active"));
+      view.classList.add("active");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.getElementById("btnNavHome").onclick = () => switchView(viewHome);
+    document.getElementById("btnNavStudio").onclick = () => switchView(viewStudio);
+    document.getElementById("btnNavAuth").onclick = () => switchView(viewAuth);
+
+    // ۳. باز شدن قطعی گالری گوشی هنگام لمس دکمه‌های فایل
     document.addEventListener("DOMContentLoaded", () => {
       const fileInputs = document.querySelectorAll("input[type='file']");
       fileInputs.forEach((input) => {
@@ -195,82 +495,76 @@
       });
     });
 
-    // ۴. مدیریت ثبت‌نام و ورود
-    const btnRegister = document.getElementById("btnRegister");
-    const btnLogin = document.getElementById("btnLogin");
-    const authMessage = document.getElementById("authMessage");
-    const authStatus = document.getElementById("authStatus");
+    // ۴. نمایش پیام‌های وضعیت
+    const authToast = document.getElementById("authToast");
+    function showToast(elem, text, isSuccess) {
+      elem.className = "toast " + (isSuccess ? "success" : "error");
+      elem.innerText = text;
+      setTimeout(() => { elem.className = "toast"; }, 4000);
+    }
 
-    btnRegister.addEventListener("click", async () => {
-      const email = document.getElementById("emailInput").value.trim();
-      const password = document.getElementById("passwordInput").value.trim();
+    // ۵. ثبت نام و ورود با یک کلیک جیمیل (Google OAuth)
+    document.getElementById("btnGoogleAuth").addEventListener("click", async () => {
+      if (!sbClient) {
+        showToast(authToast, "ورود با گوگل در حالت شبیه‌ساز با موفقیت انجام شد!", true);
+        return;
+      }
+      const { data, error } = await sbClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin + window.location.pathname
+        }
+      });
+      if (error) {
+        showToast(authToast, error.message, false);
+      }
+    });
+
+    // ۶. ثبت نام مستقیم با ایمیل
+    document.getElementById("btnAuthRegister").addEventListener("click", async () => {
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value.trim();
 
       if (!email || !password) {
-        authMessage.innerText = "لطفاً ایمیل و پسورد را وارد کنید.";
-        authMessage.style.color = "#ff4444";
+        showToast(authToast, "ایمیل و پسورد را وارد کنید", false);
         return;
       }
 
-      if (!supabase) {
-        authMessage.innerText = "اکانت با موفقیت در حالت لوکال ساخته شد!";
-        authMessage.style.color = "#1db954";
-        authStatus.innerText = email;
+      if (!sbClient) {
+        showToast(authToast, "اکانت ساخته شد و وارد شدید!", true);
         return;
       }
 
-      authMessage.innerText = "در حال ساخت اکانت...";
-      authMessage.style.color = "#aaa";
-
-      const { data, error } = await supabase.auth.signUp({ email, password });
+      const { data, error } = await sbClient.auth.signUp({ email, password });
       if (error) {
-        authMessage.innerText = error.message;
-        authMessage.style.color = "#ff4444";
+        showToast(authToast, error.message, false);
       } else {
-        authMessage.innerText = "ثبت‌نام با موفقیت انجام شد!";
-        authMessage.style.color = "#1db954";
-        authStatus.innerText = email;
+        showToast(authToast, "ثبت‌نام با موفقیت انجام شد و وارد شدید!", true);
       }
     });
 
-    btnLogin.addEventListener("click", async () => {
-      const email = document.getElementById("emailInput").value.trim();
-      const password = document.getElementById("passwordInput").value.trim();
+    // ۷. ورود با ایمیل
+    document.getElementById("btnAuthLogin").addEventListener("click", async () => {
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value.trim();
 
-      if (!supabase) {
-        authMessage.innerText = "ورود با موفقیت انجام شد!";
-        authMessage.style.color = "#1db954";
-        authStatus.innerText = email;
+      if (!sbClient) {
+        showToast(authToast, "ورود موفقیت‌آمیز بود!", true);
         return;
       }
 
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
       if (error) {
-        authMessage.innerText = error.message;
-        authMessage.style.color = "#ff4444";
+        showToast(authToast, error.message, false);
       } else {
-        authMessage.innerText = "ورود موفقیت‌آمیز بود!";
-        authMessage.style.color = "#1db954";
-        authStatus.innerText = email;
+        showToast(authToast, "خوش آمدید!", true);
       }
     });
 
-    // ۵. تست آپلود فایل‌ها
-    const btnUpload = document.getElementById("btnUpload");
-    const uploadMessage = document.getElementById("uploadMessage");
-
-    btnUpload.addEventListener("click", () => {
-      const cover = document.getElementById("coverFile").files[0];
-      const audio = document.getElementById("audioFile").files[0];
-
-      if (!cover && !audio) {
-        uploadMessage.innerText = "حداقل یک فایل کاور یا صوتی انتخاب کنید.";
-        uploadMessage.style.color = "#ff4444";
-        return;
-      }
-
-      uploadMessage.innerText = "فایل‌ها با موفقیت در حافظه انتخاب و آماده شدند.";
-      uploadMessage.style.color = "#1db954";
-    });
+    // ۸. سرویس‌ورکر جهت کش هوشمند
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js").catch(() => {});
+    }
   </script>
 </body>
 </html>
