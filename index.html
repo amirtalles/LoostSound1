@@ -82,30 +82,162 @@ audio{display:none}
 .track-meta .track-stats{font-size:9.5px;color:var(--gray);margin-top:4px;display:flex;gap:6px}
 .track-more-btn{font-size:18px;color:#000;cursor:pointer;text-align:right}
 
-/* SEARCH & CHANNELS */
-.search-group-title{font-size:10px;letter-spacing:.16em;font-weight:bold;margin:20px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
-.artist-result{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer}
-.artist-result img,.artist-result .artist-fallback{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:0 0 auto}
-.artist-fallback{display:grid;place-items:center;background:#111;color:#fff;font-weight:800;font-size:14px}
-
-/* CHANNEL VIEW */
-.channel-hero{display:flex;align-items:center;gap:16px;padding:8px 0 20px;border-bottom:1px solid var(--line)}
-.channel-avatar{width:75px;height:75px;border-radius:50%;object-fit:cover;background:#111;flex:0 0 auto;border:1px solid var(--line)}
-.channel-meta h2{font-size:26px;line-height:.95;letter-spacing:-.05em;margin:4px 0}
-.channel-id{font-size:10px;color:var(--gray)}
-.channel-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-
 /* DOCK MINI PLAYER */
-.dock-player{display:none;position:fixed;left:14px;right:14px;bottom:64px;z-index:400;padding:8px 12px;background:#ffffff;border-radius:14px;border:1px solid var(--line);box-shadow:0 14px 40px rgba(0,0,0,0.08)}
+.dock-player{display:none;position:fixed;left:14px;right:14px;bottom:64px;z-index:400;padding:8px 12px;background:#ffffff;border-radius:14px;border:1px solid var(--line);box-shadow:0 14px 40px rgba(0,0,0,0.08);cursor:pointer}
 .dock-player.open{display:block}
 .dock-inner{display:grid;grid-template-columns:44px minmax(0,1fr) 38px;gap:10px;align-items:center}
 .dock-art{width:44px;height:44px;border-radius:5px;object-fit:cover;background:#111}
 .dock-meta h5{font-size:12px;font-weight:800;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .dock-meta p{font-size:10px;color:var(--gray);margin-top:1px}
-.dock-progress{width:100%;height:2px;background:#e5e0d8;margin-top:6px;position:relative;border-radius:2px;cursor:pointer}
+.dock-progress{width:100%;height:2px;background:#e5e0d8;margin-top:6px;position:relative;border-radius:2px}
 .dock-progress-bar{height:100%;width:0;background:var(--red);border-radius:2px}
 .dock-times{display:flex;justify-content:space-between;font-size:8.5px;color:var(--gray);font-weight:700;margin-top:3px}
 .dock-play-circle{width:38px;height:38px;border-radius:50%;background:#000;color:#fff;display:grid;place-items:center;font-size:13px;margin-left:auto;cursor:pointer}
+
+/* FULL-SCREEN EXPANDED PLAYER MODAL (SPOTIFY STYLE) */
+.full-player-overlay{
+  position:fixed;
+  inset:0;
+  z-index:8000;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:24px 28px calc(28px + env(safe-area-inset-bottom));
+  transform:translateY(100%);
+  transition:transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y:auto;
+}
+.full-player-overlay.open{
+  transform:translateY(0);
+}
+.full-player-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:44px;
+}
+.full-player-close{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:24px;
+  font-weight:bold;
+  cursor:pointer;
+  line-height:1;
+  color:#000;
+}
+.full-player-stage{
+  width:100%;
+  max-width:340px;
+  margin:20px auto;
+  aspect-ratio:1;
+  position:relative;
+  border-radius:18px;
+  overflow:hidden;
+  background:#111;
+  box-shadow:0 20px 60px rgba(0,0,0,0.18);
+}
+.full-player-stage img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.full-player-stage video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:none;
+  z-index:2;
+}
+.full-player-meta{
+  width:100%;
+  max-width:340px;
+  margin:0 auto 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.full-player-titles h2{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-0.03em;
+  line-height:1.2;
+}
+.full-player-titles p{
+  font-size:14px;
+  color:var(--gray);
+  margin-top:4px;
+  font-weight:600;
+}
+.full-player-like-btn{
+  font-size:24px;
+  color:var(--gray);
+  cursor:pointer;
+  transition:0.15s;
+}
+.full-player-like-btn.liked{
+  color:var(--red);
+}
+
+.full-player-scrub{
+  width:100%;
+  max-width:340px;
+  margin:15px auto 0;
+}
+.full-scrub-bar{
+  width:100%;
+  height:4px;
+  background:#d9d4ca;
+  border-radius:4px;
+  cursor:pointer;
+  position:relative;
+}
+.full-scrub-fill{
+  height:100%;
+  width:0;
+  background:#000;
+  border-radius:4px;
+}
+.full-scrub-times{
+  display:flex;
+  justify-content:space-between;
+  font-size:11px;
+  color:var(--gray);
+  font-weight:700;
+  margin-top:6px;
+}
+
+.full-player-controls{
+  width:100%;
+  max-width:340px;
+  margin:20px auto 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.full-ctrl-btn{
+  font-size:28px;
+  color:#000;
+  cursor:pointer;
+}
+.full-play-btn{
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  background:#000;
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  cursor:pointer;
+  box-shadow:0 8px 24px rgba(0,0,0,0.2);
+}
 
 /* BOTTOM NAVIGATION */
 .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:350;height:calc(56px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);display:flex;align-items:center;justify-content:space-around;background:rgba(245,242,235,0.96);backdrop-filter:blur(18px);border-top:1px solid var(--line)}
@@ -123,7 +255,7 @@ audio{display:none}
 .drawer-panel{position:absolute;top:0;right:0;bottom:0;width:min(320px,85vw);padding:22px;background:var(--paper);overflow-y:auto}
 .drawer-head{display:flex;align-items:center;justify-content:space-between;font-size:18px}
 .drawer-list{margin-top:25px}.drawer-list button{width:100%;padding:12px 0;text-align:left;border-bottom:1px solid var(--line);font-size:13px}
-.toast{position:fixed;left:50%;bottom:130px;z-index:9000;transform:translateX(-50%);padding:10px 18px;background:#000;color:#fff;border-radius:30px;font-size:11px;font-weight:700;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:130px;z-index:9999;transform:translateX(-50%);padding:10px 18px;background:#000;color:#fff;border-radius:30px;font-size:11px;font-weight:700;white-space:nowrap}
 
 .auth-overlay{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px)}
 .auth-overlay.open{display:flex}
@@ -274,7 +406,7 @@ audio{display:none}
       <div class="upload-card">
         <div class="hero-meta-top">ACCOUNT</div>
         <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">EDIT PROFILE</h2>
-        <div class="field"><label>PROFILE PHOTO (CROPPABLE)</label><input id="profilePhotoFile" type="file" accept=".jpg,.jpeg,.png"></div>
+        <div class="field"><label>PROFILE PHOTO</label><input id="profilePhotoFile" type="file" accept="image/*"></div>
         <div class="field"><label>USERNAME</label><input id="editUsername" placeholder="username"></div>
         <div class="field"><label>DISPLAY NAME</label><input id="editDisplayName" placeholder="Your name"></div>
         <button id="saveProfileButton" class="primary-btn">SAVE PROFILE</button>
@@ -287,7 +419,7 @@ audio{display:none}
         <div class="hero-meta-top">STUDIO</div>
         <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">EDIT TRACK</h2>
         <input type="hidden" id="editTrackId">
-        <div class="field"><label>NEW COVER ARTWORK (OPTIONAL)</label><input id="editCoverFile" type="file" accept=".jpg,.jpeg,.png"></div>
+        <div class="field"><label>NEW COVER ARTWORK</label><input id="editCoverFile" type="file" accept="image/*"></div>
         <div class="field"><label>TRACK TITLE</label><input id="editTrackTitle" placeholder="Title"></div>
         <div class="field"><label>ARTIST NAME</label><input id="editTrackArtist" placeholder="Artist"></div>
         <button id="saveTrackButton" class="primary-btn">UPDATE TRACK</button>
@@ -299,9 +431,9 @@ audio{display:none}
       <div class="upload-card">
         <div class="hero-meta-top">CREATOR STUDIO</div>
         <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">UPLOAD TRACK</h2>
-        <div class="field"><label>AUDIO FILE (MP3 / WAV / M4A)</label><input id="audioFile" type="file" accept=".mp3,.wav,.m4a,audio/mpeg,audio/wav"></div>
-        <div class="field"><label>COVER ARTWORK (JPG / PNG - CROPPABLE)</label><input id="coverFile" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png"></div>
-        <div class="field"><label>TRACK VIDEO (MP4, 1-21 SEC)</label><input id="videoFile" type="file" accept=".mp4,video/mp4"></div>
+        <div class="field"><label>AUDIO FILE</label><input id="audioFile" type="file"></div>
+        <div class="field"><label>COVER ARTWORK</label><input id="coverFile" type="file" accept="image/*"></div>
+        <div class="field"><label>TRACK VIDEO (CANVAS VIDEO)</label><input id="videoFile" type="file" accept="video/*"></div>
         <div class="field"><label>TRACK TITLE</label><input id="uploadTitle" placeholder="Title"></div>
         <div class="field"><label>ARTIST NAME</label><input id="uploadArtist" placeholder="Artist"></div>
         <button id="publishButton" class="primary-btn">PUBLISH TRACK</button>
@@ -329,6 +461,48 @@ audio{display:none}
     </div>
   </div>
 
+  <!-- FULL-SCREEN EXPANDED MODAL PLAYER -->
+  <div id="fullPlayerOverlay" class="full-player-overlay">
+    <div class="full-player-top">
+      <button id="fullPlayerClose" class="full-player-close">⌵</button>
+      <div class="hero-meta-top" style="margin:0">NOW PLAYING</div>
+      <div style="width:40px"></div>
+    </div>
+
+    <!-- Cover / Seamless Video Canvas -->
+    <div class="full-player-stage">
+      <img id="fullCoverImg" src="" alt="">
+      <video id="fullCoverVideo" autoplay muted loop playsinline></video>
+    </div>
+
+    <!-- Title & Like -->
+    <div class="full-player-meta">
+      <div class="full-player-titles">
+        <h2 id="fullTitle">Track Title</h2>
+        <p id="fullArtist">Artist Name</p>
+      </div>
+      <button id="fullLikeBtn" class="full-player-like-btn">♡</button>
+    </div>
+
+    <!-- Timeline Scrubber -->
+    <div class="full-player-scrub">
+      <div id="fullScrubBar" class="full-scrub-bar">
+        <div id="fullScrubFill" class="full-scrub-fill"></div>
+      </div>
+      <div class="full-scrub-times">
+        <span id="fullCurrentTime">0:00</span>
+        <span id="fullDuration">0:00</span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="full-player-controls">
+      <button id="fullPrevBtn" class="full-ctrl-btn">«</button>
+      <button id="fullPlayBtn" class="full-play-btn">▶</button>
+      <button id="fullNextBtn" class="full-ctrl-btn">»</button>
+    </div>
+  </div>
+
   <!-- BOTTOM NAVIGATION -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-view="home"><span class="nav-icon">⌂</span>Home</button>
@@ -345,7 +519,7 @@ audio{display:none}
   <div id="authOverlay" class="auth-overlay"><div class="auth-panel"><div class="hero-meta-top">ACCOUNT</div><h2 id="authTitle" class="auth-title">REGISTER</h2><div class="field"><label>EMAIL</label><input id="authEmail" type="email" placeholder="you@example.com"></div><div class="field"><label>PASSWORD</label><input id="authPassword" type="password" placeholder="Minimum 6 characters"></div><div id="authNameField" class="field"><label>DISPLAY NAME</label><input id="authDisplayName" placeholder="Artist Name"></div><button id="authSubmit" class="auth-submit">CREATE ACCOUNT</button><div style="text-align:center;margin-top:12px"><button id="authSwitchBtn" style="font-size:11px;text-decoration:underline">Switch to Login</button> | <button id="authClose" style="font-size:11px;color:var(--gray)">Close</button></div></div></div>
 
   <!-- UNIVERSAL CROPPER MODAL -->
-  <div id="cropOverlay" class="crop-overlay"><div class="crop-panel"><div id="cropLabel" class="hero-meta-top" style="margin-bottom:10px">ADJUST PHOTO</div><div class="crop-stage circle" id="cropStage"><canvas id="cropCanvas" width="500" height="500"></canvas></div><div class="crop-controls"><button id="cropZoomOut">−</button><input id="cropZoom" type="range" min="1" max="3" step="0.01" value="1"><button id="cropZoomIn">+</button></div><div class="crop-actions"><button id="cropCancel">Cancel</button><button id="cropSave" style="background:#000;color:#fff">USE THIS PHOTO</button></div></div></div>
+  <div id="cropOverlay" class="crop-overlay"><div class="crop-panel"><div id="cropLabel" class="hero-meta-top" style="margin-bottom:10px">ADJUST PHOTO</div><div class="crop-stage circle" id="cropStage"><canvas id="cropCanvas" width="400" height="400"></canvas></div><div class="crop-controls"><button id="cropZoomOut">−</button><input id="cropZoom" type="range" min="1" max="3" step="0.01" value="1"><button id="cropZoomIn">+</button></div><div class="crop-actions"><button id="cropCancel">Cancel</button><button id="cropSave" style="background:#000;color:#fff">USE THIS PHOTO</button></div></div></div>
 
   <!-- TRACK OPTIONS SHEET -->
   <div id="trackOptionsSheet" class="track-options-sheet"><div class="track-options-box"><div class="hero-meta-top" id="optionsTrackTitle">TRACK OPTIONS</div><button id="optEditTrack" style="display:none">✎ Edit Track</button><button id="optShareTrack">↗ Share Track</button><button id="optDeleteTrack" class="danger" style="display:none">🗑 Delete Track</button><button id="optCloseTrack" style="margin-top:10px;text-align:center">Cancel</button></div></div>
@@ -382,6 +556,20 @@ function setupIntroVideo(){
   document.addEventListener("visibilitychange", () => { if (!document.hidden && v.paused) v.play().catch(()=>{}); });
 }
 
+function freeMemoryForPicker(){
+  const v = document.getElementById("introCoverVideo");
+  if(v) v.pause();
+  const fv = document.getElementById("fullCoverVideo");
+  if(fv) fv.pause();
+}
+
+function restoreMemoryAfterPicker(){
+  const v = document.getElementById("introCoverVideo");
+  if(v && document.querySelector(".view.active")?.id === "home") v.play().catch(()=>{});
+  const fv = document.getElementById("fullCoverVideo");
+  if(fv && document.getElementById("fullPlayerOverlay").classList.contains("open")) fv.play().catch(()=>{});
+}
+
 function bindButtons(){
   const logoBtn = document.getElementById("brandLogoBtn"), popup = document.getElementById("socialPopup");
   if (logoBtn && popup) {
@@ -400,17 +588,35 @@ function bindButtons(){
   document.getElementById("authSwitchBtn").onclick = toggleAuthMode;
   document.getElementById("authSubmit").onclick = submitAuth;
 
-  document.getElementById("dockPlayBtn").onclick = togglePlay;
-  document.getElementById("dockProgressWrap").onclick = seekAudio;
+  // Mini player click to open full player modal
+  document.getElementById("dockPlayer").onclick = (e) => {
+    if (e.target.id !== "dockPlayBtn") {
+      openFullPlayer();
+    }
+  };
+  document.getElementById("dockPlayBtn").onclick = (e) => { e.stopPropagation(); togglePlay(); };
+  document.getElementById("dockProgressWrap").onclick = (e) => { e.stopPropagation(); seekAudio(e); };
+
+  // Full Player Modal Controls
+  document.getElementById("fullPlayerClose").onclick = closeFullPlayer;
+  document.getElementById("fullPlayBtn").onclick = togglePlay;
+  document.getElementById("fullPrevBtn").onclick = () => playIndex(currentIndex <= 0 ? tracks.length - 1 : currentIndex - 1);
+  document.getElementById("fullNextBtn").onclick = nextTrack;
+  document.getElementById("fullScrubBar").onclick = seekAudioFull;
+  document.getElementById("fullLikeBtn").onclick = toggleLikeCurrent;
+
   document.getElementById("publishButton").onclick = publishTrack;
   document.getElementById("saveTrackButton").onclick = saveTrackEdit;
   document.getElementById("searchInput").oninput = runSearch;
 
-  // Edit profile & Cropping
+  document.querySelectorAll("input[type='file']").forEach(inp => {
+    inp.addEventListener("click", freeMemoryForPicker);
+  });
+
   document.getElementById("saveProfileButton").onclick = saveProfile;
-  document.getElementById("profilePhotoFile").onchange = e => { const f = e.target.files[0]; if (f) startCropping(f, "profile"); };
-  document.getElementById("coverFile").onchange = e => { const f = e.target.files[0]; if (f) startCropping(f, "cover"); };
-  document.getElementById("editCoverFile").onchange = e => { const f = e.target.files[0]; if (f) startCropping(f, "editCover"); };
+  document.getElementById("profilePhotoFile").onchange = e => { restoreMemoryAfterPicker(); const f = e.target.files[0]; if (f) startCropping(f, "profile"); };
+  document.getElementById("coverFile").onchange = e => { restoreMemoryAfterPicker(); const f = e.target.files[0]; if (f) startCropping(f, "cover"); };
+  document.getElementById("editCoverFile").onchange = e => { restoreMemoryAfterPicker(); const f = e.target.files[0]; if (f) startCropping(f, "editCover"); };
 
   document.getElementById("cropCancel").onclick = () => document.getElementById("cropOverlay").classList.remove("open");
   document.getElementById("cropSave").onclick = applyCroppedImage;
@@ -426,7 +632,6 @@ function bindButtons(){
   window.addEventListener("touchmove", cropPointerMove, { passive: false });
   window.addEventListener("touchend", cropPointerEnd);
 
-  // Track Sheet options
   document.getElementById("optCloseTrack").onclick = closeTrackOptions;
   document.getElementById("optShareTrack").onclick = () => { shareTrack(selectedOptionTrack); closeTrackOptions(); };
   document.getElementById("optEditTrack").onclick = () => { openEditTrack(selectedOptionTrack); closeTrackOptions(); };
@@ -435,13 +640,32 @@ function bindButtons(){
   audio.ontimeupdate = updateProgress;
   audio.onplay = () => {
     document.getElementById("dockPlayBtn").textContent = "Ⅱ";
+    document.getElementById("fullPlayBtn").textContent = "Ⅱ";
     document.getElementById("heroVinyl").classList.add("playing");
+    const fv = document.getElementById("fullCoverVideo");
+    if (fv && fv.style.display === "block") fv.play().catch(()=>{});
   };
   audio.onpause = () => {
     document.getElementById("dockPlayBtn").textContent = "▶";
+    document.getElementById("fullPlayBtn").textContent = "▶";
     document.getElementById("heroVinyl").classList.remove("playing");
+    const fv = document.getElementById("fullCoverVideo");
+    if (fv) fv.pause();
   };
   audio.onended = nextTrack;
+}
+
+function openFullPlayer(){
+  if (!currentTrackObj) return;
+  document.getElementById("fullPlayerOverlay").classList.add("open");
+  const fv = document.getElementById("fullCoverVideo");
+  if (fv && fv.style.display === "block" && !audio.paused) {
+    fv.play().catch(()=>{});
+  }
+}
+
+function closeFullPlayer(){
+  document.getElementById("fullPlayerOverlay").classList.remove("open");
 }
 
 function closeDrawer() { document.getElementById("drawer").classList.remove("open"); }
@@ -559,6 +783,7 @@ async function loadLikes(){
   if (!currentUser) return;
   const { data } = await supabaseClient.from("track_likes").select("track_id").eq("user_id", currentUser.id);
   liked = new Set((data || []).map(x => x.track_id));
+  updateFullLikeBtn();
   renderLibrary();
 }
 
@@ -732,10 +957,32 @@ function selectTrack(i){
   listeningSeconds = 0;
   lastAudioTime = 0;
 
+  // Update Dock mini player
   document.getElementById("dockTitle").textContent = currentTrackObj.title;
   document.getElementById("dockArtist").textContent = currentTrackObj.artist;
   document.getElementById("dockImg").src = currentTrackObj.cover;
   document.getElementById("dockPlayer").classList.add("open");
+
+  // Update Full-screen Modal Player
+  document.getElementById("fullTitle").textContent = currentTrackObj.title;
+  document.getElementById("fullArtist").textContent = currentTrackObj.artist;
+  document.getElementById("fullCoverImg").src = currentTrackObj.cover;
+
+  // Seamless Canvas Video Loading
+  const fv = document.getElementById("fullCoverVideo");
+  if (currentTrackObj.video) {
+    fv.src = currentTrackObj.video;
+    fv.oncanplay = () => {
+      fv.style.display = "block";
+      if (!audio.paused) fv.play().catch(()=>{});
+    };
+    fv.load();
+  } else {
+    fv.removeAttribute("src");
+    fv.style.display = "none";
+  }
+
+  updateFullLikeBtn();
 }
 
 function playIndex(i){
@@ -772,9 +1019,16 @@ function updateProgress(){
   lastAudioTime = audio.currentTime;
 
   const pct = (audio.currentTime / audio.duration) * 100;
+  
+  // Dock player scrubber
   document.getElementById("dockProgressBar").style.width = pct + "%";
   document.getElementById("dockCurrentTime").textContent = formatSeconds(audio.currentTime);
   document.getElementById("dockDuration").textContent = formatSeconds(audio.duration);
+
+  // Full-screen modal player scrubber
+  document.getElementById("fullScrubFill").style.width = pct + "%";
+  document.getElementById("fullCurrentTime").textContent = formatSeconds(audio.currentTime);
+  document.getElementById("fullDuration").textContent = formatSeconds(audio.duration);
 }
 
 async function countPlay(track){
@@ -791,12 +1045,42 @@ function seekAudio(e){
   lastAudioTime = audio.currentTime;
 }
 
-// UNIVERSAL CROPPING SYSTEM (AVATAR & COVER)
+function seekAudioFull(e){
+  if (!audio.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+  lastAudioTime = audio.currentTime;
+}
+
+async function toggleLikeCurrent(){
+  if (!currentUser) return openAuth("login");
+  if (!currentTrackObj) return;
+  const id = currentTrackObj.id;
+  if (liked.has(id)) {
+    await supabaseClient.from("track_likes").delete().eq("user_id", currentUser.id).eq("track_id", id);
+    liked.delete(id);
+  } else {
+    await supabaseClient.from("track_likes").insert({ user_id: currentUser.id, track_id: id });
+    liked.add(id);
+  }
+  updateFullLikeBtn();
+  renderLibrary();
+}
+
+function updateFullLikeBtn(){
+  const btn = document.getElementById("fullLikeBtn");
+  if (!btn || !currentTrackObj) return;
+  const isLiked = liked.has(currentTrackObj.id);
+  btn.textContent = isLiked ? "♥" : "♡";
+  btn.classList.toggle("liked", isLiked);
+}
+
+// UNIVERSAL CROPPING SYSTEM
 let cropTarget = "profile", cropFile = null, cropImage = null, cropScale = 1, cropX = 0, cropY = 0, cropDragging = false, cropLastX = 0, cropLastY = 0;
 let croppedAvatarBlob = null, croppedCoverBlob = null, croppedEditCoverBlob = null;
 
 function startCropping(file, target){
-  if (!file || !file.type.startsWith("image/")) return;
+  if (!file) return;
   cropTarget = target;
   const stage = document.getElementById("cropStage");
   if (target === "profile") {
@@ -846,15 +1130,15 @@ function cropPointerEnd(){ cropDragging = false; }
 
 async function applyCroppedImage(){
   if (!cropImage) return;
-  const canvas = document.createElement("canvas"); canvas.width = 600; canvas.height = 600;
-  const ctx = canvas.getContext("2d"), s = 600;
+  const canvas = document.createElement("canvas"); canvas.width = 400; canvas.height = 400;
+  const ctx = canvas.getContext("2d"), s = 400;
   const base = Math.max(s / cropImage.naturalWidth, s / cropImage.naturalHeight);
   const w = cropImage.naturalWidth * base * cropScale, h = cropImage.naturalHeight * base * cropScale;
-  const x = (s - w) / 2 + cropX * (s / 500), y = (s - h) / 2 + cropY * (s / 500);
+  const x = (s - w) / 2 + cropX, y = (s - h) / 2 + cropY;
 
   ctx.save(); ctx.beginPath();
   if (cropTarget === "profile") {
-    ctx.arc(300, 300, 300, 0, Math.PI * 2);
+    ctx.arc(200, 200, 200, 0, Math.PI * 2);
   } else {
     ctx.rect(0, 0, s, s);
   }
@@ -869,7 +1153,7 @@ async function applyCroppedImage(){
     
     document.getElementById("cropOverlay").classList.remove("open");
     toast("Image cropped & ready.");
-  }, "image/jpeg", 0.9);
+  }, "image/jpeg", 0.85);
 }
 
 async function saveProfile(){
@@ -903,7 +1187,6 @@ async function publishTrack(){
   const artistName = document.getElementById("uploadArtist").value.trim();
 
   if (!aFile || !cFile || !title) return toast("Fill required fields.");
-  if (aFile.size > 25 * 1024 * 1024) return toast("Audio must be under 25MB.");
 
   const btn = document.getElementById("publishButton");
   btn.disabled = true; btn.textContent = "UPLOADING...";
@@ -915,8 +1198,7 @@ async function publishTrack(){
       art = newArt;
     }
 
-    const cleanExt = (n) => n ? n.split('.').pop() : "jpg";
-    const aPath = `${currentUser.id}/${Date.now()}-track.${cleanExt(aFile.name)}`;
+    const aPath = `${currentUser.id}/${Date.now()}-track.mp3`;
     const cPath = `${currentUser.id}/${Date.now()}-cover.jpg`;
 
     await supabaseClient.storage.from("audio").upload(aPath, aFile, { upsert: false });
@@ -951,7 +1233,6 @@ async function publishTrack(){
   }
 }
 
-// TRACK EDITING & ACTIONS
 function openTrackOptions(t){
   selectedOptionTrack = t;
   document.getElementById("optionsTrackTitle").textContent = t.title;
@@ -973,7 +1254,6 @@ function openEditTrack(t){
 async function saveTrackEdit(){
   const id = document.getElementById("editTrackId").value;
   const title = document.getElementById("editTrackTitle").value.trim();
-  const artist = document.getElementById("editTrackArtist").value.trim();
   if (!id || !title) return toast("Fill title.");
 
   const btn = document.getElementById("saveTrackButton");
@@ -1007,7 +1287,6 @@ async function deleteTrack(t){
   } catch(e){ toast("Delete failed."); }
 }
 
-// ROUTING & HELPERS
 function navigate(view, opts = {}){
   const u = new URL(location.href);
   u.search = "";
