@@ -26,8 +26,8 @@ audio{display:none}
 /* SPLASH PRELOADER */
 .splash-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .35s ease,visibility .35s ease}
 .splash-screen.hide{opacity:0;visibility:hidden;pointer-events:none}
-.splash-logo{font-size:24px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;margin-bottom:18px}
-.splash-spinner{width:28px;height:28px;border:2px solid var(--line);border-top-color:#000;border-radius:50%;animation:splashSpin .6s linear infinite}
+.splash-logo{font-size:22px;font-weight:900;letter-spacing:.25em;text-transform:uppercase;margin-bottom:16px}
+.splash-spinner{width:26px;height:26px;border:2px solid var(--line);border-top-color:#000;border-radius:50%;animation:splashSpin .6s linear infinite}
 @keyframes splashSpin{to{transform:rotate(360deg)}}
 
 .app{min-height:100vh;padding-bottom:120px}
@@ -280,20 +280,29 @@ document.addEventListener("DOMContentLoaded",async()=>{
   setupIntroVideo();
   bindEvents();
   
-  // بارگذاری دیتا و بازیابی آخرین وضعیت کاربر قبل از پنهان شدن اسپلش
-  await loadTracks();
-  restoreLastState();
+  // تایمر اضطراری: در صورت کندی اینترنت یا خطای سرور، لودر حداکثر بعد از 1.2 ثانیه باز می‌شود
+  const fallbackTimer=setTimeout(()=>{
+    hideSplashScreen();
+  },1200);
 
-  // پنهان کردن انیمیشنی صفحه لودینگ اولیه
-  hideSplashScreen();
+  try{
+    await loadTracks();
+    restoreLastState();
+  }catch(err){
+    console.warn("Init load warning:",err);
+  }finally{
+    clearTimeout(fallbackTimer);
+    hideSplashScreen();
+  }
 });
 
 function hideSplashScreen(){
   const splash=document.getElementById("splashScreen");
-  if(splash){
+  if(splash && !splash.classList.contains("hide")){
+    splash.classList.add("hide");
     setTimeout(()=>{
-      splash.classList.add("hide");
-    },300);
+      splash.remove();
+    },350);
   }
 }
 
@@ -334,7 +343,6 @@ function switchView(viewId){
   document.getElementById(viewId)?.classList.add("active");
   document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n.dataset.view===viewId));
   window.scrollTo(0,0);
-  // ذخیره آخرین تب باز شده
   localStorage.setItem("ls_last_view",viewId);
 }
 
@@ -392,7 +400,6 @@ function playIndex(i,autoplay=true){
   document.getElementById("dockImg").src=currentTrackObj.cover;
   document.getElementById("dockPlayer").classList.add("open");
 
-  // ذخیره وضعیت ترک جاری در لوکال استوریج
   localStorage.setItem("ls_last_track_id",currentTrackObj.id);
 }
 
@@ -425,7 +432,6 @@ function updateProgress(){
   document.getElementById("dockCurrentTime").textContent=formatSeconds(audio.currentTime);
   document.getElementById("dockDuration").textContent=formatSeconds(audio.duration);
 
-  // هر ۳ ثانیه زمان پخش در صورت نیاز ذخیره می‌شود
   if(Math.floor(audio.currentTime)%3===0){
     saveAudioState();
   }
@@ -437,18 +443,15 @@ function saveAudioState(){
   }
 }
 
-// بازیابی آخرین وضعیت بعد از رفرش صفحه
 function restoreLastState(){
-  // ۱. بازیابی صفحه/تب قبلی
   const lastView=localStorage.getItem("ls_last_view")||"home";
   switchView(lastView);
 
-  // ۲. بازیابی آهنگ قبلی در مینی‌پلیر
   const lastTrackId=localStorage.getItem("ls_last_track_id");
   if(lastTrackId && tracks.length){
     const foundIdx=tracks.findIndex(t=>String(t.id)===String(lastTrackId));
     if(foundIdx>=0){
-      playIndex(foundIdx,false); // بارگذاری اطلاعات بدون پخش خودکار مزاحم
+      playIndex(foundIdx,false);
       const lastSeek=parseFloat(localStorage.getItem("ls_last_seek_time")||"0");
       if(lastSeek>0){
         audio.currentTime=lastSeek;
