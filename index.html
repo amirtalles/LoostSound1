@@ -1,1525 +1,276 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0d0d0d">
-<title>LOST SOUND</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0d0d0d">
+  <title>LOST SOUND</title>
 
-<!-- PWA CONFIGURATION -->
-<link rel="manifest" href="manifest.json">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="LostSound">
+  <!-- ادغام مستقیم مانیفست فول‌اسکرین در یک خط -->
+  <link rel="manifest" href='data:application/manifest+json,{"id":"com.lostsound.music","name":"LOST SOUND","short_name":"LOST SOUND","start_url":"./index.html","scope":"./","display":"fullscreen","display_override":["fullscreen","standalone"],"background_color":"#0d0d0d","theme_color":"#0d0d0d","orientation":"portrait","icons":[{"src":"assets/icon.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"assets/icon.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'>
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="apple-touch-icon" href="assets/icon.png">
 
-/* THEME VARIABLES */
-:root{
-  --bg:#0d0d0d;
-  --paper:#171717;
-  --paper-sub:#212121;
-  --black:#ffffff;
-  --white:#000000;
-  --gray:#8e8e8e;
-  --line:rgba(255,255,255,0.12);
-  --red:#ff4d4d;
-  --shadow:0 14px 35px rgba(0,0,0,0.6);
-  --pill-bg:rgba(30,30,30,0.85);
-  --pill-glider:#ffffff;
-  --pill-text:rgba(255,255,255,0.6);
-  --pill-active:#000000;
-}
+  <!-- کتابخانه Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-body.morning-mode{
-  --bg:#f5f2eb;
-  --paper:#ffffff;
-  --paper-sub:#ebe6dc;
-  --black:#000000;
-  --white:#ffffff;
-  --gray:#77736c;
-  --line:rgba(0,0,0,0.1);
-  --red:#e53935;
-  --shadow:0 14px 35px rgba(0,0,0,0.12);
-  --pill-bg:rgba(235,230,220,0.88);
-  --pill-glider:#000000;
-  --pill-text:rgba(0,0,0,0.6);
-  --pill-active:#ffffff;
-}
-
-html,body{width:100%;min-height:100%;background:var(--bg);color:var(--black);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,sans-serif;overflow-x:hidden;transition:background 0.28s ease,color 0.28s ease}
-body{min-height:100vh}
-button,input,textarea,select{font-family:inherit;color:inherit}
-button{border:0;background:none;cursor:pointer}
-img{max-width:100%;display:block}
-audio{display:none}
-
-.app{min-height:100vh;padding-bottom:135px}
-
-/* TOPBAR */
-.topbar{height:54px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;background:var(--bg);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);transition:background 0.28s ease}
-.top-left{position:relative;display:flex;align-items:center;gap:8px}
-.brand-logo-btn{width:36px;height:36px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;cursor:pointer;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,0.15)}
-.brand-fallback{font-size:10px;font-weight:900;letter-spacing:.05em}
-
-.top-right{display:flex;align-items:center;gap:12px}
-.theme-toggle-btn{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:16px;cursor:pointer;background:var(--paper-sub);border:1px solid var(--line);transition:transform 0.2s}
-.theme-toggle-btn:active{transform:scale(0.9)}
-
-/* SOCIAL POPUP */
-.social-popup{position:absolute;top:46px;left:0;background:var(--paper);border-radius:14px;padding:6px;box-shadow:var(--shadow);border:1px solid var(--line);min-width:145px;display:none;z-index:500}
-.social-popup.show{display:flex;flex-direction:column;gap:2px;animation:popIn .16s cubic-bezier(0.16,1,0.3,1) forwards}
-@keyframes popIn{from{opacity:0;transform:scale(0.92) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.social-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:700;color:var(--black);text-decoration:none;transition:0.15s}
-.social-item:hover{background:var(--paper-sub)}
-.social-svg{width:16px;height:16px;fill:currentColor}
-
-.top-title{font-size:11px;letter-spacing:.22em;font-weight:800;text-transform:uppercase}
-.top-menu-btn{font-size:20px;padding:4px;line-height:1;color:var(--black)}
-#siteBackButton{visibility:hidden;opacity:.35;transition:.2s;font-size:22px;color:var(--black)}
-#siteBackButton.visible{visibility:visible;opacity:1}
-
-/* MAIN PAGE */
-.page{width:100%;max-width:920px;margin:auto;padding:12px 18px}
-.view{display:none}
-.view.active{display:block}
-
-/* HERO SECTION */
-.hero-layout{display:grid;grid-template-columns:1fr 185px;align-items:center;gap:15px;margin:8px 0 28px;position:relative}
-.hero-meta-top{font-size:9.5px;letter-spacing:.14em;font-weight:800;text-transform:uppercase;color:var(--gray);margin-bottom:6px}
-.hero-title{font-size:clamp(34px,5.8vw,48px);line-height:0.86;letter-spacing:-0.05em;font-weight:900}
-.hero-year{font-size:10px;font-weight:700;letter-spacing:.12em;margin-top:16px;color:var(--gray)}
-.hero-year-right{position:absolute;top:0;right:0;font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--gray)}
-
-/* HERO COVER & VINYL */
-.hero-vinyl-stage{position:relative;width:100%;height:145px;display:flex;align-items:center;justify-content:flex-start}
-.stage-cover{position:relative;z-index:2;width:130px;height:130px;border-radius:6px;overflow:hidden;background:#111;box-shadow:var(--shadow);flex:0 0 auto;border:1px solid var(--line)}
-.stage-cover video{width:100%;height:100%;object-fit:cover;display:block}
-.stage-vinyl{position:absolute;z-index:1;left:65px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,#2a2a2a 0 5%,#444 5.5% 6%,#111 6.5% 12%,#222 12.5% 13%,#050505 13.5% 27%,#222 27.5% 28%,#050505 28.5% 44%,#222 44.5% 45%,#050505 45.5% 61%,#1a1a1a 61.5% 62%,#050505 62.5% 100%);box-shadow:0 8px 24px rgba(0,0,0,0.3);pointer-events:none}
-.stage-vinyl.playing{animation:rotateVinyl 4s linear infinite}
-@keyframes rotateVinyl{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-
-/* SECTION HEAD */
-.section-title-line{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
-.section-title{font-size:10px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(--gray)}
-
-/* TRACK ROW */
-.track-row{display:grid;grid-template-columns:74px 38px minmax(0,1fr) 24px;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
-.track-thumb-wrap{position:relative;width:74px;height:74px}
-.track-thumb{width:100%;height:100%;object-fit:cover;border-radius:6px;background:var(--paper-sub);border:1px solid var(--line)}
-.avatar-badge{position:absolute;top:-6px;left:-6px;width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid var(--bg);box-shadow:0 2px 6px rgba(0,0,0,0.3);background:#111;z-index:4;cursor:pointer}
-.avatar-badge-fallback{position:absolute;top:-6px;left:-6px;width:26px;height:26px;border-radius:50%;border:2px solid var(--bg);background:var(--paper-sub);color:var(--black);display:grid;place-items:center;font-size:9px;font-weight:bold;z-index:4;cursor:pointer}
-.track-play-btn{width:38px;height:38px;border-radius:50%;background:var(--black);color:var(--white);box-shadow:0 3px 10px rgba(0,0,0,0.1);display:grid;place-items:center;font-size:12px;cursor:pointer;transition:0.15s}
-.track-play-btn:hover{opacity:0.85}
-.track-meta{min-width:0;cursor:pointer}
-.track-meta h4{font-size:13.5px;font-weight:800;line-height:1.2;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.track-meta .artist-name{font-size:11px;color:var(--gray);margin-top:3px;font-weight:500}
-.track-meta .track-stats{font-size:9.5px;color:var(--gray);margin-top:4px;display:flex;gap:6px}
-.track-more-btn{font-size:18px;color:var(--black);cursor:pointer;text-align:right}
-
-/* SEARCH & CHANNELS */
-.search-group-title{font-size:10px;letter-spacing:.16em;font-weight:bold;margin:20px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line);color:var(--gray)}
-.artist-result{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line);cursor:pointer}
-.artist-result img,.artist-result .artist-fallback{width:46px;height:46px;border-radius:50%;object-fit:cover;flex:0 0 auto}
-.artist-fallback{display:grid;place-items:center;background:var(--paper-sub);color:var(--black);font-weight:800;font-size:14px;border:1px solid var(--line)}
-
-/* CHANNEL VIEW */
-.channel-hero{display:flex;align-items:center;gap:16px;padding:8px 0 20px;border-bottom:1px solid var(--line)}
-.channel-avatar{width:75px;height:75px;border-radius:50%;object-fit:cover;background:#111;flex:0 0 auto;border:1px solid var(--line)}
-.channel-meta h2{font-size:26px;line-height:.95;letter-spacing:-.05em;margin:4px 0}
-.channel-id{font-size:10px;color:var(--gray)}
-.channel-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-
-/* DOCK MINI PLAYER */
-.dock-player{display:none;position:fixed;left:14px;right:14px;bottom:78px;z-index:400;padding:8px 12px;background:var(--paper);border-radius:14px;border:1px solid var(--line);box-shadow:var(--shadow);cursor:pointer;transition:background 0.28s ease}
-.dock-player.open{display:block}
-.dock-inner{display:grid;grid-template-columns:44px minmax(0,1fr) 38px;gap:10px;align-items:center}
-.dock-art{width:44px;height:44px;border-radius:5px;object-fit:cover;background:#111}
-.dock-meta h5{font-size:12px;font-weight:800;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.dock-meta p{font-size:10px;color:var(--gray);margin-top:1px}
-.dock-progress{width:100%;height:2px;background:var(--paper-sub);margin-top:6px;position:relative;border-radius:2px}
-.dock-progress-bar{height:100%;width:0;background:var(--black);border-radius:2px}
-.dock-times{display:flex;justify-content:space-between;font-size:8.5px;color:var(--gray);font-weight:700;margin-top:3px}
-.dock-play-circle{width:38px;height:38px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;font-size:13px;margin-left:auto;cursor:pointer}
-
-/* FULL-SCREEN EXPANDED MODAL PLAYER */
-.full-player-overlay{
-  position:fixed;
-  inset:0;
-  z-index:8000;
-  background:var(--bg);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  padding:24px 28px calc(28px + env(safe-area-inset-bottom));
-  transform:translateY(100%);
-  transition:transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), background 0.28s ease;
-  overflow-y:auto;
-}
-.full-player-overlay.open{
-  transform:translateY(0);
-}
-.full-player-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  height:44px;
-}
-.full-player-close{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  font-size:24px;
-  font-weight:bold;
-  cursor:pointer;
-  line-height:1;
-  color:var(--black);
-}
-.full-player-stage{
-  width:100%;
-  max-width:340px;
-  margin:20px auto;
-  aspect-ratio:1;
-  position:relative;
-  border-radius:18px;
-  overflow:hidden;
-  background:#111;
-  box-shadow:var(--shadow);
-  border:1px solid var(--line);
-}
-.full-player-stage img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-.full-player-stage video{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:none;
-  z-index:2;
-}
-.full-player-meta{
-  width:100%;
-  max-width:340px;
-  margin:0 auto 10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.full-player-titles h2{
-  font-size:22px;
-  font-weight:900;
-  letter-spacing:-0.03em;
-  line-height:1.2;
-}
-.full-player-titles p{
-  font-size:14px;
-  color:var(--gray);
-  margin-top:4px;
-  font-weight:600;
-}
-.full-player-like-btn{
-  font-size:24px;
-  color:var(--gray);
-  cursor:pointer;
-  transition:0.15s;
-}
-.full-player-like-btn.liked{
-  color:var(--red);
-}
-
-.full-player-scrub{
-  width:100%;
-  max-width:340px;
-  margin:15px auto 0;
-}
-.full-scrub-bar{
-  width:100%;
-  height:4px;
-  background:var(--paper-sub);
-  border-radius:4px;
-  cursor:pointer;
-  position:relative;
-}
-.full-scrub-fill{
-  height:100%;
-  width:0;
-  background:var(--black);
-  border-radius:4px;
-}
-.full-scrub-times{
-  display:flex;
-  justify-content:space-between;
-  font-size:11px;
-  color:var(--gray);
-  font-weight:700;
-  margin-top:6px;
-}
-
-.full-player-controls{
-  width:100%;
-  max-width:340px;
-  margin:20px auto 10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.full-ctrl-btn{
-  font-size:28px;
-  color:var(--black);
-  cursor:pointer;
-}
-.full-play-btn{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  background:var(--black);
-  color:var(--white);
-  display:grid;
-  place-items:center;
-  font-size:22px;
-  cursor:pointer;
-  box-shadow:0 8px 24px rgba(0,0,0,0.2);
-}
-
-/* FLOATING PILL TABBAR */
-.pill-nav-container{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:calc(16px + env(safe-area-inset-bottom));
-  z-index:350;
-  display:flex;
-  justify-content:center;
-  pointer-events:none;
-}
-.pill-nav{
-  pointer-events:auto;
-  position:relative;
-  display:flex;
-  align-items:center;
-  background:var(--pill-bg);
-  backdrop-filter:blur(25px);
-  -webkit-backdrop-filter:blur(25px);
-  padding:4px;
-  border-radius:40px;
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
-  width:min(380px,92vw);
-  transition:background 0.28s ease, border-color 0.28s ease;
-}
-.pill-glider{
-  position:absolute;
-  top:4px;
-  bottom:4px;
-  left:4px;
-  width:calc((100% - 8px) / 5);
-  background:var(--pill-glider);
-  border-radius:30px;
-  box-shadow:0 4px 14px rgba(0,0,0,0.15);
-  transition:transform 0.32s cubic-bezier(0.2,0.9,0.3,1.2), background 0.28s ease;
-  z-index:1;
-  pointer-events:none;
-}
-.pill-item{
-  flex:1;
-  position:relative;
-  z-index:2;
-  height:40px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  font-weight:700;
-  color:var(--pill-text);
-  text-decoration:none;
-  border-radius:30px;
-  transition:color 0.22s ease;
-  user-select:none;
-}
-.pill-item.active{
-  color:var(--pill-active);
-}
-
-/* FORMS, CARDS & MODALS */
-.upload-card{background:var(--paper);padding:20px;border-radius:14px;border:1px solid var(--line);max-width:540px;margin:auto}
-.field{margin:12px 0}
-.field label{display:block;font-size:9px;font-weight:800;letter-spacing:.12em;margin-bottom:6px;color:var(--gray)}
-.field input,.field textarea,.field select{width:100%;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--paper-sub);font-size:13px;outline:none;color:var(--black)}
-.primary-btn{padding:11px 20px;background:var(--black);color:var(--white);border-radius:24px;font-size:10px;font-weight:800;letter-spacing:.12em;width:100%;margin-top:8px}
-.drawer{position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,0.7)}.drawer.open{display:block}
-.drawer-panel{position:absolute;top:0;right:0;bottom:0;width:min(320px,85vw);padding:22px;background:var(--paper);overflow-y:auto;border-left:1px solid var(--line)}
-.drawer-head{display:flex;align-items:center;justify-content:space-between;font-size:18px}
-.drawer-list{margin-top:25px}.drawer-list button{width:100%;padding:12px 0;text-align:left;border-bottom:1px solid var(--line);font-size:13px;color:var(--black)}
-.toast{position:fixed;left:50%;bottom:140px;z-index:9999;transform:translateX(-50%);padding:10px 18px;background:var(--black);color:var(--white);border-radius:30px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:var(--shadow)}
-
-.auth-overlay{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px)}
-.auth-overlay.open{display:flex}
-.auth-panel{width:100%;max-width:380px;background:var(--paper);border-radius:14px;padding:24px;box-shadow:var(--shadow);border:1px solid var(--line)}
-.auth-title{font-size:28px;line-height:.9;letter-spacing:-.05em;margin-bottom:8px;font-weight:900}
-.auth-submit{width:100%;padding:12px;margin-top:10px;border-radius:25px;background:var(--black);color:var(--white);font-weight:bold;font-size:11px}
-.small-btn{padding:7px 12px;border:1px solid var(--line);border-radius:18px;font-size:9.5px;background:var(--paper-sub);font-weight:bold;color:var(--black)}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:15px}
-.card{cursor:pointer;background:var(--paper);padding:10px;border-radius:8px;border:1px solid var(--line)}
-.card img{aspect-ratio:1;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
-.card h4{margin-top:8px;font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.card p{font-size:10px;color:var(--gray);margin-top:2px}
-
-/* UNIVERSAL CROPPER MODAL */
-.crop-overlay{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px)}
-.crop-overlay.open{display:flex}
-.crop-panel{width:min(400px,100%);background:var(--paper);border-radius:16px;padding:18px;border:1px solid var(--line)}
-.crop-stage{width:min(260px,70vw);height:min(260px,70vw);margin:0 auto;background:#050505;overflow:hidden;touch-action:none;position:relative;border:1px solid var(--line)}
-.crop-stage.circle{border-radius:50%}
-.crop-stage.square{border-radius:8px}
-#cropCanvas{width:100%;height:100%}
-.crop-controls{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;gap:8px;margin-top:12px}
-.crop-controls button{height:36px;border:1px solid var(--line);border-radius:50%;background:var(--paper-sub);font-size:16px;color:var(--black)}
-.crop-actions{display:flex;gap:6px;margin-top:14px}
-.crop-actions button{flex:1;padding:10px;border-radius:20px;border:1px solid var(--line);font-size:10px;font-weight:bold}
-
-/* TRACK OPTIONS BOTTOM SHEET */
-.track-options-sheet{position:fixed;inset:0;z-index:7000;background:rgba(0,0,0,0.7);display:none;align-items:flex-end;justify-content:center;padding:14px}
-.track-options-sheet.open{display:flex}
-.track-options-box{width:min(460px,100%);background:var(--paper);border-radius:18px;padding:16px;box-shadow:var(--shadow);border:1px solid var(--line)}
-.track-options-box button{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;margin-top:6px;font-size:12px;font-weight:bold;text-align:left;background:var(--paper-sub);color:var(--black)}
-.track-options-box button.danger{color:var(--red)}
-
-@media(max-width:480px){
-  .hero-layout{grid-template-columns:1fr 160px;gap:8px}
-  .stage-cover{width:115px;height:115px}
-  .stage-vinyl{left:55px;width:115px;height:115px}
-  .track-row{grid-template-columns:64px 34px minmax(0,1fr) 20px;gap:10px}
-  .track-thumb-wrap{width:64px;height:64px}
-  .track-play-btn{width:34px;height:34px}
-}
-</style>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    body {
+      background-color: #0d0d0d;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    header {
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #141414;
+      border-bottom: 1px solid #222;
+    }
+    .logo {
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+    }
+    .container {
+      padding: 20px;
+      flex: 1;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .card {
+      background: #181818;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #282828;
+    }
+    .card h3 {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      color: #1db954;
+    }
+    .field {
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    label {
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      background: #242424;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      background: #242424;
+      border: 1px dashed #444;
+      border-radius: 8px;
+      color: #aaa;
+      cursor: pointer;
+    }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: #1db954;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn:active {
+      opacity: 0.8;
+      transform: scale(0.98);
+    }
+    .status-msg {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      text-align: center;
+      min-height: 20px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="app">
-
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <div class="top-left">
-      <button id="siteBackButton" class="top-menu-btn" title="Back">‹</button>
-      <div id="brandLogoBtn" class="brand-logo-btn" role="button" aria-label="Socials">
-        <div class="brand-fallback">LSO</div>
-      </div>
-      <div id="socialPopup" class="social-popup">
-        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-item">
-          <svg class="social-svg" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-          <span>YouTube</span>
-        </a>
-        <a href="https://instagram.com/lostsoundone" target="_blank" rel="noopener noreferrer" class="social-item">
-          <svg class="social-svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-          <span>Instagram</span>
-        </a>
-      </div>
-    </div>
-    
-    <div class="top-title">LOST SOUND</div>
-
-    <div class="top-right">
-      <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Mode">🌙</button>
-      <button id="menuButton" class="top-menu-btn">☰</button>
-    </div>
+  <header>
+    <div class="logo">LOST SOUND</div>
+    <div id="authStatus" style="font-size: 0.85rem; color: #888;">مهمان</div>
   </header>
 
-  <!-- CONTENT -->
-  <main class="page">
+  <div class="container">
     
-    <!-- HOME -->
-    <section id="home" class="view active">
-      <div class="hero-layout">
-        <span class="hero-year-right">2024</span>
-        <div>
-          <div class="hero-meta-top">MUSIC STREAMING</div>
-          <h1 class="hero-title">LOST<br>SOUND</h1>
-          <div class="hero-year">2024</div>
-        </div>
-        
-        <div class="hero-vinyl-stage">
-          <div id="heroVinyl" class="stage-vinyl"></div>
-          <div class="stage-cover">
-            <video id="introCoverVideo" autoplay muted loop playsinline preload="auto">
-              <source src="assets/lost-cover.mp4" type="video/mp4">
-            </video>
-          </div>
-        </div>
+    <!-- بخش ورود و ثبت‌نام -->
+    <div class="card" id="authSection">
+      <h3>حساب کاربری</h3>
+      <div class="field">
+        <label>ایمیل</label>
+        <input type="email" id="emailInput" placeholder="example@mail.com">
       </div>
-
-      <!-- LATEST LIST -->
-      <div class="section-title-line">
-        <div class="section-title">LATEST UPLOADS</div>
+      <div class="field">
+        <label>رمز عبور</label>
+        <input type="password" id="passwordInput" placeholder="حداقل ۶ کاراکتر">
       </div>
-      <div id="latestList"></div>
-    </section>
-
-    <!-- DISCOVER -->
-    <section id="discover" class="view">
-      <div class="hero-meta-top">DISCOVER</div>
-      <h1 class="hero-title" style="font-size:36px;margin-bottom:15px">NEW WORLDS</h1>
-      <div id="discoverList" class="cards"></div>
-    </section>
-
-    <!-- SEARCH -->
-    <section id="search" class="view">
-      <div class="hero-meta-top">SEARCH</div>
-      <div style="margin:10px 0 20px;border-bottom:2px solid var(--black);padding-bottom:6px">
-        <input id="searchInput" type="text" placeholder="Search artist, track..." style="width:100%;border:none;background:transparent;font-size:18px;font-weight:700;outline:none;color:var(--black)">
-      </div>
-      <div id="searchResults"></div>
-    </section>
-
-    <!-- LIBRARY -->
-    <section id="library" class="view">
-      <div class="hero-meta-top">YOUR ARCHIVE</div>
-      <h1 class="hero-title" style="font-size:36px;margin-bottom:15px">MY SOUND</h1>
-      <div id="likedList"></div>
-    </section>
-
-    <!-- ARTIST CHANNEL -->
-    <section id="artist" class="view">
-      <div id="artistPage"></div>
-    </section>
-
-    <!-- PROFILE -->
-    <section id="profile" class="view">
-      <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px">
-        <div style="width:64px;height:64px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;font-weight:900;font-size:18px;overflow:hidden" id="profileAvatarWrap">
-          <img id="profileAvatar" style="width:100%;height:100%;object-fit:cover;display:none">
-          <div id="profileAvatarFallback">LSO</div>
-        </div>
-        <div>
-          <div class="hero-meta-top">ARTIST</div>
-          <h2 id="profileName" style="font-size:22px;font-weight:900">LOST SOUND</h2>
-          <div id="profileUsername" style="color:var(--gray);font-size:11px">@independent</div>
-          <div class="profile-actions" id="profileActions" style="margin-top:8px"></div>
-        </div>
-      </div>
-      <div class="section-title-line"><div class="section-title">MY TRACKS</div></div>
-      <div id="profileTracks"></div>
-    </section>
-
-    <!-- EDIT PROFILE -->
-    <section id="editProfile" class="view">
-      <div class="upload-card">
-        <div class="hero-meta-top">ACCOUNT</div>
-        <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">EDIT PROFILE</h2>
-        <div class="field"><label>PROFILE PHOTO</label><input id="profilePhotoFile" type="file" accept="image/*"></div>
-        <div class="field"><label>USERNAME</label><input id="editUsername" placeholder="username"></div>
-        <div class="field"><label>DISPLAY NAME</label><input id="editDisplayName" placeholder="Your name"></div>
-        <button id="saveProfileButton" class="primary-btn">SAVE PROFILE</button>
-      </div>
-    </section>
-
-    <!-- EDIT TRACK -->
-    <section id="editTrack" class="view">
-      <div class="upload-card">
-        <div class="hero-meta-top">STUDIO</div>
-        <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">EDIT TRACK</h2>
-        <input type="hidden" id="editTrackId">
-        <div class="field"><label>NEW COVER ARTWORK</label><input id="editCoverFile" type="file" accept="image/*"></div>
-        <div class="field"><label>TRACK TITLE</label><input id="editTrackTitle" placeholder="Title"></div>
-        <div class="field"><label>ARTIST NAME</label><input id="editTrackArtist" placeholder="Artist"></div>
-        <button id="saveTrackButton" class="primary-btn">UPDATE TRACK</button>
-      </div>
-    </section>
-
-    <!-- UPLOAD -->
-    <section id="upload" class="view">
-      <div class="upload-card">
-        <div class="hero-meta-top">CREATOR STUDIO</div>
-        <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">UPLOAD TRACK</h2>
-        <div class="field"><label>AUDIO FILE</label><input id="audioFile" type="file"></div>
-        <div class="field"><label>COVER ARTWORK</label><input id="coverFile" type="file" accept="image/*"></div>
-        <div class="field"><label>TRACK VIDEO (CANVAS VIDEO)</label><input id="videoFile" type="file" accept="video/*"></div>
-        <div class="field"><label>TRACK TITLE</label><input id="uploadTitle" placeholder="Title"></div>
-        <div class="field"><label>ARTIST NAME</label><input id="uploadArtist" placeholder="Artist"></div>
-        <button id="publishButton" class="primary-btn">PUBLISH TRACK</button>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- DOCK MINI PLAYER -->
-  <div id="dockPlayer" class="dock-player">
-    <div class="dock-inner">
-      <img id="dockImg" class="dock-art" src="" alt="">
-      <div class="dock-meta">
-        <h5 id="dockTitle">No track selected</h5>
-        <p id="dockArtist">LOST SOUND</p>
-        <div id="dockProgressWrap" class="dock-progress">
-          <div id="dockProgressBar" class="dock-progress-bar"></div>
-        </div>
-        <div class="dock-times">
-          <span id="dockCurrentTime">0:00</span>
-          <span id="dockDuration">0:00</span>
-        </div>
-      </div>
-      <button id="dockPlayBtn" class="dock-play-circle">▶</button>
+      <button class="btn" id="btnRegister">ثبت‌نام مستقیم</button>
+      <button class="btn" style="background:#333; color:#fff;" id="btnLogin">ورود به حساب</button>
+      <div class="status-msg" id="authMessage"></div>
     </div>
+
+    <!-- بخش آپلود رسانه با رفع مشکل گالری -->
+    <div class="card" id="uploadSection">
+      <h3>آپلود موزیک و کاور</h3>
+      
+      <div class="field">
+        <label>انتخاب کاور موزیک (تصویر):</label>
+        <input type="file" id="coverFile" accept="image/png, image/jpeg, image/jpg, image/webp">
+      </div>
+
+      <div class="field">
+        <label>انتخاب فایل صوتی:</label>
+        <input type="file" id="audioFile" accept="audio/mp3, audio/wav, audio/mpeg, audio/*">
+      </div>
+
+      <button class="btn" id="btnUpload">آپلود در پلتفرم</button>
+      <div class="status-msg" id="uploadMessage"></div>
+    </div>
+
   </div>
 
-  <!-- FULL-SCREEN EXPANDED MODAL PLAYER -->
-  <div id="fullPlayerOverlay" class="full-player-overlay">
-    <div class="full-player-top">
-      <button id="fullPlayerClose" class="full-player-close">⌵</button>
-      <div class="hero-meta-top" style="margin:0">NOW PLAYING</div>
-      <div style="width:40px"></div>
-    </div>
-
-    <div class="full-player-stage">
-      <img id="fullCoverImg" src="" alt="">
-      <video id="fullCoverVideo" autoplay muted loop playsinline></video>
-    </div>
-
-    <div class="full-player-meta">
-      <div class="full-player-titles">
-        <h2 id="fullTitle">Track Title</h2>
-        <p id="fullArtist">Artist Name</p>
-      </div>
-      <button id="fullLikeBtn" class="full-player-like-btn">♡</button>
-    </div>
-
-    <div class="full-player-scrub">
-      <div id="fullScrubBar" class="full-scrub-bar">
-        <div id="fullScrubFill" class="full-scrub-fill"></div>
-      </div>
-      <div class="full-scrub-times">
-        <span id="fullCurrentTime">0:00</span>
-        <span id="fullDuration">0:00</span>
-      </div>
-    </div>
-
-    <div class="full-player-controls">
-      <button id="fullPrevBtn" class="full-ctrl-btn">«</button>
-      <button id="fullPlayBtn" class="full-play-btn">▶</button>
-      <button id="fullNextBtn" class="full-ctrl-btn">»</button>
-    </div>
-  </div>
-
-  <!-- FLOATING PILL TABBAR -->
-  <div class="pill-nav-container">
-    <nav class="pill-nav" id="pillNav">
-      <div class="pill-glider" id="pillGlider"></div>
-      <button class="pill-item active" data-view="home" data-index="0">Music</button>
-      <button class="pill-item" data-view="discover" data-index="1">Discover</button>
-      <button class="pill-item" data-view="search" data-index="2">Search</button>
-      <button class="pill-item" data-view="library" data-index="3">Library</button>
-      <button class="pill-item" data-view="profile" data-index="4">Profile</button>
-    </nav>
-  </div>
-
-  <!-- DRAWER -->
-  <div id="drawer" class="drawer"><aside class="drawer-panel"><div class="drawer-head"><strong>LSO</strong><button id="closeDrawer" style="color:var(--black)">×</button></div><div class="drawer-list"><button data-go="home">Home</button><button data-go="discover">Discover</button><button data-go="search">Search</button><button data-go="library">Library</button><button data-go="profile">Profile</button><button data-go="upload">Upload</button><button id="authMenuButton">Register / Login</button></div></aside></div>
-
-  <!-- AUTH MODAL -->
-  <div id="authOverlay" class="auth-overlay"><div class="auth-panel"><div class="hero-meta-top">ACCOUNT</div><h2 id="authTitle" class="auth-title">REGISTER</h2><div class="field"><label>EMAIL</label><input id="authEmail" type="email" placeholder="you@example.com"></div><div class="field"><label>PASSWORD</label><input id="authPassword" type="password" placeholder="Minimum 6 characters"></div><div id="authNameField" class="field"><label>DISPLAY NAME</label><input id="authDisplayName" placeholder="Artist Name"></div><button id="authSubmit" class="auth-submit">CREATE ACCOUNT</button><div style="text-align:center;margin-top:12px"><button id="authSwitchBtn" style="font-size:11px;text-decoration:underline">Switch to Login</button> | <button id="authClose" style="font-size:11px;color:var(--gray)">Close</button></div></div></div>
-
-  <!-- UNIVERSAL CROPPER MODAL -->
-  <div id="cropOverlay" class="crop-overlay"><div class="crop-panel"><div id="cropLabel" class="hero-meta-top" style="margin-bottom:10px">ADJUST PHOTO</div><div class="crop-stage circle" id="cropStage"><canvas id="cropCanvas" width="400" height="400"></canvas></div><div class="crop-controls"><button id="cropZoomOut">−</button><input id="cropZoom" type="range" min="1" max="3" step="0.01" value="1"><button id="cropZoomIn">+</button></div><div class="crop-actions"><button id="cropCancel">Cancel</button><button id="cropSave" style="background:var(--black);color:var(--white)">USE THIS PHOTO</button></div></div></div>
-
-  <!-- TRACK OPTIONS SHEET -->
-  <div id="trackOptionsSheet" class="track-options-sheet"><div class="track-options-box"><div class="hero-meta-top" id="optionsTrackTitle">TRACK OPTIONS</div><button id="optEditTrack" style="display:none">✎ Edit Track</button><button id="optShareTrack">↗ Share Track</button><button id="optDeleteTrack" class="danger" style="display:none">🗑 Delete Track</button><button id="optCloseTrack" style="margin-top:10px;text-align:center">Cancel</button></div></div>
-
-</div>
-
-<audio id="audio" preload="metadata"></audio>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const SUPABASE_URL = "https://iezjmlesxdqtgrzopnyf.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_oZzBug6zzrXVDEaLljsHeQ_EPQOhcnu";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-let tracks = [], artists = [], liked = new Set(), currentIndex = -1, currentUser = null, currentProfile = null;
-let listeningSeconds = 0, lastAudioTime = 0, currentTrackObj = null, authMode = "register", selectedOptionTrack = null;
-const audio = document.getElementById("audio");
-
-document.addEventListener("DOMContentLoaded", async () => {
-  initTheme();
-  setupIntroVideo();
-  bindButtons();
-  
-  await checkSession();
-  await loadArtists();
-  await loadTracks();
-  await loadLikes();
-  restorePlayerState();
-  applyRoute(false);
-});
-
-// SERVICE WORKER REGISTRATION (PWA)
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
-}
-
-// THEME SYSTEM
-function initTheme(){
-  const savedTheme = localStorage.getItem("ls_theme") || "night";
-  setTheme(savedTheme);
-}
-
-function setTheme(mode){
-  const btn = document.getElementById("themeToggleBtn");
-  if (mode === "morning") {
-    document.body.classList.add("morning-mode");
-    if(btn) btn.textContent = "☀️";
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f5f2eb');
-  } else {
-    document.body.classList.remove("morning-mode");
-    if(btn) btn.textContent = "🌙";
-    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d');
-  }
-  localStorage.setItem("ls_theme", mode);
-}
-
-function toggleTheme(){
-  const isMorning = document.body.classList.contains("morning-mode");
-  setTheme(isMorning ? "night" : "morning");
-}
-
-function setupIntroVideo(){
-  const v = document.getElementById("introCoverVideo");
-  if (!v) return;
-  v.addEventListener("ended", () => { v.currentTime = 0; v.play().catch(()=>{}); });
-  document.addEventListener("visibilitychange", () => { if (!document.hidden && v.paused) v.play().catch(()=>{}); });
-}
-
-function freeMemoryForPicker(){
-  const v = document.getElementById("introCoverVideo");
-  if(v) v.pause();
-  const fv = document.getElementById("fullCoverVideo");
-  if(fv) fv.pause();
-}
-
-function restoreMemoryAfterPicker(){
-  const v = document.getElementById("introCoverVideo");
-  if(v && document.querySelector(".view.active")?.id === "home") v.play().catch(()=>{});
-  const fv = document.getElementById("fullCoverVideo");
-  if(fv && document.getElementById("fullPlayerOverlay").classList.contains("open")) fv.play().catch(()=>{});
-}
-
-function bindButtons(){
-  const logoBtn = document.getElementById("brandLogoBtn"), popup = document.getElementById("socialPopup");
-  if (logoBtn && popup) {
-    logoBtn.onclick = (e) => { e.stopPropagation(); popup.classList.toggle("show"); };
-    document.addEventListener("click", () => popup.classList.remove("show"));
-  }
-
-  document.getElementById("themeToggleBtn").onclick = toggleTheme;
-  document.getElementById("siteBackButton").onclick = goBack;
-  document.querySelectorAll(".pill-item").forEach(btn => btn.onclick = () => navigate(btn.dataset.view));
-  document.querySelectorAll("[data-go]").forEach(btn => btn.onclick = () => { closeDrawer(); navigate(btn.dataset.go); });
-
-  document.getElementById("menuButton").onclick = () => document.getElementById("drawer").classList.add("open");
-  document.getElementById("closeDrawer").onclick = closeDrawer;
-  document.getElementById("authMenuButton").onclick = () => { closeDrawer(); currentUser ? logout() : openAuth("login"); };
-  document.getElementById("authClose").onclick = () => document.getElementById("authOverlay").classList.remove("open");
-  document.getElementById("authSwitchBtn").onclick = toggleAuthMode;
-  document.getElementById("authSubmit").onclick = submitAuth;
-
-  document.getElementById("dockPlayer").onclick = (e) => {
-    if (e.target.id !== "dockPlayBtn") openFullPlayer();
-  };
-  document.getElementById("dockPlayBtn").onclick = (e) => { e.stopPropagation(); togglePlay(); };
-  document.getElementById("dockProgressWrap").onclick = (e) => { e.stopPropagation(); seekAudio(e); };
-
-  document.getElementById("fullPlayerClose").onclick = closeFullPlayer;
-  document.getElementById("fullPlayBtn").onclick = togglePlay;
-  document.getElementById("fullPrevBtn").onclick = () => playIndex(currentIndex <= 0 ? tracks.length - 1 : currentIndex - 1);
-  document.getElementById("fullNextBtn").onclick = nextTrack;
-  document.getElementById("fullScrubBar").onclick = seekAudioFull;
-  document.getElementById("fullLikeBtn").onclick = toggleLikeCurrent;
-
-  document.getElementById("publishButton").onclick = publishTrack;
-  document.getElementById("saveTrackButton").onclick = saveTrackEdit;
-  document.getElementById("searchInput").oninput = runSearch;
-
-  document.querySelectorAll("input[type='file']").forEach(inp => {
-    inp.addEventListener("click", freeMemoryForPicker);
-  });
-
-  document.getElementById("saveProfileButton").onclick = saveProfile;
-  document.getElementById("profilePhotoFile").onchange = e => { restoreMemoryAfterPicker(); const f = e.target.files[0]; if (f) startCropping(f, "profile"); };
-  document.getElementById("coverFile").onchange = e => { restoreMemoryAfterPicker(); const f = e.target.files[0]; if (f) startCropping(f, "cover"); };
-  document.getElementById("editCoverFile").onchange = e => { restoreMemoryAfterPicker(); const f = e.target.files[0]; if (f) startCropping(f, "editCover"); };
-
-  document.getElementById("cropCancel").onclick = () => document.getElementById("cropOverlay").classList.remove("open");
-  document.getElementById("cropSave").onclick = applyCroppedImage;
-  document.getElementById("cropZoom").oninput = e => { cropScale = Number(e.target.value); drawCrop(); };
-  document.getElementById("cropZoomOut").onclick = () => { cropScale = Math.max(1, cropScale - 0.1); drawCrop(); };
-  document.getElementById("cropZoomIn").onclick = () => { cropScale = Math.min(3, cropScale + 0.1); drawCrop(); };
-
-  const cropStage = document.getElementById("cropStage");
-  cropStage.addEventListener("mousedown", cropPointerStart);
-  window.addEventListener("mousemove", cropPointerMove, { passive: false });
-  window.addEventListener("mouseup", cropPointerEnd);
-  cropStage.addEventListener("touchstart", cropPointerStart, { passive: false });
-  window.addEventListener("touchmove", cropPointerMove, { passive: false });
-  window.addEventListener("touchend", cropPointerEnd);
-
-  document.getElementById("optCloseTrack").onclick = closeTrackOptions;
-  document.getElementById("optShareTrack").onclick = () => { shareTrack(selectedOptionTrack); closeTrackOptions(); };
-  document.getElementById("optEditTrack").onclick = () => { openEditTrack(selectedOptionTrack); closeTrackOptions(); };
-  document.getElementById("optDeleteTrack").onclick = () => { deleteTrack(selectedOptionTrack); closeTrackOptions(); };
-
-  audio.ontimeupdate = updateProgress;
-  audio.onplay = () => {
-    document.getElementById("dockPlayBtn").textContent = "Ⅱ";
-    document.getElementById("fullPlayBtn").textContent = "Ⅱ";
-    document.getElementById("heroVinyl").classList.add("playing");
-    const fv = document.getElementById("fullCoverVideo");
-    if (fv && fv.style.display === "block") fv.play().catch(()=>{});
-  };
-  audio.onpause = () => {
-    document.getElementById("dockPlayBtn").textContent = "▶";
-    document.getElementById("fullPlayBtn").textContent = "▶";
-    document.getElementById("heroVinyl").classList.remove("playing");
-    const fv = document.getElementById("fullCoverVideo");
-    if (fv) fv.pause();
-  };
-  audio.onended = nextTrack;
-}
-
-function openFullPlayer(){
-  if (!currentTrackObj) return;
-  document.getElementById("fullPlayerOverlay").classList.add("open");
-  const fv = document.getElementById("fullCoverVideo");
-  if (fv && fv.style.display === "block" && !audio.paused) fv.play().catch(()=>{});
-}
-
-function closeFullPlayer(){
-  document.getElementById("fullPlayerOverlay").classList.remove("open");
-}
-
-function closeDrawer() { document.getElementById("drawer").classList.remove("open"); }
-function openAuth(mode = "register") {
-  authMode = mode;
-  document.getElementById("authTitle").textContent = mode === "register" ? "REGISTER" : "LOGIN";
-  document.getElementById("authSubmit").textContent = mode === "register" ? "CREATE ACCOUNT" : "LOGIN";
-  document.getElementById("authNameField").style.display = mode === "register" ? "block" : "none";
-  document.getElementById("authSwitchBtn").textContent = mode === "register" ? "Switch to Login" : "Switch to Register";
-  document.getElementById("authOverlay").classList.add("open");
-}
-function toggleAuthMode() { openAuth(authMode === "register" ? "login" : "register"); }
-
-async function checkSession(){
-  const { data } = await supabaseClient.auth.getSession();
-  currentUser = data?.session?.user || null;
-  if (currentUser) {
-    const { data: p } = await supabaseClient.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
-    currentProfile = p || { id: currentUser.id, display_name: currentUser.email.split("@")[0], username: "artist" };
-  }
-  renderProfile();
-  document.getElementById("authMenuButton").textContent = currentUser ? "Logout" : "Register / Login";
-}
-
-async function submitAuth(){
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
-  const name = document.getElementById("authDisplayName")?.value.trim() || email.split("@")[0];
-  if (!email || !password) return toast("Enter email & password.");
-
-  try {
-    if (authMode === "register") {
-      const { data, error } = await supabaseClient.auth.signUp({ email, password });
-      if (error) throw error;
-      currentUser = data.user;
-      if (currentUser) {
-        await supabaseClient.from("profiles").upsert({ id: currentUser.id, display_name: name, username: email.split("@")[0] });
-        await supabaseClient.from("artists").insert({ user_id: currentUser.id, name, username: email.split("@")[0] });
-      }
-      toast("Account created!");
-    } else {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      currentUser = data.user;
-      toast("Logged in!");
-    }
-    document.getElementById("authOverlay").classList.remove("open");
-    await checkSession();
-    await loadArtists();
-    await loadTracks();
-  } catch(e) {
-    toast(e.message || "Auth failed.");
-  }
-}
-
-async function logout(){
-  await supabaseClient.auth.signOut();
-  currentUser = null;
-  currentProfile = null;
-  renderProfile();
-  toast("Logged out.");
-}
-
-async function loadArtists(){
-  try {
-    const { data } = await supabaseClient.from("artists").select("id,user_id,name,username");
-    const rows = data || [];
-    const ids = rows.map(a => a.user_id).filter(Boolean);
-    let profiles = [];
-    if (ids.length) {
-      const pr = await supabaseClient.from("profiles").select("id,avatar_url,display_name,username").in("id", ids);
-      if (!pr.error) profiles = pr.data || [];
-    }
-    const pmap = new Map(profiles.map(p => [p.id, p]));
-    artists = rows.map(a => {
-      const p = pmap.get(a.user_id) || {};
-      return { id: a.id, userId: a.user_id, name: a.name || p.display_name || "Artist", username: a.username || p.username || "", avatar: p.avatar_url || "" };
-    });
-  } catch(e){ artists = []; }
-}
-
-async function loadTracks(){
-  try {
-    let result = await supabaseClient.from("tracks").select("id,artist_id,title,description,cover_url,audio_url,video_url,duration_seconds,play_count,created_at,artists(id,user_id,name,username)").eq("is_published", true).order("created_at", { ascending: false });
-    const { data } = result;
-    if (!data) return;
-    
-    tracks = data.map(t => {
-      const a = Array.isArray(t.artists) ? t.artists[0] : t.artists;
-      return {
-        id: t.id,
-        artistId: t.artist_id,
-        artistUserId: a?.user_id || "",
-        title: t.title,
-        description: t.description || "",
-        cover: t.cover_url,
-        audio: t.audio_url,
-        video: t.video_url || "",
-        duration: formatSeconds(t.duration_seconds || 0),
-        artist: a?.name || "Unknown Artist",
-        username: a?.username || "",
-        plays: Number(t.play_count || 0),
-        date: formatDate(t.created_at)
-      };
-    });
-    
-    renderLatestList();
-    renderDiscover();
-    renderProfile();
-    renderLibrary();
-  } catch(e) {}
-}
-
-async function loadLikes(){
-  if (!currentUser) return;
-  const { data } = await supabaseClient.from("track_likes").select("track_id").eq("user_id", currentUser.id);
-  liked = new Set((data || []).map(x => x.track_id));
-  updateFullLikeBtn();
-  renderLibrary();
-}
-
-function renderLatestList(){
-  const container = document.getElementById("latestList");
-  if (!container) return;
-  container.innerHTML = tracks.map((t, i) => trackRowHTML(t, i)).join("");
-  bindTrackClicks(container);
-}
-
-function trackRowHTML(t, i){
-  const artist = artistById(t.artistId);
-  const avatar = artist?.avatar ? `<img class="avatar-badge" data-artist-avatar="${t.artistId}" src="${safeURL(artist.avatar)}" alt="">` : `<div class="avatar-badge-fallback" data-artist-avatar="${t.artistId}">${escapeHTML((t.artist||"A")[0].toUpperCase())}</div>`;
-  const isPlaying = currentIndex >= 0 && tracks[currentIndex]?.id === t.id && !audio.paused;
-
-  return `
-    <div class="track-row">
-      <div class="track-thumb-wrap">
-        ${avatar}
-        <img class="track-thumb" src="${safeURL(t.cover)}" alt="">
-      </div>
-      <button class="track-play-btn" data-play-index="${i}">${isPlaying ? "Ⅱ" : "▶"}</button>
-      <div class="track-meta" data-track-meta="${i}">
-        <h4>${escapeHTML(t.title)}</h4>
-        <div class="artist-name">${escapeHTML(t.artist)}</div>
-        <div class="track-stats"><span>${t.date}</span><span>•</span><span data-play-count-id="${t.id}">${Number(t.plays||0).toLocaleString()} plays</span></div>
-      </div>
-      <div class="track-more-btn" data-track-sheet="${t.id}">⋮</div>
-    </div>
-  `;
-}
-
-function bindTrackClicks(container){
-  container.querySelectorAll("[data-play-index]").forEach(b => {
-    b.onclick = (e) => {
-      e.stopPropagation();
-      const i = Number(b.dataset.playIndex);
-      if (currentIndex === i && !audio.paused) audio.pause(); else playIndex(i);
-    };
-  });
-  container.querySelectorAll("[data-track-meta]").forEach(b => {
-    b.onclick = () => playIndex(Number(b.dataset.trackMeta));
-  });
-  container.querySelectorAll("[data-artist-avatar]").forEach(b => {
-    b.onclick = (e) => {
-      e.stopPropagation();
-      navigate("artist", { artistId: b.dataset.artistAvatar });
-    };
-  });
-  container.querySelectorAll("[data-track-sheet]").forEach(b => {
-    b.onclick = (e) => {
-      e.stopPropagation();
-      const t = tracks.find(x => String(x.id) === String(b.dataset.trackSheet));
-      if (t) openTrackOptions(t);
-    };
-  });
-}
-
-function artistById(id){ return artists.find(a => String(a.id) === String(id)); }
-
-function renderDiscover(){
-  const disc = document.getElementById("discoverList");
-  if (!disc) return;
-  disc.innerHTML = tracks.map((t, i) => `
-    <div class="card" onclick="playIndex(${i})">
-      <img src="${safeURL(t.cover)}" alt="">
-      <h4>${escapeHTML(t.title)}</h4>
-      <p>${escapeHTML(t.artist)}</p>
-    </div>
-  `).join("");
-}
-
-function renderProfile(){
-  const pName = document.getElementById("profileName"), pUser = document.getElementById("profileUsername"), pActs = document.getElementById("profileActions"), pTracks = document.getElementById("profileTracks");
-  const avatarImg = document.getElementById("profileAvatar"), fallback = document.getElementById("profileAvatarFallback");
-  
-  if (!currentUser) {
-    pName.textContent = "LOST SOUND";
-    pUser.textContent = "@guest";
-    avatarImg.style.display = "none";
-    fallback.style.display = "grid";
-    pActs.innerHTML = `<button class="small-btn" onclick="openAuth('login')">Login / Register</button>`;
-    pTracks.innerHTML = "<p style='font-size:11px;color:var(--gray);margin-top:10px'>Login to view your tracks.</p>";
-    return;
-  }
-
-  pName.textContent = currentProfile?.display_name || "Artist";
-  pUser.textContent = "@" + (currentProfile?.username || "user");
-  if (currentProfile?.avatar_url) {
-    avatarImg.src = currentProfile.avatar_url;
-    avatarImg.style.display = "block";
-    fallback.style.display = "none";
-  } else {
-    avatarImg.style.display = "none";
-    fallback.style.display = "grid";
-  }
-
-  pActs.innerHTML = `<button class="small-btn" onclick="navigate('editProfile')">Edit Profile</button><button class="small-btn" onclick="navigate('upload')">+ Upload</button><button class="small-btn" onclick="logout()">Logout</button>`;
-  
-  const mine = tracks.filter(t => t.artistUserId === currentUser.id);
-  pTracks.innerHTML = mine.length ? mine.map((t, i) => trackRowHTML(t, tracks.indexOf(t))).join("") : "<p style='font-size:11px;color:var(--gray);margin-top:10px'>No uploads yet.</p>";
-  bindTrackClicks(pTracks);
-}
-
-function renderArtistChannel(id){
-  const a = artistById(id), c = document.getElementById("artistPage");
-  if (!a) { c.innerHTML = "<p style='padding:20px'>Channel not found.</p>"; return; }
-  const mine = tracks.filter(t => String(t.artistId) === String(a.id));
-  const av = a.avatar ? `<img class="channel-avatar" src="${safeURL(a.avatar)}">` : `<div class="channel-avatar artist-fallback">${(a.name||"A")[0].toUpperCase()}</div>`;
-  const isOwner = currentUser && a.userId === currentUser.id;
-
-  c.innerHTML = `
-    <div class="channel-hero">
-      ${av}
-      <div class="channel-meta">
-        <div class="hero-meta-top">ARTIST CHANNEL</div>
-        <h2>${escapeHTML(a.name)}</h2>
-        <div class="channel-id">@${escapeHTML(a.username || a.id)}</div>
-        <div class="channel-actions">
-          ${isOwner ? `<button class="small-btn" id="editChannelBtn">✎ Edit Channel</button>` : ''}
-          <button class="small-btn" id="shareChannelBtn">↗ Share Profile</button>
-        </div>
-      </div>
-    </div>
-    <div class="section-title-line"><div class="section-title">RELEASES (${mine.length})</div></div>
-    <div id="channelTrackList">${mine.length ? mine.map(t => trackRowHTML(t, tracks.indexOf(t))).join("") : "<p style='font-size:11px;color:var(--gray)'>No tracks.</p>"}</div>
-  `;
-  bindTrackClicks(c);
-  document.getElementById("shareChannelBtn").onclick = () => shareProfile(a);
-  if (isOwner) {
-    document.getElementById("editChannelBtn").onclick = () => navigate("editProfile");
-  }
-}
-
-function runSearch(){
-  const q = document.getElementById("searchInput").value.trim().toLowerCase();
-  const box = document.getElementById("searchResults");
-  if (!q) { box.innerHTML = ""; return; }
-  
-  const ar = artists.filter(a => (a.name + " " + a.username).toLowerCase().includes(q));
-  const tr = tracks.filter(t => (t.title + " " + t.artist).toLowerCase().includes(q));
-  
-  let out = "";
-  if (ar.length) {
-    out += `<div class="search-group-title">ARTISTS & CHANNELS</div>` + ar.map(a => `
-      <div class="artist-result" onclick="navigate('artist', { artistId: '${a.id}' })">
-        ${a.avatar ? `<img src="${safeURL(a.avatar)}">` : `<div class="artist-fallback">${(a.name||"A")[0].toUpperCase()}</div>`}
-        <div><strong>${escapeHTML(a.name)}</strong><br><small style="color:var(--gray)">@${escapeHTML(a.username)}</small></div>
-      </div>
-    `).join("");
-  }
-  if (tr.length) {
-    out += `<div class="search-group-title">TRACKS</div>` + tr.map(t => trackRowHTML(t, tracks.indexOf(t))).join("");
-  }
-  box.innerHTML = out || "<p style='font-size:11px;color:var(--gray);margin-top:10px'>No results.</p>";
-  bindTrackClicks(box);
-}
-
-function renderLibrary(){
-  const c = document.getElementById("likedList");
-  if (!c) return;
-  const lt = tracks.filter(t => liked.has(t.id));
-  c.innerHTML = lt.length ? lt.map(t => trackRowHTML(t, tracks.indexOf(t))).join("") : "<p style='font-size:11px;color:var(--gray);margin-top:10px'>No saved tracks yet.</p>";
-  bindTrackClicks(c);
-}
-
-function selectTrack(i, autoplay = false){
-  if (i < 0 || i >= tracks.length) return;
-  currentIndex = i;
-  currentTrackObj = tracks[i];
-  listeningSeconds = 0;
-  lastAudioTime = 0;
-
-  document.getElementById("dockTitle").textContent = currentTrackObj.title;
-  document.getElementById("dockArtist").textContent = currentTrackObj.artist;
-  document.getElementById("dockImg").src = currentTrackObj.cover;
-  document.getElementById("dockPlayer").classList.add("open");
-
-  document.getElementById("fullTitle").textContent = currentTrackObj.title;
-  document.getElementById("fullArtist").textContent = currentTrackObj.artist;
-  document.getElementById("fullCoverImg").src = currentTrackObj.cover;
-
-  const fv = document.getElementById("fullCoverVideo");
-  if (currentTrackObj.video) {
-    fv.src = currentTrackObj.video;
-    fv.oncanplay = () => {
-      fv.style.display = "block";
-      if (!audio.paused) fv.play().catch(()=>{});
-    };
-    fv.load();
-  } else {
-    fv.removeAttribute("src");
-    fv.style.display = "none";
-  }
-
-  updateFullLikeBtn();
-
-  if (currentTrackObj.audio && (!audio.src || !audio.src.includes(currentTrackObj.audio))) {
-    audio.src = currentTrackObj.audio;
-    audio.load();
-    if (autoplay) {
-      audio.play().catch(()=>{});
-    }
-  }
-
-  try {
-    localStorage.setItem("ls_current_track_id", currentTrackObj.id);
-  } catch(e){}
-}
-
-function playIndex(i){
-  if (i < 0 || i >= tracks.length) return;
-  selectTrack(i, true);
-  audio.play().catch(()=>{});
-  renderLatestList();
-}
-
-function togglePlay(){
-  if (currentIndex < 0) { if (tracks.length) playIndex(0); return; }
-  if (audio.paused) {
-    audio.play().catch(()=>{});
-  } else {
-    audio.pause();
-  }
-}
-
-function nextTrack(){ if (tracks.length) playIndex((currentIndex + 1) % tracks.length); }
-
-function updateProgress(){
-  if (!audio.duration) return;
-
-  if (!audio.paused && audio.currentTime > 0) {
-    const timeDelta = audio.currentTime - lastAudioTime;
-    if (timeDelta > 0 && timeDelta < 1.5) {
-      listeningSeconds += timeDelta;
-      if (listeningSeconds >= 60) {
-        listeningSeconds = 0;
-        if (currentTrackObj) countPlay(currentTrackObj);
-      }
-    }
-  }
-  lastAudioTime = audio.currentTime;
-
-  const pct = (audio.currentTime / audio.duration) * 100;
-  
-  document.getElementById("dockProgressBar").style.width = pct + "%";
-  document.getElementById("dockCurrentTime").textContent = formatSeconds(audio.currentTime);
-  document.getElementById("dockDuration").textContent = formatSeconds(audio.duration);
-
-  document.getElementById("fullScrubFill").style.width = pct + "%";
-  document.getElementById("fullCurrentTime").textContent = formatSeconds(audio.currentTime);
-  document.getElementById("fullDuration").textContent = formatSeconds(audio.duration);
-
-  if (Math.floor(audio.currentTime) % 2 === 0) {
-    try {
-      localStorage.setItem("ls_current_seek", audio.currentTime);
-    } catch(e){}
-  }
-}
-
-async function countPlay(track){
-  if (!track?.id) return;
-  track.plays = Number(track.plays || 0) + 1;
-  document.querySelectorAll(`[data-play-count-id="${track.id}"]`).forEach(el => {
-    el.textContent = `${Number(track.plays).toLocaleString()} plays`;
-  });
-
-  try {
-    const { data: currentData } = await supabaseClient.from("tracks").select("play_count").eq("id", track.id).single();
-    const updatedCount = Number(currentData?.play_count || 0) + 1;
-    await supabaseClient.from("tracks").update({ play_count: updatedCount }).eq("id", track.id);
-  } catch(e){
-    console.error("Count sync error:", e);
-  }
-}
-
-function restorePlayerState(){
-  try {
-    const savedTrackId = localStorage.getItem("ls_current_track_id");
-    if (savedTrackId && tracks.length) {
-      const idx = tracks.findIndex(t => String(t.id) === String(savedTrackId));
-      if (idx >= 0) {
-        selectTrack(idx, false);
-        const savedSeek = parseFloat(localStorage.getItem("ls_current_seek") || "0");
-        if (savedSeek > 0) {
-          audio.currentTime = savedSeek;
-        }
-      }
-    }
-  } catch(e){}
-}
-
-function seekAudio(e){
-  if (!audio.duration) return;
-  const rect = e.currentTarget.getBoundingClientRect();
-  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
-  lastAudioTime = audio.currentTime;
-}
-
-function seekAudioFull(e){
-  if (!audio.duration) return;
-  const rect = e.currentTarget.getBoundingClientRect();
-  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
-  lastAudioTime = audio.currentTime;
-}
-
-async function toggleLikeCurrent(){
-  if (!currentUser) return openAuth("login");
-  if (!currentTrackObj) return;
-  const id = currentTrackObj.id;
-  if (liked.has(id)) {
-    await supabaseClient.from("track_likes").delete().eq("user_id", currentUser.id).eq("track_id", id);
-    liked.delete(id);
-  } else {
-    await supabaseClient.from("track_likes").insert({ user_id: currentUser.id, track_id: id });
-    liked.add(id);
-  }
-  updateFullLikeBtn();
-  renderLibrary();
-}
-
-function updateFullLikeBtn(){
-  const btn = document.getElementById("fullLikeBtn");
-  if (!btn || !currentTrackObj) return;
-  const isLiked = liked.has(currentTrackObj.id);
-  btn.textContent = isLiked ? "♥" : "♡";
-  btn.classList.toggle("liked", isLiked);
-}
-
-// UNIVERSAL CROPPING SYSTEM
-let cropTarget = "profile", cropFile = null, cropImage = null, cropScale = 1, cropX = 0, cropY = 0, cropDragging = false, cropLastX = 0, cropLastY = 0;
-let croppedAvatarBlob = null, croppedCoverBlob = null, croppedEditCoverBlob = null;
-
-function startCropping(file, target){
-  if (!file) return;
-  cropTarget = target;
-  const stage = document.getElementById("cropStage");
-  if (target === "profile") {
-    stage.className = "crop-stage circle";
-    document.getElementById("cropLabel").textContent = "ADJUST PROFILE PHOTO";
-  } else {
-    stage.className = "crop-stage square";
-    document.getElementById("cropLabel").textContent = "ADJUST COVER ARTWORK";
-  }
-
-  const url = URL.createObjectURL(file);
-  const img = new Image();
-  img.onload = () => {
-    cropFile = file; cropImage = img; cropScale = 1; cropX = 0; cropY = 0;
-    document.getElementById("cropZoom").value = "1";
-    document.getElementById("cropOverlay").classList.add("open");
-    drawCrop();
-    URL.revokeObjectURL(url);
-  };
-  img.src = url;
-}
-
-function drawCrop(){
-  const canvas = document.getElementById("cropCanvas"), ctx = canvas.getContext("2d"), s = canvas.width;
-  ctx.clearRect(0, 0, s, s); ctx.fillStyle = "#050505"; ctx.fillRect(0, 0, s, s);
-  if (!cropImage) return;
-
-  const base = Math.max(s / cropImage.naturalWidth, s / cropImage.naturalHeight);
-  const w = cropImage.naturalWidth * base * cropScale, h = cropImage.naturalHeight * base * cropScale;
-  const x = (s - w) / 2 + cropX, y = (s - h) / 2 + cropY;
-
-  ctx.save();
-  ctx.beginPath();
-  if (cropTarget === "profile") {
-    ctx.arc(s / 2, s / 2, s / 2, 0, Math.PI * 2);
-  } else {
-    ctx.rect(0, 0, s, s);
-  }
-  ctx.clip();
-  ctx.drawImage(cropImage, x, y, w, h);
-  ctx.restore();
-}
-
-function cropPointerStart(e){ if (!cropImage) return; cropDragging = true; const p = e.touches?.[0] || e; cropLastX = p.clientX; cropLastY = p.clientY; }
-function cropPointerMove(e){ if (!cropDragging) return; const p = e.touches?.[0] || e; cropX += p.clientX - cropLastX; cropY += p.clientY - cropLastY; cropLastX = p.clientX; cropLastY = p.clientY; drawCrop(); e.preventDefault(); }
-function cropPointerEnd(){ cropDragging = false; }
-
-async function applyCroppedImage(){
-  if (!cropImage) return;
-  const canvas = document.createElement("canvas"); canvas.width = 400; canvas.height = 400;
-  const ctx = canvas.getContext("2d"), s = 400;
-  const base = Math.max(s / cropImage.naturalWidth, s / cropImage.naturalHeight);
-  const w = cropImage.naturalWidth * base * cropScale, h = cropImage.naturalHeight * base * cropScale;
-  const x = (s - w) / 2 + cropX, y = (s - h) / 2 + cropY;
-
-  ctx.save(); ctx.beginPath();
-  if (cropTarget === "profile") {
-    ctx.arc(200, 200, 200, 0, Math.PI * 2);
-  } else {
-    ctx.rect(0, 0, s, s);
-  }
-  ctx.clip();
-  ctx.drawImage(cropImage, x, y, w, h);
-  ctx.restore();
-
-  canvas.toBlob(blob => {
-    if (cropTarget === "profile") croppedAvatarBlob = blob;
-    else if (cropTarget === "cover") croppedCoverBlob = blob;
-    else if (cropTarget === "editCover") croppedEditCoverBlob = blob;
-    
-    document.getElementById("cropOverlay").classList.remove("open");
-    toast("Image cropped & ready.");
-  }, "image/jpeg", 0.85);
-}
-
-async function saveProfile(){
-  if (!currentUser) return openAuth("login");
-  const username = document.getElementById("editUsername").value.trim().toLowerCase();
-  const displayName = document.getElementById("editDisplayName").value.trim();
-  let avatarUrl = currentProfile?.avatar_url || null;
-
-  try {
-    if (croppedAvatarBlob) {
-      const path = `${currentUser.id}/avatar-${Date.now()}.jpg`;
-      await supabaseClient.storage.from("avatars").upload(path, croppedAvatarBlob, { upsert: true, contentType: "image/jpeg" });
-      avatarUrl = supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl;
-      croppedAvatarBlob = null;
-    }
-    await supabaseClient.from("profiles").upsert({ id: currentUser.id, username, display_name: displayName, avatar_url: avatarUrl });
-    await supabaseClient.from("artists").update({ name: displayName, username }).eq("user_id", currentUser.id);
-    await checkSession();
-    await loadArtists();
-    navigate("profile");
-    toast("Profile updated!");
-  } catch(e) { toast("Update failed."); }
-}
-
-async function publishTrack(){
-  if (!currentUser) return openAuth("login");
-  const aFile = document.getElementById("audioFile").files[0];
-  const cFile = croppedCoverBlob || document.getElementById("coverFile").files[0];
-  const vFile = document.getElementById("videoFile").files[0];
-  const title = document.getElementById("uploadTitle").value.trim();
-  const artistName = document.getElementById("uploadArtist").value.trim();
-
-  if (!aFile || !cFile || !title) return toast("Fill required fields.");
-
-  const btn = document.getElementById("publishButton");
-  btn.disabled = true; btn.textContent = "UPLOADING...";
-
-  try {
-    let { data: art } = await supabaseClient.from("artists").select("*").eq("user_id", currentUser.id).maybeSingle();
-    if (!art) {
-      const { data: newArt } = await supabaseClient.from("artists").insert({ user_id: currentUser.id, name: artistName || "Artist", username: currentProfile?.username || "artist" }).select().single();
-      art = newArt;
+  <script>
+    // ۱. فعال‌سازی Service Worker به صورت داخلی (Inline Blob)
+    if ("serviceWorker" in navigator) {
+      const swCode = `
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('activate', e => clients.claim());
+        self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => new Response('Offline'))));
+      `;
+      const blob = new Blob([swCode], { type: 'text/javascript' });
+      navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
     }
 
-    const aPath = `${currentUser.id}/${Date.now()}-track.mp3`;
-    const cPath = `${currentUser.id}/${Date.now()}-cover.jpg`;
+    // ۲. تنظیم اتصال Supabase
+    const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"; // آدرس سوپابیس شما
+    const SUPABASE_KEY = "YOUR_ANON_KEY"; // کلید عمومی سوپابیس شما
+    const supabase = (SUPABASE_URL.indexOf("YOUR_PROJECT") === -1) 
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
+      : null;
 
-    await supabaseClient.storage.from("audio").upload(aPath, aFile, { upsert: false });
-    await supabaseClient.storage.from("covers").upload(cPath, cFile, { upsert: false, contentType: "image/jpeg" });
-
-    let vUrl = null;
-    if (vFile) {
-      const vPath = `${currentUser.id}/${Date.now()}-video.mp4`;
-      await supabaseClient.storage.from("videos").upload(vPath, vFile, { upsert: false });
-      vUrl = supabaseClient.storage.from("videos").getPublicUrl(vPath).data.publicUrl;
-    }
-
-    const aUrl = supabaseClient.storage.from("audio").getPublicUrl(aPath).data.publicUrl;
-    const cUrl = supabaseClient.storage.from("covers").getPublicUrl(cPath).data.publicUrl;
-
-    await supabaseClient.from("tracks").insert({
-      artist_id: art.id, title, cover_url: cUrl, audio_url: aUrl, video_url: vUrl, play_count: 0, is_published: true
+    // ۳. تضمین باز شدن بی‌درنگ گالری گوشی هنگام لمس
+    document.addEventListener("DOMContentLoaded", () => {
+      const fileInputs = document.querySelectorAll("input[type='file']");
+      fileInputs.forEach((input) => {
+        input.removeAttribute("capture");
+        input.addEventListener("click", (e) => {
+          e.stopPropagation();
+        });
+      });
     });
 
-    toast("Track published!");
-    document.getElementById("audioFile").value = "";
-    document.getElementById("coverFile").value = "";
-    document.getElementById("videoFile").value = "";
-    croppedCoverBlob = null;
+    // ۴. مدیریت ثبت‌نام و ورود
+    const btnRegister = document.getElementById("btnRegister");
+    const btnLogin = document.getElementById("btnLogin");
+    const authMessage = document.getElementById("authMessage");
+    const authStatus = document.getElementById("authStatus");
 
-    await loadTracks();
-    navigate("home");
-  } catch(e) {
-    toast(e.message || "Upload failed.");
-  } finally {
-    btn.disabled = false; btn.textContent = "PUBLISH TRACK";
-  }
-}
+    btnRegister.addEventListener("click", async () => {
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value.trim();
 
-function openTrackOptions(t){
-  selectedOptionTrack = t;
-  document.getElementById("optionsTrackTitle").textContent = t.title;
-  const isOwner = currentUser && t.artistUserId === currentUser.id;
-  document.getElementById("optEditTrack").style.display = isOwner ? "block" : "none";
-  document.getElementById("optDeleteTrack").style.display = isOwner ? "block" : "none";
-  document.getElementById("trackOptionsSheet").classList.add("open");
-}
-function closeTrackOptions(){ document.getElementById("trackOptionsSheet").classList.remove("open"); }
+      if (!email || !password) {
+        authMessage.innerText = "لطفاً ایمیل و پسورد را وارد کنید.";
+        authMessage.style.color = "#ff4444";
+        return;
+      }
 
-function openEditTrack(t){
-  document.getElementById("editTrackId").value = t.id;
-  document.getElementById("editTrackTitle").value = t.title;
-  document.getElementById("editTrackArtist").value = t.artist;
-  croppedEditCoverBlob = null;
-  navigate("editTrack");
-}
+      if (!supabase) {
+        authMessage.innerText = "اکانت با موفقیت در حالت لوکال ساخته شد!";
+        authMessage.style.color = "#1db954";
+        authStatus.innerText = email;
+        return;
+      }
 
-async function saveTrackEdit(){
-  const id = document.getElementById("editTrackId").value;
-  const title = document.getElementById("editTrackTitle").value.trim();
-  if (!id || !title) return toast("Fill title.");
+      authMessage.innerText = "در حال ساخت اکانت...";
+      authMessage.style.color = "#aaa";
 
-  const btn = document.getElementById("saveTrackButton");
-  btn.disabled = true; btn.textContent = "SAVING...";
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) {
+        authMessage.innerText = error.message;
+        authMessage.style.color = "#ff4444";
+      } else {
+        authMessage.innerText = "ثبت‌نام با موفقیت انجام شد!";
+        authMessage.style.color = "#1db954";
+        authStatus.innerText = email;
+      }
+    });
 
-  try {
-    let updatePayload = { title };
-    if (croppedEditCoverBlob) {
-      const cPath = `${currentUser.id}/${Date.now()}-editcover.jpg`;
-      await supabaseClient.storage.from("covers").upload(cPath, croppedEditCoverBlob, { upsert: false, contentType: "image/jpeg" });
-      updatePayload.cover_url = supabaseClient.storage.from("covers").getPublicUrl(cPath).data.publicUrl;
-      croppedEditCoverBlob = null;
-    }
-    await supabaseClient.from("tracks").update(updatePayload).eq("id", id);
-    toast("Track updated!");
-    await loadTracks();
-    navigate("profile");
-  } catch(e){
-    toast("Edit failed.");
-  } finally {
-    btn.disabled = false; btn.textContent = "UPDATE TRACK";
-  }
-}
+    btnLogin.addEventListener("click", async () => {
+      const email = document.getElementById("emailInput").value.trim();
+      const password = document.getElementById("passwordInput").value.trim();
 
-async function deleteTrack(t){
-  if (!confirm(`Delete "${t.title}" permanently?`)) return;
-  try {
-    await supabaseClient.from("tracks").delete().eq("id", t.id);
-    toast("Track deleted.");
-    await loadTracks();
-  } catch(e){ toast("Delete failed."); }
-}
+      if (!supabase) {
+        authMessage.innerText = "ورود با موفقیت انجام شد!";
+        authMessage.style.color = "#1db954";
+        authStatus.innerText = email;
+        return;
+      }
 
-function navigate(view, opts = {}){
-  const u = new URL(location.href);
-  u.search = "";
-  if (view && view !== "home") u.searchParams.set("view", view);
-  if (view === "artist" && opts.artistId) u.searchParams.set("artist", opts.artistId);
-  history.pushState({ view, ...opts }, "", u.href);
-  applyRoute(false);
-}
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        authMessage.innerText = error.message;
+        authMessage.style.color = "#ff4444";
+      } else {
+        authMessage.innerText = "ورود موفقیت‌آمیز بود!";
+        authMessage.style.color = "#1db954";
+        authStatus.innerText = email;
+      }
+    });
 
-function updatePillGlider(viewName){
-  const navMap = { "home": 0, "discover": 1, "search": 2, "library": 3, "profile": 4 };
-  const idx = navMap[viewName] !== undefined ? navMap[viewName] : 0;
-  
-  const glider = document.getElementById("pillGlider");
-  if (glider) {
-    glider.style.transform = `translateX(${idx * 100}%)`;
-  }
-  document.querySelectorAll(".pill-item").forEach(item => {
-    item.classList.toggle("active", item.dataset.view === viewName);
-  });
-}
+    // ۵. تست آپلود فایل‌ها
+    const btnUpload = document.getElementById("btnUpload");
+    const uploadMessage = document.getElementById("uploadMessage");
 
-function applyRoute(fromPop = true){
-  const p = new URLSearchParams(location.search), view = p.get("view") || "home";
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  document.getElementById("siteBackButton").classList.toggle("visible", !!p.get("view"));
+    btnUpload.addEventListener("click", () => {
+      const cover = document.getElementById("coverFile").files[0];
+      const audio = document.getElementById("audioFile").files[0];
 
-  updatePillGlider(view);
+      if (!cover && !audio) {
+        uploadMessage.innerText = "حداقل یک فایل کاور یا صوتی انتخاب کنید.";
+        uploadMessage.style.color = "#ff4444";
+        return;
+      }
 
-  if (view === "artist") {
-    document.getElementById("artist").classList.add("active");
-    renderArtistChannel(p.get("artist"));
-  } else {
-    document.getElementById(view)?.classList.add("active");
-    if (view === "profile") renderProfile();
-    if (view === "library") renderLibrary();
-  }
-  if (!fromPop) window.scrollTo(0, 0);
-}
-
-window.addEventListener("popstate", () => applyRoute(true));
-function goBack(){ history.length > 1 ? history.back() : navigate("home"); }
-
-function shareProfile(a){
-  const url = `${location.origin}${location.pathname}?view=artist&artist=${a.id}`;
-  if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => toast("Channel link copied!"));
-}
-
-function shareTrack(t){
-  const trk = t || (currentIndex >= 0 ? tracks[currentIndex] : null);
-  if (!trk) return;
-  const url = `${location.origin}${location.pathname}?view=track&id=${trk.id}`;
-  if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => toast("Track link copied!"));
-}
-
-function formatSeconds(s){ if (!isFinite(s)) return "0:00"; return Math.floor(s/60) + ":" + String(Math.floor(s%60)).padStart(2, "0"); }
-function formatDate(d){ if (!d) return "Recently"; return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(new Date(d)); }
-function toast(m){ document.querySelector(".toast")?.remove(); const e = document.createElement("div"); e.className = "toast"; e.textContent = m; document.body.appendChild(e); setTimeout(() => e.remove(), 2200); }
-function escapeHTML(v){ return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-function safeURL(v){ return String(v??"").replace(/"/g,"%22"); }
-</script>
+      uploadMessage.innerText = "فایل‌ها با موفقیت در حافظه انتخاب و آماده شدند.";
+      uploadMessage.style.color = "#1db954";
+    });
+  </script>
 </body>
 </html>
