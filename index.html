@@ -114,21 +114,10 @@ audio{display:none}
 .view.active{display:block}
 
 /* PAGE LOADER */
-.page-loader{
-  display:none;
-  padding:40px 0;
-  text-align:center;
-}
+.page-loader{display:none;padding:40px 0;text-align:center}
 .page-loader.show{display:block}
-.page-spinner{
-  width:32px;
-  height:32px;
-  border:2.5px solid var(--line);
-  border-top-color:var(--black);
-  border-radius:50%;
-  margin:0 auto 10px;
-  animation:spin 0.75s linear infinite;
-}
+.page-spinner{width:32px;height:32px;border:2.5px solid var(--line);border-top-color:var(--black);border-radius:50%;margin:0 auto 10px;animation:spin 0.75s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* HERO SECTION */
 .hero-layout{display:grid;grid-template-columns:1fr 185px;align-items:center;gap:15px;margin:8px 0 28px;position:relative}
@@ -145,39 +134,60 @@ audio{display:none}
 .stage-vinyl.playing{animation:rotateVinyl 4s linear infinite}
 @keyframes rotateVinyl{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 
-/* SECTION HEAD */
-.section-title-line{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
-.section-title{font-size:10px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(--gray)}
-
-/* 3D COVERFLOW SLIDER FOR DISCOVER */
-.coverflow-wrap{
+/* 3D MINIMAL COVERFLOW POD (HIGH CONTRAST CAPSULE) */
+.coverflow-pod-container{
   width:100%;
-  margin:18px 0 32px;
-  perspective:1000px;
-  overflow:hidden;
-  position:relative;
-  touch-action:pan-y;
-  user-select:none;
+  max-width:440px;
+  margin:10px auto 24px;
+  padding:0 8px;
 }
-.coverflow-stage{
+.coverflow-pod{
+  position:relative;
+  width:100%;
+  height:195px;
+  border-radius:36px;
+  background:#f7f7f8;
+  border:1px solid rgba(255,255,255,0.4);
+  box-shadow:0 14px 35px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.08);
+  perspective:800px;
+  overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
-  height:280px;
+  touch-action:pan-y;
+  user-select:none;
+  transition:background 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+body.morning-mode .coverflow-pod{
+  background:#0d0d0d;
+  border:1px solid rgba(0,0,0,0.15);
+  box-shadow:0 14px 35px rgba(0,0,0,0.18), 0 0 25px rgba(0,0,0,0.1);
+}
+.coverflow-stage{
+  width:100%;
+  height:100%;
   position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   transform-style:preserve-3d;
 }
 .coverflow-item{
   position:absolute;
-  width:220px;
-  height:220px;
-  border-radius:18px;
+  width:130px;
+  height:130px;
+  border-radius:14px;
   overflow:hidden;
-  background:var(--paper-sub);
-  box-shadow:0 16px 35px rgba(0,0,0,0.5);
-  border:1px solid var(--line);
+  background:#111;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  border:1px solid rgba(255,255,255,0.12);
   cursor:pointer;
-  transition:transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, filter 0.4s ease;
+  transform-origin:center center;
+  transition:transform 0.38s cubic-bezier(0.2,0.9,0.3,1), opacity 0.35s ease, filter 0.35s ease;
+}
+body.morning-mode .coverflow-item{
+  border-color:rgba(255,255,255,0.15);
+  box-shadow:0 8px 22px rgba(0,0,0,0.5);
 }
 .coverflow-item img{
   width:100%;
@@ -190,24 +200,18 @@ audio{display:none}
   bottom:0;
   left:0;
   right:0;
-  padding:14px;
-  background:linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);
-  color:#fff;
+  padding:6px 8px;
+  background:linear-gradient(0deg, rgba(0,0,0,0.92) 0%, transparent 100%);
+  color:#ffffff;
   opacity:0;
-  transition:opacity 0.3s ease;
+  transition:opacity 0.25s ease;
 }
-.coverflow-item.active .cf-meta{
-  opacity:1;
-}
-.cf-meta h4{font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cf-meta p{font-size:10.5px;color:#aaa;margin-top:2px}
+.coverflow-item.active .cf-meta{opacity:1}
+.cf-meta h4{font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cf-meta p{font-size:8.5px;color:#ccc;margin-top:1px}
 
 /* SEARCH PILL EXPAND ANIMATION */
-.search-pill-container{
-  display:flex;
-  justify-content:center;
-  margin:20px 0 25px;
-}
+.search-pill-container{display:flex;justify-content:center;margin:15px 0 25px}
 .search-pill{
   width:50px;
   height:50px;
@@ -222,16 +226,8 @@ audio{display:none}
   overflow:hidden;
   transition:width 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.search-pill.expanded{
-  width:100%;
-}
-.search-icon{
-  width:20px;
-  height:20px;
-  flex:0 0 auto;
-  fill:var(--black);
-  opacity:0.85;
-}
+.search-pill.expanded{width:100%}
+.search-icon{width:20px;height:20px;flex:0 0 auto;fill:var(--black);opacity:0.85}
 .search-pill input{
   width:100%;
   border:none;
@@ -243,9 +239,11 @@ audio{display:none}
   opacity:0;
   transition:opacity 0.3s ease 0.15s;
 }
-.search-pill.expanded input{
-  opacity:1;
-}
+.search-pill.expanded input{opacity:1}
+
+/* SECTION HEAD */
+.section-title-line{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
+.section-title{font-size:10px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(--gray)}
 
 /* TRACK ROW */
 .track-row{display:grid;grid-template-columns:74px 38px minmax(0,1fr) 24px;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
@@ -287,19 +285,7 @@ audio{display:none}
 .dock-play-circle{width:38px;height:38px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;font-size:13px;margin-left:auto;cursor:pointer}
 
 /* FULL-SCREEN EXPANDED MODAL PLAYER */
-.full-player-overlay{
-  position:fixed;
-  inset:0;
-  z-index:8000;
-  background:var(--bg);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  padding:24px 28px calc(28px + env(safe-area-inset-bottom));
-  transform:translateY(100%);
-  transition:transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), background 0.28s ease;
-  overflow-y:auto;
-}
+.full-player-overlay{position:fixed;inset:0;z-index:8000;background:var(--bg);display:flex;flex-direction:column;justify-content:space-between;padding:24px 28px calc(28px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), background 0.28s ease;overflow-y:auto}
 .full-player-overlay.open{transform:translateY(0)}
 .full-player-top{display:flex;align-items:center;justify-content:space-between;height:44px}
 .full-player-close{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:24px;font-weight:bold;cursor:pointer;line-height:1;color:var(--black)}
@@ -361,7 +347,6 @@ audio{display:none}
 .auth-feedback-overlay{position:absolute;inset:0;background:var(--paper);border-radius:16px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:10;animation:fadeIn 0.22s ease forwards}
 .auth-feedback-overlay.show{display:flex}
 .auth-spinner{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--black);border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
 .auth-checkmark{width:44px;height:44px;border-radius:50%;background:rgba(34,197,94,0.15);border:2px solid #22c55e;display:grid;place-items:center;font-size:22px;color:#22c55e;animation:popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards}
 
@@ -471,13 +456,16 @@ audio{display:none}
       <div id="homeLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
-    <!-- DISCOVER WITH 3D COVERFLOW -->
+    <!-- DISCOVER WITH 3D COVERFLOW POD -->
     <section id="discover" class="view">
       <div class="hero-meta-top">LOST SOUND PROMOTED</div>
-      <h1 class="hero-title" style="font-size:36px;margin-bottom:10px">FEATURED</h1>
+      <h1 class="hero-title" style="font-size:30px;margin-bottom:6px">FEATURED</h1>
 
-      <div class="coverflow-wrap" id="coverflowWrap">
-        <div class="coverflow-stage" id="coverflowStage"></div>
+      <!-- 3D CAROUSEL POD -->
+      <div class="coverflow-pod-container">
+        <div class="coverflow-pod" id="coverflowWrap">
+          <div class="coverflow-stage" id="coverflowStage"></div>
+        </div>
       </div>
 
       <div class="section-title-line">
@@ -730,7 +718,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLI
 
 let tracks = [], artists = [], liked = new Set(), currentIndex = -1, currentUser = null, currentProfile = null;
 let listeningSeconds = 0, lastAudioTime = 0, currentTrackObj = null, authMode = "register", selectedOptionTrack = null;
-const loadedPages = new Set(); // سیستم کش کردن لود صفحات (On-Demand Page Cache)
+const loadedPages = new Set();
 const audio = document.getElementById("audio");
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -1216,7 +1204,7 @@ function bindTrackClicks(container){
 
 function artistById(id){ return artists.find(a => String(a.id) === String(id)); }
 
-// 3D COVERFLOW LOGIC FOR DISCOVER
+// 3D COVERFLOW LOGIC
 let cfCurrentIndex = 0;
 let cfStartX = 0;
 let cfIsDragging = false;
@@ -1261,26 +1249,26 @@ function updateCoverflow3D(){
     if (absOffset > 3) {
       item.style.opacity = "0";
       item.style.pointerEvents = "none";
-      item.style.transform = `translateX(${offset * 75}px) translateZ(-400px) scale(0.6)`;
+      item.style.transform = `translateX(${offset * 30}px) translateZ(-200px) scale(0.5)`;
       item.classList.remove("active");
     } else if (offset === 0) {
       item.style.opacity = "1";
       item.style.pointerEvents = "auto";
-      item.style.zIndex = "100";
+      item.style.zIndex = "40";
       item.style.filter = "none";
-      item.style.transform = `translateX(0px) translateZ(80px) rotateY(0deg) scale(1.15)`;
+      item.style.transform = `translateX(0px) translateZ(40px) rotateY(0deg) scale(1.15)`;
       item.classList.add("active");
     } else {
       const direction = offset > 0 ? 1 : -1;
-      const tx = offset * 85 + (direction * 45);
-      const rotY = direction * -38;
-      const tz = -100 * absOffset;
-      const scale = Math.max(0.75, 1 - (absOffset * 0.15));
+      const tx = offset * 34 + (direction * 18);
+      const rotY = direction * -34; 
+      const tz = -45 * absOffset;
+      const scale = Math.max(0.7, 1 - (absOffset * 0.12));
 
-      item.style.opacity = absOffset === 1 ? "0.85" : "0.5";
+      item.style.opacity = absOffset === 1 ? "0.9" : absOffset === 2 ? "0.6" : "0.2";
       item.style.pointerEvents = "auto";
-      item.style.zIndex = `${10 - absOffset}`;
-      item.style.filter = "brightness(0.7)";
+      item.style.zIndex = `${30 - absOffset}`;
+      item.style.filter = "brightness(0.75)";
       item.style.transform = `translateX(${tx}px) translateZ(${tz}px) rotateY(${rotY}deg) scale(${scale})`;
       item.classList.remove("active");
     }
