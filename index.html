@@ -71,7 +71,7 @@ audio{display:none}
 
 .app{min-height:100vh;padding-bottom:135px}
 
-/* PULL TO REFRESH SPINNER */
+/* PULL REFRESH INDICATOR */
 .pull-spinner{
   display:none;
   text-align:center;
@@ -88,19 +88,19 @@ audio{display:none}
 /* TOPBAR */
 .topbar{height:54px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;background:var(--bg);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);transition:background 0.28s ease}
 .top-left{position:relative;display:flex;align-items:center;gap:8px}
-.brand-logo-btn{width:36px;height:36px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;cursor:pointer;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,0.15)}
-.brand-fallback{font-size:10px;font-weight:900;letter-spacing:.05em}
+.brand-logo-btn{width:36px;height:36px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;cursor:pointer;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,0.15);border:1px solid var(--line)}
 
 .top-right{display:flex;align-items:center;gap:12px}
 .theme-toggle-btn{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:16px;cursor:pointer;background:var(--paper-sub);border:1px solid var(--line);transition:transform 0.2s}
 .theme-toggle-btn:active{transform:scale(0.9)}
 
-/* SOCIAL POPUP */
-.social-popup{position:absolute;top:46px;left:0;background:var(--paper);border-radius:14px;padding:6px;box-shadow:var(--shadow);border:1px solid var(--line);min-width:145px;display:none;z-index:500}
+/* SOCIAL & DOWNLOAD POPUP */
+.social-popup{position:absolute;top:46px;left:0;background:var(--paper);border-radius:14px;padding:6px;box-shadow:var(--shadow);border:1px solid var(--line);min-width:165px;display:none;z-index:500}
 .social-popup.show{display:flex;flex-direction:column;gap:2px;animation:popIn .16s cubic-bezier(0.16,1,0.3,1) forwards}
 @keyframes popIn{from{opacity:0;transform:scale(0.92) translateY(-4px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .social-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;font-size:12px;font-weight:700;color:var(--black);text-decoration:none;transition:0.15s}
 .social-item:hover{background:var(--paper-sub)}
+.social-item.highlight{background:var(--black);color:var(--white);margin-bottom:4px}
 .social-svg{width:16px;height:16px;fill:currentColor}
 
 .top-title{font-size:11px;letter-spacing:.22em;font-weight:800;text-transform:uppercase}
@@ -385,13 +385,43 @@ audio{display:none}
 .drawer{position:fixed;inset:0;z-index:500;display:none;background:rgba(0,0,0,0.7)}.drawer.open{display:block}
 .drawer-panel{position:absolute;top:0;right:0;bottom:0;width:min(320px,85vw);padding:22px;background:var(--paper);overflow-y:auto;border-left:1px solid var(--line)}
 .drawer-head{display:flex;align-items:center;justify-content:space-between;font-size:18px}
-.drawer-list{margin-top:25px}.drawer-list button{width:100%;padding:12px 0;text-align:left;border-bottom:1px solid var(--line);font-size:13px;color:var(--black)}
+.drawer-list{margin-top:25px}.drawer-list button,.drawer-list a{width:100%;padding:12px 0;text-align:left;border-bottom:1px solid var(--line);font-size:13px;color:var(--black);text-decoration:none;display:block}
 .toast{position:fixed;left:50%;bottom:140px;z-index:9999;transform:translateX(-50%);padding:10px 18px;background:var(--black);color:var(--white);border-radius:30px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:var(--shadow)}
+
+/* MINIMAL UPLOAD PROGRESS BAR */
+.upload-progress-wrap{
+  display:none;
+  margin-top:14px;
+  background:var(--paper-sub);
+  border-radius:20px;
+  height:18px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--line);
+}
+.upload-progress-fill{
+  height:100%;
+  width:0%;
+  background:var(--black);
+  border-radius:20px;
+  transition:width 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.upload-progress-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:9.5px;
+  font-weight:900;
+  color:var(--white);
+  mix-blend-mode:difference;
+}
 
 /* AUTH OVERLAY & GOOGLE BUTTON */
 .auth-overlay{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px)}
 .auth-overlay.open{display:flex}
-.auth-panel{width:100%;max-width:380px;background:var(--paper);border-radius:16px;padding:26px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.auth-panel{position:relative;width:100%;max-width:380px;background:var(--paper);border-radius:16px;padding:26px;box-shadow:var(--shadow);border:1px solid var(--line)}
 .auth-title{font-size:28px;line-height:.9;letter-spacing:-.05em;margin-bottom:8px;font-weight:900}
 .auth-submit{width:100%;padding:13px;margin-top:12px;border-radius:25px;background:var(--black);color:var(--white);font-weight:800;font-size:11px;letter-spacing:.05em}
 .small-btn{padding:7px 12px;border:1px solid var(--line);border-radius:18px;font-size:9.5px;background:var(--paper-sub);font-weight:bold;color:var(--black)}
@@ -400,6 +430,46 @@ audio{display:none}
 .card img{aspect-ratio:1;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
 .card h4{margin-top:8px;font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .card p{font-size:10px;color:var(--gray);margin-top:2px}
+
+/* AUTH LOADING & SUCCESS ANIMATION OVERLAY */
+.auth-feedback-overlay{
+  position:absolute;
+  inset:0;
+  background:var(--paper);
+  border-radius:16px;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  z-index:10;
+  animation:fadeIn 0.22s ease forwards;
+}
+.auth-feedback-overlay.show{display:flex}
+
+.auth-spinner{
+  width:36px;
+  height:36px;
+  border:3px solid var(--line);
+  border-top-color:var(--black);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+
+.auth-checkmark{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:rgba(34,197,94,0.15);
+  border:2px solid #22c55e;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  color:#22c55e;
+  animation:popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
 
 /* MINIMAL GOOGLE AUTH BUTTON */
 .btn-google-auth{
@@ -464,10 +534,16 @@ audio{display:none}
   <header class="topbar">
     <div class="top-left">
       <button id="siteBackButton" class="top-menu-btn" title="Back">‹</button>
-      <div id="brandLogoBtn" class="brand-logo-btn" role="button" aria-label="Socials">
-        <div class="brand-fallback">LSO</div>
+      <div id="brandLogoBtn" class="brand-logo-btn" role="button" aria-label="Menu">
+        <img src="assets/icon.png" alt="Lost Sound" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
       </div>
+      
+      <!-- LOGO POPUP WITH APP DOWNLOAD LINK -->
       <div id="socialPopup" class="social-popup">
+        <a href="https://github.com/amirtalles/LoostSound1/actions/runs/32631611478/artifacts/9491199182" target="_blank" rel="noopener noreferrer" class="social-item highlight">
+          <svg class="social-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+          <span>Download App (APK)</span>
+        </a>
         <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-item">
           <svg class="social-svg" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
           <span>YouTube</span>
@@ -533,7 +609,7 @@ audio{display:none}
       <div id="searchResults"></div>
     </section>
 
-    <!-- LIBRARY -->
+    <!-- LIBRARY / LIKED PLAYLIST -->
     <section id="library" class="view">
       <div class="hero-meta-top">YOUR ARCHIVE</div>
       <h1 class="hero-title" style="font-size:36px;margin-bottom:15px">MY SOUND</h1>
@@ -568,7 +644,7 @@ audio{display:none}
       <div class="upload-card">
         <div class="hero-meta-top">ACCOUNT</div>
         <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">EDIT PROFILE</h2>
-        <div class="field"><label>PROFILE PHOTO</label><input id="profilePhotoFile" type="file" accept="image/png, image/jpeg, image/jpg, image/webp"></div>
+        <div class="field"><label>PROFILE PHOTO</label><input id="profilePhotoFile" type="file" accept="image/*"></div>
         <div class="field"><label>USERNAME</label><input id="editUsername" placeholder="username"></div>
         <div class="field"><label>DISPLAY NAME</label><input id="editDisplayName" placeholder="Your name"></div>
         <button id="saveProfileButton" class="primary-btn">SAVE PROFILE</button>
@@ -581,24 +657,30 @@ audio{display:none}
         <div class="hero-meta-top">STUDIO</div>
         <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">EDIT TRACK</h2>
         <input type="hidden" id="editTrackId">
-        <div class="field"><label>NEW COVER ARTWORK</label><input id="editCoverFile" type="file" accept="image/png, image/jpeg, image/jpg, image/webp"></div>
+        <div class="field"><label>NEW COVER ARTWORK</label><input id="editCoverFile" type="file" accept="image/*"></div>
         <div class="field"><label>TRACK TITLE</label><input id="editTrackTitle" placeholder="Title"></div>
         <div class="field"><label>ARTIST NAME</label><input id="editTrackArtist" placeholder="Artist"></div>
         <button id="saveTrackButton" class="primary-btn">UPDATE TRACK</button>
       </div>
     </section>
 
-    <!-- UPLOAD -->
+    <!-- UPLOAD TRACK WITH REAL TIME PROGRESS -->
     <section id="upload" class="view">
       <div class="upload-card">
         <div class="hero-meta-top">CREATOR STUDIO</div>
         <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">UPLOAD TRACK</h2>
-        <div class="field"><label>AUDIO FILE</label><input id="audioFile" type="file" accept="audio/mp3, audio/wav, audio/mpeg, audio/*"></div>
-        <div class="field"><label>COVER ARTWORK</label><input id="coverFile" type="file" accept="image/png, image/jpeg, image/jpg, image/webp"></div>
-        <div class="field"><label>TRACK VIDEO (CANVAS VIDEO)</label><input id="videoFile" type="file" accept="video/mp4, video/webm, video/*"></div>
+        <div class="field"><label>AUDIO FILE</label><input id="audioFile" type="file" accept="audio/*"></div>
+        <div class="field"><label>COVER ARTWORK</label><input id="coverFile" type="file" accept="image/*"></div>
+        <div class="field"><label>TRACK VIDEO (CANVAS VIDEO)</label><input id="videoFile" type="file" accept="video/*"></div>
         <div class="field"><label>TRACK TITLE</label><input id="uploadTitle" placeholder="Title"></div>
         <div class="field"><label>ARTIST NAME</label><input id="uploadArtist" placeholder="Artist"></div>
+        
         <button id="publishButton" class="primary-btn">PUBLISH TRACK</button>
+        
+        <div id="uploadProgressWrap" class="upload-progress-wrap">
+          <div id="uploadProgressFill" class="upload-progress-fill"></div>
+          <div id="uploadProgressText" class="upload-progress-text">0%</div>
+        </div>
       </div>
     </section>
 
@@ -673,27 +755,59 @@ audio{display:none}
     </nav>
   </div>
 
-  <!-- DRAWER -->
-  <div id="drawer" class="drawer"><aside class="drawer-panel"><div class="drawer-head"><strong>LSO</strong><button id="closeDrawer" style="color:var(--black)">×</button></div><div class="drawer-list"><button data-go="home">Home</button><button data-go="discover">Discover</button><button data-go="search">Search</button><button data-go="library">Library</button><button data-go="profile">Profile</button><button data-go="upload">Upload</button><button id="authMenuButton">Register / Login</button></div></aside></div>
+  <!-- DRAWER / DASHBOARD MENU WITH DOWNLOAD LINK -->
+  <div id="drawer" class="drawer">
+    <aside class="drawer-panel">
+      <div class="drawer-head">
+        <strong>LSO</strong>
+        <button id="closeDrawer" style="color:var(--black)">×</button>
+      </div>
+      <div class="drawer-list">
+        <a href="https://github.com/amirtalles/LoostSound1/actions/runs/32631611478/artifacts/9491199182" target="_blank" rel="noopener noreferrer" style="font-weight:bold;color:var(--black)">
+          📥 Download Android App
+        </a>
+        <button data-go="home">Home</button>
+        <button data-go="discover">Discover</button>
+        <button data-go="search">Search</button>
+        <button data-go="library">Library</button>
+        <button data-go="profile">Profile</button>
+        <button data-go="upload">Upload</button>
+        <button id="authMenuButton">Register / Login</button>
+      </div>
+    </aside>
+  </div>
 
-  <!-- AUTH MODAL WITH GOOGLE LOGIN -->
+  <!-- AUTH MODAL WITH FORGOT PASSWORD & ANIMATIONS -->
   <div id="authOverlay" class="auth-overlay">
     <div class="auth-panel">
+      <!-- Loading / Success Screen -->
+      <div id="authFeedbackOverlay" class="auth-feedback-overlay">
+        <div id="authSpinner" class="auth-spinner"></div>
+        <div id="authCheckmark" class="auth-checkmark" style="display:none">✓</div>
+        <div id="authFeedbackText" style="font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--black)">VERIFYING...</div>
+      </div>
+
       <div class="hero-meta-top">ACCOUNT</div>
       <h2 id="authTitle" class="auth-title">REGISTER</h2>
 
       <!-- GOOGLE ONE-CLICK SIGN IN -->
-      <button type="button" id="btnGoogleAuth" class="btn-google-auth">
-        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-        <span>Continue with Google</span>
-      </button>
+      <div id="googleAuthSection">
+        <button type="button" id="btnGoogleAuth" class="btn-google-auth">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          <span>Continue with Google</span>
+        </button>
 
-      <div class="auth-divider">or with email</div>
+        <div class="auth-divider">or with email</div>
+      </div>
 
       <div class="field"><label>EMAIL</label><input id="authEmail" type="email" placeholder="you@example.com"></div>
-      <div class="field"><label>PASSWORD</label><input id="authPassword" type="password" placeholder="Minimum 6 characters"></div>
+      <div id="authPasswordField" class="field"><label>PASSWORD</label><input id="authPassword" type="password" placeholder="Minimum 6 characters"></div>
       <div id="authNameField" class="field"><label>DISPLAY NAME</label><input id="authDisplayName" placeholder="Artist Name"></div>
       
+      <div id="authForgotRow" style="text-align:right;margin:-4px 0 10px;display:none">
+        <button id="authForgotBtn" style="font-size:10px;color:var(--gray);text-decoration:underline">Forgot password?</button>
+      </div>
+
       <button id="authSubmit" class="auth-submit">CREATE ACCOUNT</button>
       
       <div style="text-align:center;margin-top:14px">
@@ -837,6 +951,7 @@ function bindButtons(){
   document.getElementById("authMenuButton").onclick = () => { closeDrawer(); currentUser ? logout() : openAuth("login"); };
   document.getElementById("authClose").onclick = () => document.getElementById("authOverlay").classList.remove("open");
   document.getElementById("authSwitchBtn").onclick = toggleAuthMode;
+  document.getElementById("authForgotBtn").onclick = () => openAuth("forgot");
   document.getElementById("authSubmit").onclick = submitAuth;
   document.getElementById("btnGoogleAuth").onclick = signInWithGoogle;
 
@@ -920,25 +1035,73 @@ function closeFullPlayer(){
 }
 
 function closeDrawer() { document.getElementById("drawer").classList.remove("open"); }
+
 function openAuth(mode = "register") {
   authMode = mode;
-  document.getElementById("authTitle").textContent = mode === "register" ? "REGISTER" : "LOGIN";
-  document.getElementById("authSubmit").textContent = mode === "register" ? "CREATE ACCOUNT" : "LOGIN";
-  document.getElementById("authNameField").style.display = mode === "register" ? "block" : "none";
-  document.getElementById("authSwitchBtn").textContent = mode === "register" ? "Switch to Login" : "Switch to Register";
-  document.getElementById("authOverlay").classList.add("open");
+  const overlay = document.getElementById("authOverlay");
+  const fb = document.getElementById("authFeedbackOverlay");
+  fb.classList.remove("show");
+
+  const title = document.getElementById("authTitle");
+  const submit = document.getElementById("authSubmit");
+  const nameField = document.getElementById("authNameField");
+  const passField = document.getElementById("authPasswordField");
+  const googleSection = document.getElementById("googleAuthSection");
+  const forgotRow = document.getElementById("authForgotRow");
+  const switchBtn = document.getElementById("authSwitchBtn");
+
+  if (mode === "register") {
+    title.textContent = "REGISTER";
+    submit.textContent = "CREATE ACCOUNT";
+    nameField.style.display = "block";
+    passField.style.display = "block";
+    googleSection.style.display = "block";
+    forgotRow.style.display = "none";
+    switchBtn.textContent = "Switch to Login";
+  } else if (mode === "login") {
+    title.textContent = "LOGIN";
+    submit.textContent = "LOGIN";
+    nameField.style.display = "none";
+    passField.style.display = "block";
+    googleSection.style.display = "block";
+    forgotRow.style.display = "block";
+    switchBtn.textContent = "Switch to Register";
+  } else if (mode === "forgot") {
+    title.textContent = "RESET PASSWORD";
+    submit.textContent = "SEND RESET LINK";
+    nameField.style.display = "none";
+    passField.style.display = "none";
+    googleSection.style.display = "none";
+    forgotRow.style.display = "none";
+    switchBtn.textContent = "Back to Login";
+  }
+
+  overlay.classList.add("open");
 }
-function toggleAuthMode() { openAuth(authMode === "register" ? "login" : "register"); }
+
+function toggleAuthMode() {
+  if (authMode === "register") openAuth("login");
+  else if (authMode === "login") openAuth("register");
+  else openAuth("login");
+}
 
 async function checkSession(){
-  const { data } = await supabaseClient.auth.getSession();
-  currentUser = data?.session?.user || null;
-  if (currentUser) {
-    const { data: p } = await supabaseClient.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
-    currentProfile = p || { id: currentUser.id, display_name: currentUser.email.split("@")[0], username: "artist" };
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    currentUser = session?.user || null;
+    if (currentUser) {
+      const { data: p } = await supabaseClient.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
+      currentProfile = p || { id: currentUser.id, display_name: currentUser.email.split("@")[0], username: "artist" };
+    } else {
+      currentProfile = null;
+    }
+  } catch (err) {
+    currentUser = null;
+    currentProfile = null;
   }
   renderProfile();
-  document.getElementById("authMenuButton").textContent = currentUser ? "Logout" : "Register / Login";
+  const authBtn = document.getElementById("authMenuButton");
+  if (authBtn) authBtn.textContent = currentUser ? "Logout" : "Register / Login";
 }
 
 async function signInWithGoogle(){
@@ -958,31 +1121,68 @@ async function signInWithGoogle(){
 async function submitAuth(){
   const email = document.getElementById("authEmail").value.trim();
   const password = document.getElementById("authPassword").value;
-  const name = document.getElementById("authDisplayName")?.value.trim() || email.split("@")[0];
-  if (!email || !password) return toast("Enter email & password.");
+  const nameInput = document.getElementById("authDisplayName");
+  const name = nameInput?.value.trim() || email.split("@")[0];
+
+  if (!email) return toast("Enter your email.");
+  if (authMode !== "forgot" && !password) return toast("Enter password.");
+
+  const fbOverlay = document.getElementById("authFeedbackOverlay");
+  const spinner = document.getElementById("authSpinner");
+  const checkmark = document.getElementById("authCheckmark");
+  const fbText = document.getElementById("authFeedbackText");
+
+  spinner.style.display = "block";
+  checkmark.style.display = "none";
+  fbText.textContent = authMode === "forgot" ? "SENDING LINK..." : "VERIFYING...";
+  fbOverlay.classList.add("show");
 
   try {
     if (authMode === "register") {
-      const { data, error } = await supabaseClient.auth.signUp({ email, password });
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: { data: { display_name: name } }
+      });
       if (error) throw error;
       currentUser = data.user;
       if (currentUser) {
         await supabaseClient.from("profiles").upsert({ id: currentUser.id, display_name: name, username: email.split("@")[0] });
         await supabaseClient.from("artists").insert({ user_id: currentUser.id, name, username: email.split("@")[0] });
       }
-      toast("Account created!");
-    } else {
+      fbText.textContent = "ACCOUNT CREATED!";
+    } else if (authMode === "login") {
       const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) throw error;
       currentUser = data.user;
-      toast("Logged in!");
+      fbText.textContent = "WELCOME BACK!";
+    } else if (authMode === "forgot") {
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname
+      });
+      if (error) throw error;
+      fbText.textContent = "RESET LINK SENT!";
     }
-    document.getElementById("authOverlay").classList.remove("open");
-    await checkSession();
-    await loadArtists();
-    await loadTracks();
+
+    spinner.style.display = "none";
+    checkmark.style.display = "grid";
+
+    setTimeout(async () => {
+      fbOverlay.classList.remove("show");
+      document.getElementById("authOverlay").classList.remove("open");
+      document.getElementById("authEmail").value = "";
+      document.getElementById("authPassword").value = "";
+
+      await checkSession();
+      await loadArtists();
+      await loadTracks();
+      await loadLikes();
+      applyRoute(false);
+    }, 1100);
+
   } catch(e) {
-    toast(e.message || "Auth failed.");
+    fbOverlay.classList.remove("show");
+    toast(e.message || "Authentication failed.");
   }
 }
 
@@ -990,7 +1190,9 @@ async function logout(){
   await supabaseClient.auth.signOut();
   currentUser = null;
   currentProfile = null;
+  liked.clear();
   renderProfile();
+  renderLibrary();
   toast("Logged out.");
 }
 
@@ -1045,7 +1247,11 @@ async function loadTracks(){
 }
 
 async function loadLikes(){
-  if (!currentUser) return;
+  if (!currentUser) {
+    liked.clear();
+    renderLibrary();
+    return;
+  }
   const { data } = await supabaseClient.from("track_likes").select("track_id").eq("user_id", currentUser.id);
   liked = new Set((data || []).map(x => x.track_id));
   updateFullLikeBtn();
@@ -1207,11 +1413,12 @@ function runSearch(){
   bindTrackClicks(box);
 }
 
+// LIBRARY RENDERING (AUTO PLAYLIST OF LIKED TRACKS)
 function renderLibrary(){
   const c = document.getElementById("likedList");
   if (!c) return;
   const lt = tracks.filter(t => liked.has(t.id));
-  c.innerHTML = lt.length ? lt.map(t => trackRowHTML(t, tracks.indexOf(t))).join("") : "<p style='font-size:11px;color:var(--gray);margin-top:10px'>No saved tracks yet.</p>";
+  c.innerHTML = lt.length ? lt.map(t => trackRowHTML(t, tracks.indexOf(t))).join("") : "<p style='font-size:11px;color:var(--gray);margin-top:10px'>No saved tracks yet. Like any track to add it here.</p>";
   bindTrackClicks(c);
 }
 
@@ -1319,9 +1526,11 @@ async function toggleLikeCurrent(){
   if (liked.has(id)) {
     await supabaseClient.from("track_likes").delete().eq("user_id", currentUser.id).eq("track_id", id);
     liked.delete(id);
+    toast("Removed from Library");
   } else {
     await supabaseClient.from("track_likes").insert({ user_id: currentUser.id, track_id: id });
     liked.add(id);
+    toast("Saved to Library!");
   }
   updateFullLikeBtn();
   renderLibrary();
@@ -1438,6 +1647,7 @@ async function saveProfile(){
   } catch(e) { toast("Update failed."); }
 }
 
+// UPLOAD TRACK WITH REAL TIME PROGRESS DISPLAY
 async function publishTrack(){
   if (!currentUser) return openAuth("login");
   const aFile = document.getElementById("audioFile").files[0];
@@ -1449,7 +1659,20 @@ async function publishTrack(){
   if (!aFile || !cFile || !title) return toast("Fill required fields.");
 
   const btn = document.getElementById("publishButton");
-  btn.disabled = true; btn.textContent = "UPLOADING...";
+  const progressWrap = document.getElementById("uploadProgressWrap");
+  const progressFill = document.getElementById("uploadProgressFill");
+  const progressText = document.getElementById("uploadProgressText");
+
+  btn.disabled = true;
+  btn.textContent = "UPLOADING...";
+  progressWrap.style.display = "block";
+  progressFill.style.width = "0%";
+  progressText.textContent = "0%";
+
+  function updateUploadProgress(pct){
+    progressFill.style.width = pct + "%";
+    progressText.textContent = Math.round(pct) + "%";
+  }
 
   try {
     let { data: art } = await supabaseClient.from("artists").select("*").eq("user_id", currentUser.id).maybeSingle();
@@ -1458,12 +1681,24 @@ async function publishTrack(){
       art = newArt;
     }
 
-    const aPath = `${currentUser.id}/${Date.now()}-track.mp3`;
+    const totalWeight = (aFile?.size || 0) + (cFile?.size || 0) + (vFile?.size || 0);
+    let uploadedBytes = 0;
+
+    updateUploadProgress(10);
+
+    // ۱. آپلود کاور
     const cPath = `${currentUser.id}/${Date.now()}-cover.jpg`;
-
-    await supabaseClient.storage.from("audio").upload(aPath, aFile, { upsert: false });
     await supabaseClient.storage.from("covers").upload(cPath, cFile, { upsert: false, contentType: "image/jpeg" });
+    uploadedBytes += (cFile?.size || 0);
+    updateUploadProgress(totalWeight ? (uploadedBytes / totalWeight) * 85 : 40);
 
+    // ۲. آپلود فایل صوتی
+    const aPath = `${currentUser.id}/${Date.now()}-track.mp3`;
+    await supabaseClient.storage.from("audio").upload(aPath, aFile, { upsert: false });
+    uploadedBytes += (aFile?.size || 0);
+    updateUploadProgress(totalWeight ? (uploadedBytes / totalWeight) * 85 : 75);
+
+    // ۳. آپلود ویدیو در صورت وجود
     let vUrl = null;
     if (vFile) {
       const vPath = `${currentUser.id}/${Date.now()}-video.mp4`;
@@ -1474,22 +1709,31 @@ async function publishTrack(){
     const aUrl = supabaseClient.storage.from("audio").getPublicUrl(aPath).data.publicUrl;
     const cUrl = supabaseClient.storage.from("covers").getPublicUrl(cPath).data.publicUrl;
 
+    updateUploadProgress(92);
+
     await supabaseClient.from("tracks").insert({
       artist_id: art.id, title, cover_url: cUrl, audio_url: aUrl, video_url: vUrl, play_count: 0, is_published: true
     });
 
-    toast("Track published!");
-    document.getElementById("audioFile").value = "";
-    document.getElementById("coverFile").value = "";
-    document.getElementById("videoFile").value = "";
-    croppedCoverBlob = null;
+    updateUploadProgress(100);
 
-    await loadTracks();
-    navigate("home");
+    setTimeout(async () => {
+      toast("Track published!");
+      document.getElementById("audioFile").value = "";
+      document.getElementById("coverFile").value = "";
+      document.getElementById("videoFile").value = "";
+      croppedCoverBlob = null;
+      progressWrap.style.display = "none";
+      await loadTracks();
+      navigate("home");
+    }, 400);
+
   } catch(e) {
     toast(e.message || "Upload failed.");
+    progressWrap.style.display = "none";
   } finally {
-    btn.disabled = false; btn.textContent = "PUBLISH TRACK";
+    btn.disabled = false;
+    btn.textContent = "PUBLISH TRACK";
   }
 }
 
