@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0d0d0d">
 
-<!-- SEO & Social Meta Tags -->
 <title>LOST SOUND | Music Streaming & Artist Platform</title>
 <meta name="description" content="LOST SOUND is an independent music streaming and artist publishing platform. Stream original music, discover underground sounds, and share your tracks.">
 <meta name="keywords" content="Lost Sound, Music Streaming, Independent Artists, Underground Music, Upload Music">
@@ -29,7 +28,6 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
-/* THEME VARIABLES */
 :root{
   --bg:#0d0d0d;
   --paper:#171717;
@@ -44,6 +42,7 @@
   --pill-glider:#ffffff;
   --pill-text:rgba(255,255,255,0.6);
   --pill-active:#000000;
+  --search-glow:0 0 25px rgba(255,255,255,0.18);
 }
 
 body.morning-mode{
@@ -60,6 +59,7 @@ body.morning-mode{
   --pill-glider:#000000;
   --pill-text:rgba(0,0,0,0.6);
   --pill-active:#ffffff;
+  --search-glow:0 0 25px rgba(0,0,0,0.12);
 }
 
 html,body{width:100%;min-height:100%;background:var(--bg);color:var(--black);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,sans-serif;overflow-x:hidden;transition:background 0.28s ease,color 0.28s ease}
@@ -113,6 +113,23 @@ audio{display:none}
 .view{display:none}
 .view.active{display:block}
 
+/* PAGE LOADER */
+.page-loader{
+  display:none;
+  padding:40px 0;
+  text-align:center;
+}
+.page-loader.show{display:block}
+.page-spinner{
+  width:32px;
+  height:32px;
+  border:2.5px solid var(--line);
+  border-top-color:var(--black);
+  border-radius:50%;
+  margin:0 auto 10px;
+  animation:spin 0.75s linear infinite;
+}
+
 /* HERO SECTION */
 .hero-layout{display:grid;grid-template-columns:1fr 185px;align-items:center;gap:15px;margin:8px 0 28px;position:relative}
 .hero-meta-top{font-size:9.5px;letter-spacing:.14em;font-weight:800;text-transform:uppercase;color:var(--gray);margin-bottom:6px}
@@ -131,6 +148,104 @@ audio{display:none}
 /* SECTION HEAD */
 .section-title-line{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
 .section-title{font-size:10px;font-weight:900;letter-spacing:.15em;text-transform:uppercase;color:var(--gray)}
+
+/* 3D COVERFLOW SLIDER FOR DISCOVER */
+.coverflow-wrap{
+  width:100%;
+  margin:18px 0 32px;
+  perspective:1000px;
+  overflow:hidden;
+  position:relative;
+  touch-action:pan-y;
+  user-select:none;
+}
+.coverflow-stage{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height:280px;
+  position:relative;
+  transform-style:preserve-3d;
+}
+.coverflow-item{
+  position:absolute;
+  width:220px;
+  height:220px;
+  border-radius:18px;
+  overflow:hidden;
+  background:var(--paper-sub);
+  box-shadow:0 16px 35px rgba(0,0,0,0.5);
+  border:1px solid var(--line);
+  cursor:pointer;
+  transition:transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, filter 0.4s ease;
+}
+.coverflow-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  pointer-events:none;
+}
+.coverflow-item .cf-meta{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:14px;
+  background:linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+  color:#fff;
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+.coverflow-item.active .cf-meta{
+  opacity:1;
+}
+.cf-meta h4{font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cf-meta p{font-size:10.5px;color:#aaa;margin-top:2px}
+
+/* SEARCH PILL EXPAND ANIMATION */
+.search-pill-container{
+  display:flex;
+  justify-content:center;
+  margin:20px 0 25px;
+}
+.search-pill{
+  width:50px;
+  height:50px;
+  border-radius:30px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  box-shadow:var(--search-glow);
+  display:flex;
+  align-items:center;
+  padding:0 14px;
+  gap:10px;
+  overflow:hidden;
+  transition:width 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.search-pill.expanded{
+  width:100%;
+}
+.search-icon{
+  width:20px;
+  height:20px;
+  flex:0 0 auto;
+  fill:var(--black);
+  opacity:0.85;
+}
+.search-pill input{
+  width:100%;
+  border:none;
+  background:transparent;
+  font-size:15px;
+  font-weight:700;
+  outline:none;
+  color:var(--black);
+  opacity:0;
+  transition:opacity 0.3s ease 0.15s;
+}
+.search-pill.expanded input{
+  opacity:1;
+}
 
 /* TRACK ROW */
 .track-row{display:grid;grid-template-columns:74px 38px minmax(0,1fr) 24px;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
@@ -185,196 +300,33 @@ audio{display:none}
   transition:transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), background 0.28s ease;
   overflow-y:auto;
 }
-.full-player-overlay.open{
-  transform:translateY(0);
-}
-.full-player-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  height:44px;
-}
-.full-player-close{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  font-size:24px;
-  font-weight:bold;
-  cursor:pointer;
-  line-height:1;
-  color:var(--black);
-}
-.full-player-stage{
-  width:100%;
-  max-width:340px;
-  margin:20px auto;
-  aspect-ratio:1;
-  position:relative;
-  border-radius:18px;
-  overflow:hidden;
-  background:#111;
-  box-shadow:var(--shadow);
-  border:1px solid var(--line);
-}
-.full-player-stage img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-.full-player-stage video{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:none;
-  z-index:2;
-}
-.full-player-meta{
-  width:100%;
-  max-width:340px;
-  margin:0 auto 10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.full-player-titles h2{
-  font-size:22px;
-  font-weight:900;
-  letter-spacing:-0.03em;
-  line-height:1.2;
-}
-.full-player-titles p{
-  font-size:14px;
-  color:var(--gray);
-  margin-top:4px;
-  font-weight:600;
-}
-.full-player-like-btn{
-  font-size:24px;
-  color:var(--gray);
-  cursor:pointer;
-  transition:0.15s;
-}
-.full-player-like-btn.liked{
-  color:var(--red);
-}
+.full-player-overlay.open{transform:translateY(0)}
+.full-player-top{display:flex;align-items:center;justify-content:space-between;height:44px}
+.full-player-close{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:24px;font-weight:bold;cursor:pointer;line-height:1;color:var(--black)}
+.full-player-stage{width:100%;max-width:340px;margin:20px auto;aspect-ratio:1;position:relative;border-radius:18px;overflow:hidden;background:#111;box-shadow:var(--shadow);border:1px solid var(--line)}
+.full-player-stage img{width:100%;height:100%;object-fit:cover;display:block}
+.full-player-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;z-index:2}
+.full-player-meta{width:100%;max-width:340px;margin:0 auto 10px;display:flex;align-items:center;justify-content:space-between}
+.full-player-titles h2{font-size:22px;font-weight:900;letter-spacing:-0.03em;line-height:1.2}
+.full-player-titles p{font-size:14px;color:var(--gray);margin-top:4px;font-weight:600}
+.full-player-like-btn{font-size:24px;color:var(--gray);cursor:pointer;transition:0.15s}
+.full-player-like-btn.liked{color:var(--red)}
 
-.full-player-scrub{
-  width:100%;
-  max-width:340px;
-  margin:15px auto 0;
-}
-.full-scrub-bar{
-  width:100%;
-  height:4px;
-  background:var(--paper-sub);
-  border-radius:4px;
-  cursor:pointer;
-  position:relative;
-}
-.full-scrub-fill{
-  height:100%;
-  width:0;
-  background:var(--black);
-  border-radius:4px;
-}
-.full-scrub-times{
-  display:flex;
-  justify-content:space-between;
-  font-size:11px;
-  color:var(--gray);
-  font-weight:700;
-  margin-top:6px;
-}
+.full-player-scrub{width:100%;max-width:340px;margin:15px auto 0}
+.full-scrub-bar{width:100%;height:4px;background:var(--paper-sub);border-radius:4px;cursor:pointer;position:relative}
+.full-scrub-fill{height:100%;width:0;background:var(--black);border-radius:4px}
+.full-scrub-times{display:flex;justify-content:space-between;font-size:11px;color:var(--gray);font-weight:700;margin-top:6px}
 
-.full-player-controls{
-  width:100%;
-  max-width:340px;
-  margin:20px auto 10px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.full-ctrl-btn{
-  font-size:28px;
-  color:var(--black);
-  cursor:pointer;
-}
-.full-play-btn{
-  width:64px;
-  height:64px;
-  border-radius:50%;
-  background:var(--black);
-  color:var(--white);
-  display:grid;
-  place-items:center;
-  font-size:22px;
-  cursor:pointer;
-  box-shadow:0 8px 24px rgba(0,0,0,0.2);
-}
+.full-player-controls{width:100%;max-width:340px;margin:20px auto 10px;display:flex;align-items:center;justify-content:space-between}
+.full-ctrl-btn{font-size:28px;color:var(--black);cursor:pointer}
+.full-play-btn{width:64px;height:64px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;font-size:22px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,0.2)}
 
 /* FLOATING PILL TABBAR */
-.pill-nav-container{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:calc(16px + env(safe-area-inset-bottom));
-  z-index:350;
-  display:flex;
-  justify-content:center;
-  pointer-events:none;
-}
-.pill-nav{
-  pointer-events:auto;
-  position:relative;
-  display:flex;
-  align-items:center;
-  background:var(--pill-bg);
-  backdrop-filter:blur(25px);
-  -webkit-backdrop-filter:blur(25px);
-  padding:4px;
-  border-radius:40px;
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
-  width:min(380px,92vw);
-  transition:background 0.28s ease, border-color 0.28s ease;
-}
-.pill-glider{
-  position:absolute;
-  top:4px;
-  bottom:4px;
-  left:4px;
-  width:calc((100% - 8px) / 5);
-  background:var(--pill-glider);
-  border-radius:30px;
-  box-shadow:0 4px 14px rgba(0,0,0,0.15);
-  transition:transform 0.32s cubic-bezier(0.2,0.9,0.3,1.2), background 0.28s ease;
-  z-index:1;
-  pointer-events:none;
-}
-.pill-item{
-  flex:1;
-  position:relative;
-  z-index:2;
-  height:40px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:12px;
-  font-weight:700;
-  color:var(--pill-text);
-  text-decoration:none;
-  border-radius:30px;
-  transition:color 0.22s ease;
-  user-select:none;
-}
-.pill-item.active{
-  color:var(--pill-active);
-}
+.pill-nav-container{position:fixed;left:0;right:0;bottom:calc(16px + env(safe-area-inset-bottom));z-index:350;display:flex;justify-content:center;pointer-events:none}
+.pill-nav{pointer-events:auto;position:relative;display:flex;align-items:center;background:var(--pill-bg);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);padding:4px;border-radius:40px;border:1px solid var(--line);box-shadow:var(--shadow);width:min(380px,92vw);transition:background 0.28s ease, border-color 0.28s ease}
+.pill-glider{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px) / 5);background:var(--pill-glider);border-radius:30px;box-shadow:0 4px 14px rgba(0,0,0,0.15);transition:transform 0.32s cubic-bezier(0.2,0.9,0.3,1.2), background 0.28s ease;z-index:1;pointer-events:none}
+.pill-item{flex:1;position:relative;z-index:2;height:40px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--pill-text);text-decoration:none;border-radius:30px;transition:color 0.22s ease;user-select:none}
+.pill-item.active{color:var(--pill-active)}
 
 /* FORMS, CARDS & MODALS */
 .upload-card{background:var(--paper);padding:20px;border-radius:14px;border:1px solid var(--line);max-width:540px;margin:auto}
@@ -389,36 +341,11 @@ audio{display:none}
 .toast{position:fixed;left:50%;bottom:140px;z-index:9999;transform:translateX(-50%);padding:10px 18px;background:var(--black);color:var(--white);border-radius:30px;font-size:11px;font-weight:800;white-space:nowrap;box-shadow:var(--shadow)}
 
 /* MINIMAL UPLOAD PROGRESS BAR */
-.upload-progress-wrap{
-  display:none;
-  margin-top:14px;
-  background:var(--paper-sub);
-  border-radius:20px;
-  height:18px;
-  position:relative;
-  overflow:hidden;
-  border:1px solid var(--line);
-}
-.upload-progress-fill{
-  height:100%;
-  width:0%;
-  background:var(--black);
-  border-radius:20px;
-  transition:width 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.upload-progress-text{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:9.5px;
-  font-weight:900;
-  color:var(--white);
-  mix-blend-mode:difference;
-}
+.upload-progress-wrap{display:none;margin-top:14px;background:var(--paper-sub);border-radius:20px;height:18px;position:relative;overflow:hidden;border:1px solid var(--line)}
+.upload-progress-fill{height:100%;width:0%;background:var(--black);border-radius:20px;transition:width 0.18s cubic-bezier(0.4, 0, 0.2, 1)}
+.upload-progress-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:900;color:var(--white);mix-blend-mode:difference}
 
-/* AUTH OVERLAY & GOOGLE BUTTON */
+/* AUTH OVERLAY & ANIMATIONS */
 .auth-overlay{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px)}
 .auth-overlay.open{display:flex}
 .auth-panel{position:relative;width:100%;max-width:380px;background:var(--paper);border-radius:16px;padding:26px;box-shadow:var(--shadow);border:1px solid var(--line)}
@@ -431,64 +358,14 @@ audio{display:none}
 .card h4{margin-top:8px;font-size:12px;font-weight:bold;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .card p{font-size:10px;color:var(--gray);margin-top:2px}
 
-/* AUTH LOADING & SUCCESS ANIMATION OVERLAY */
-.auth-feedback-overlay{
-  position:absolute;
-  inset:0;
-  background:var(--paper);
-  border-radius:16px;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  z-index:10;
-  animation:fadeIn 0.22s ease forwards;
-}
+.auth-feedback-overlay{position:absolute;inset:0;background:var(--paper);border-radius:16px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:10;animation:fadeIn 0.22s ease forwards}
 .auth-feedback-overlay.show{display:flex}
-
-.auth-spinner{
-  width:36px;
-  height:36px;
-  border:3px solid var(--line);
-  border-top-color:var(--black);
-  border-radius:50%;
-  animation:spin 0.8s linear infinite;
-}
+.auth-spinner{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--black);border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.auth-checkmark{width:44px;height:44px;border-radius:50%;background:rgba(34,197,94,0.15);border:2px solid #22c55e;display:grid;place-items:center;font-size:22px;color:#22c55e;animation:popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards}
 
-.auth-checkmark{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  background:rgba(34,197,94,0.15);
-  border:2px solid #22c55e;
-  display:grid;
-  place-items:center;
-  font-size:22px;
-  color:#22c55e;
-  animation:popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-
-/* MINIMAL GOOGLE AUTH BUTTON */
-.btn-google-auth{
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
-  padding:12px;
-  border-radius:25px;
-  background:var(--paper-sub);
-  color:var(--black);
-  border:1px solid var(--line);
-  font-size:11.5px;
-  font-weight:800;
-  margin-bottom:14px;
-  cursor:pointer;
-  transition:transform 0.15s, opacity 0.15s;
-}
+.btn-google-auth{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;border-radius:25px;background:var(--paper-sub);color:var(--black);border:1px solid var(--line);font-size:11.5px;font-weight:800;margin-bottom:14px;cursor:pointer;transition:transform 0.15s, opacity 0.15s}
 .btn-google-auth:active{transform:scale(0.98);opacity:0.85}
 .auth-divider{display:flex;align-items:center;gap:10px;margin:12px 0 14px;color:var(--gray);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--line)}
@@ -538,9 +415,9 @@ audio{display:none}
         <img src="assets/icon.png" alt="Lost Sound" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
       </div>
       
-      <!-- LOGO POPUP WITH APP DOWNLOAD LINK -->
+      <!-- LOGO POPUP WITH DIRECT APP DOWNLOAD -->
       <div id="socialPopup" class="social-popup">
-        <a href="https://github.com/amirtalles/LoostSound1/actions/runs/32631611478/artifacts/9491199182" target="_blank" rel="noopener noreferrer" class="social-item highlight">
+        <a href="https://nightly.link/amirtalles/LoostSound1/actions/runs/32631611478/artifacts/9491199182.zip" target="_blank" rel="noopener noreferrer" class="social-item highlight">
           <svg class="social-svg" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
           <span>Download App (APK)</span>
         </a>
@@ -591,22 +468,39 @@ audio{display:none}
         <div class="section-title">LATEST UPLOADS</div>
       </div>
       <div id="latestList"></div>
+      <div id="homeLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
-    <!-- DISCOVER -->
+    <!-- DISCOVER WITH 3D COVERFLOW -->
     <section id="discover" class="view">
-      <div class="hero-meta-top">DISCOVER</div>
-      <h1 class="hero-title" style="font-size:36px;margin-bottom:15px">NEW WORLDS</h1>
+      <div class="hero-meta-top">LOST SOUND PROMOTED</div>
+      <h1 class="hero-title" style="font-size:36px;margin-bottom:10px">FEATURED</h1>
+
+      <div class="coverflow-wrap" id="coverflowWrap">
+        <div class="coverflow-stage" id="coverflowStage"></div>
+      </div>
+
+      <div class="section-title-line">
+        <div class="section-title">ALL RELEASES</div>
+      </div>
       <div id="discoverList" class="cards"></div>
+      <div id="discoverLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
-    <!-- SEARCH -->
+    <!-- SEARCH WITH PILL EXPAND ANIMATION -->
     <section id="search" class="view">
       <div class="hero-meta-top">SEARCH</div>
-      <div style="margin:10px 0 20px;border-bottom:2px solid var(--black);padding-bottom:6px">
-        <input id="searchInput" type="text" placeholder="Search artist, track..." style="width:100%;border:none;background:transparent;font-size:18px;font-weight:700;outline:none;color:var(--black)">
+      
+      <!-- PILL SEARCH BAR -->
+      <div class="search-pill-container">
+        <div id="searchPill" class="search-pill">
+          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input id="searchInput" type="text" placeholder="Search artist, track...">
+        </div>
       </div>
+
       <div id="searchResults"></div>
+      <div id="searchLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
     <!-- LIBRARY / LIKED PLAYLIST -->
@@ -614,11 +508,13 @@ audio{display:none}
       <div class="hero-meta-top">YOUR ARCHIVE</div>
       <h1 class="hero-title" style="font-size:36px;margin-bottom:15px">MY SOUND</h1>
       <div id="likedList"></div>
+      <div id="libraryLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
     <!-- ARTIST CHANNEL -->
     <section id="artist" class="view">
       <div id="artistPage"></div>
+      <div id="artistLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
     <!-- PROFILE -->
@@ -637,9 +533,10 @@ audio{display:none}
       </div>
       <div class="section-title-line"><div class="section-title">MY TRACKS</div></div>
       <div id="profileTracks"></div>
+      <div id="profileLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
-    <!-- EDIT PROFILE -->
+    <!-- EDIT PROFILE WITH PASSWORD UPDATE -->
     <section id="editProfile" class="view">
       <div class="upload-card">
         <div class="hero-meta-top">ACCOUNT</div>
@@ -647,6 +544,7 @@ audio{display:none}
         <div class="field"><label>PROFILE PHOTO</label><input id="profilePhotoFile" type="file" accept="image/*"></div>
         <div class="field"><label>USERNAME</label><input id="editUsername" placeholder="username"></div>
         <div class="field"><label>DISPLAY NAME</label><input id="editDisplayName" placeholder="Your name"></div>
+        <div class="field"><label>CHANGE PASSWORD (LEAVE BLANK TO KEEP CURRENT)</label><input id="editNewPassword" type="password" placeholder="New password (min 6 chars)"></div>
         <button id="saveProfileButton" class="primary-btn">SAVE PROFILE</button>
       </div>
     </section>
@@ -755,7 +653,7 @@ audio{display:none}
     </nav>
   </div>
 
-  <!-- DRAWER / DASHBOARD MENU WITH DOWNLOAD LINK -->
+  <!-- DRAWER / DASHBOARD MENU -->
   <div id="drawer" class="drawer">
     <aside class="drawer-panel">
       <div class="drawer-head">
@@ -763,7 +661,7 @@ audio{display:none}
         <button id="closeDrawer" style="color:var(--black)">×</button>
       </div>
       <div class="drawer-list">
-        <a href="https://github.com/amirtalles/LoostSound1/actions/runs/32631611478/artifacts/9491199182" target="_blank" rel="noopener noreferrer" style="font-weight:bold;color:var(--black)">
+        <a href="https://nightly.link/amirtalles/LoostSound1/actions/runs/32631611478/artifacts/9491199182.zip" target="_blank" rel="noopener noreferrer" style="font-weight:bold;color:var(--black)">
           📥 Download Android App
         </a>
         <button data-go="home">Home</button>
@@ -777,10 +675,9 @@ audio{display:none}
     </aside>
   </div>
 
-  <!-- AUTH MODAL WITH FORGOT PASSWORD & ANIMATIONS -->
+  <!-- AUTH MODAL -->
   <div id="authOverlay" class="auth-overlay">
     <div class="auth-panel">
-      <!-- Loading / Success Screen -->
       <div id="authFeedbackOverlay" class="auth-feedback-overlay">
         <div id="authSpinner" class="auth-spinner"></div>
         <div id="authCheckmark" class="auth-checkmark" style="display:none">✓</div>
@@ -790,13 +687,11 @@ audio{display:none}
       <div class="hero-meta-top">ACCOUNT</div>
       <h2 id="authTitle" class="auth-title">REGISTER</h2>
 
-      <!-- GOOGLE ONE-CLICK SIGN IN -->
       <div id="googleAuthSection">
         <button type="button" id="btnGoogleAuth" class="btn-google-auth">
           <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
           <span>Continue with Google</span>
         </button>
-
         <div class="auth-divider">or with email</div>
       </div>
 
@@ -835,6 +730,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLI
 
 let tracks = [], artists = [], liked = new Set(), currentIndex = -1, currentUser = null, currentProfile = null;
 let listeningSeconds = 0, lastAudioTime = 0, currentTrackObj = null, authMode = "register", selectedOptionTrack = null;
+const loadedPages = new Set(); // سیستم کش کردن لود صفحات (On-Demand Page Cache)
 const audio = document.getElementById("audio");
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -844,13 +740,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupPullToRefresh();
   
   await checkSession();
-  await loadArtists();
-  await loadTracks();
-  await loadLikes();
+  await loadInitialHomeData();
   applyRoute(false);
 });
 
-// THEME SYSTEM (NIGHT / MORNING)
+// THEME SYSTEM
 function initTheme(){
   const savedTheme = localStorage.getItem("ls_theme") || "night";
   setTheme(savedTheme);
@@ -925,9 +819,8 @@ function setupPullToRefresh(){
     const spinner = document.getElementById("pullRefreshSpinner");
     
     if (spinner && spinner.style.display === "block") {
-      await loadArtists();
-      await loadTracks();
-      await loadLikes();
+      loadedPages.clear();
+      await loadInitialHomeData();
       spinner.style.display = "none";
       toast("Archive Updated!");
     }
@@ -972,7 +865,6 @@ function bindButtons(){
   document.getElementById("saveTrackButton").onclick = saveTrackEdit;
   document.getElementById("searchInput").oninput = runSearch;
 
-  // حل مشکل مسدود شدن باز شدن فایل‌پیکر و گالری در موبایل
   document.querySelectorAll("input[type='file']").forEach(inp => {
     inp.removeAttribute("capture");
     inp.addEventListener("click", (e) => {
@@ -1173,10 +1065,9 @@ async function submitAuth(){
       document.getElementById("authEmail").value = "";
       document.getElementById("authPassword").value = "";
 
+      loadedPages.clear();
       await checkSession();
-      await loadArtists();
-      await loadTracks();
-      await loadLikes();
+      await loadInitialHomeData();
       applyRoute(false);
     }, 1100);
 
@@ -1191,9 +1082,22 @@ async function logout(){
   currentUser = null;
   currentProfile = null;
   liked.clear();
+  loadedPages.clear();
   renderProfile();
   renderLibrary();
   toast("Logged out.");
+}
+
+// LAZY LOADING & ON-DEMAND DATA SYSTEM
+async function loadInitialHomeData(){
+  const loader = document.getElementById("homeLoader");
+  if (loader) loader.classList.add("show");
+  
+  await loadArtists();
+  await loadTracks();
+  
+  if (loader) loader.classList.remove("show");
+  loadedPages.add("home");
 }
 
 async function loadArtists(){
@@ -1240,9 +1144,6 @@ async function loadTracks(){
     });
     
     renderLatestList();
-    renderDiscover();
-    renderProfile();
-    renderLibrary();
   } catch(e) {}
 }
 
@@ -1315,16 +1216,120 @@ function bindTrackClicks(container){
 
 function artistById(id){ return artists.find(a => String(a.id) === String(id)); }
 
+// 3D COVERFLOW LOGIC FOR DISCOVER
+let cfCurrentIndex = 0;
+let cfStartX = 0;
+let cfIsDragging = false;
+
 function renderDiscover(){
+  const stage = document.getElementById("coverflowStage");
   const disc = document.getElementById("discoverList");
-  if (!disc) return;
-  disc.innerHTML = tracks.map((t, i) => `
-    <div class="card" onclick="playIndex(${i})">
+  if (!stage || !tracks.length) return;
+
+  stage.innerHTML = tracks.map((t, i) => `
+    <div class="coverflow-item" data-cf-index="${i}" onclick="handleCoverflowClick(${i})">
       <img src="${safeURL(t.cover)}" alt="">
-      <h4>${escapeHTML(t.title)}</h4>
-      <p>${escapeHTML(t.artist)}</p>
+      <div class="cf-meta">
+        <h4>${escapeHTML(t.title)}</h4>
+        <p>${escapeHTML(t.artist)}</p>
+      </div>
     </div>
   `).join("");
+
+  updateCoverflow3D();
+  setupCoverflowGestures();
+
+  if (disc) {
+    disc.innerHTML = tracks.map((t, i) => `
+      <div class="card" onclick="playIndex(${i})">
+        <img src="${safeURL(t.cover)}" alt="">
+        <h4>${escapeHTML(t.title)}</h4>
+        <p>${escapeHTML(t.artist)}</p>
+      </div>
+    `).join("");
+  }
+}
+
+function updateCoverflow3D(){
+  const items = document.querySelectorAll(".coverflow-item");
+  if (!items.length) return;
+
+  items.forEach((item, i) => {
+    const offset = i - cfCurrentIndex;
+    const absOffset = Math.abs(offset);
+
+    if (absOffset > 3) {
+      item.style.opacity = "0";
+      item.style.pointerEvents = "none";
+      item.style.transform = `translateX(${offset * 75}px) translateZ(-400px) scale(0.6)`;
+      item.classList.remove("active");
+    } else if (offset === 0) {
+      item.style.opacity = "1";
+      item.style.pointerEvents = "auto";
+      item.style.zIndex = "100";
+      item.style.filter = "none";
+      item.style.transform = `translateX(0px) translateZ(80px) rotateY(0deg) scale(1.15)`;
+      item.classList.add("active");
+    } else {
+      const direction = offset > 0 ? 1 : -1;
+      const tx = offset * 85 + (direction * 45);
+      const rotY = direction * -38;
+      const tz = -100 * absOffset;
+      const scale = Math.max(0.75, 1 - (absOffset * 0.15));
+
+      item.style.opacity = absOffset === 1 ? "0.85" : "0.5";
+      item.style.pointerEvents = "auto";
+      item.style.zIndex = `${10 - absOffset}`;
+      item.style.filter = "brightness(0.7)";
+      item.style.transform = `translateX(${tx}px) translateZ(${tz}px) rotateY(${rotY}deg) scale(${scale})`;
+      item.classList.remove("active");
+    }
+  });
+}
+
+function handleCoverflowClick(index){
+  if (index === cfCurrentIndex) {
+    playIndex(index);
+  } else {
+    cfCurrentIndex = index;
+    updateCoverflow3D();
+  }
+}
+
+function setupCoverflowGestures(){
+  const wrap = document.getElementById("coverflowWrap");
+  if (!wrap) return;
+
+  wrap.ontouchstart = (e) => {
+    cfStartX = e.touches[0].clientX;
+    cfIsDragging = true;
+  };
+  wrap.ontouchmove = (e) => { if (!cfIsDragging) return; };
+  wrap.ontouchend = (e) => {
+    if (!cfIsDragging) return;
+    cfIsDragging = false;
+    const diff = e.changedTouches[0].clientX - cfStartX;
+    if (diff < -40 && cfCurrentIndex < tracks.length - 1) {
+      cfCurrentIndex++;
+      updateCoverflow3D();
+    } else if (diff > 40 && cfCurrentIndex > 0) {
+      cfCurrentIndex--;
+      updateCoverflow3D();
+    }
+  };
+}
+
+// SEARCH PILL TRIGGER
+function animateSearchPill(){
+  const pill = document.getElementById("searchPill");
+  const input = document.getElementById("searchInput");
+  if (!pill) return;
+  
+  pill.classList.remove("expanded");
+  setTimeout(() => {
+    pill.classList.add("expanded");
+    if (input) input.focus();
+  }, 80);
 }
 
 function renderProfile(){
@@ -1413,7 +1418,6 @@ function runSearch(){
   bindTrackClicks(box);
 }
 
-// LIBRARY RENDERING (AUTO PLAYLIST OF LIKED TRACKS)
 function renderLibrary(){
   const c = document.getElementById("likedList");
   if (!c) return;
@@ -1625,29 +1629,49 @@ async function applyCroppedImage(){
   }, "image/jpeg", 0.85);
 }
 
+// SAVE PROFILE WITH PASSWORD UPDATE
 async function saveProfile(){
   if (!currentUser) return openAuth("login");
   const username = document.getElementById("editUsername").value.trim().toLowerCase();
   const displayName = document.getElementById("editDisplayName").value.trim();
+  const newPassword = document.getElementById("editNewPassword").value;
   let avatarUrl = currentProfile?.avatar_url || null;
 
+  const btn = document.getElementById("saveProfileButton");
+  btn.disabled = true;
+  btn.textContent = "SAVING...";
+
   try {
+    if (newPassword) {
+      if (newPassword.length < 6) throw new Error("Password must be at least 6 characters.");
+      const { error: passErr } = await supabaseClient.auth.updateUser({ password: newPassword });
+      if (passErr) throw passErr;
+    }
+
     if (croppedAvatarBlob) {
       const path = `${currentUser.id}/avatar-${Date.now()}.jpg`;
       await supabaseClient.storage.from("avatars").upload(path, croppedAvatarBlob, { upsert: true, contentType: "image/jpeg" });
       avatarUrl = supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl;
       croppedAvatarBlob = null;
     }
+
     await supabaseClient.from("profiles").upsert({ id: currentUser.id, username, display_name: displayName, avatar_url: avatarUrl });
     await supabaseClient.from("artists").update({ name: displayName, username }).eq("user_id", currentUser.id);
+    
     await checkSession();
     await loadArtists();
     navigate("profile");
-    toast("Profile updated!");
-  } catch(e) { toast("Update failed."); }
+    toast("Profile & security updated!");
+    document.getElementById("editNewPassword").value = "";
+  } catch(e) { 
+    toast(e.message || "Update failed."); 
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "SAVE PROFILE";
+  }
 }
 
-// UPLOAD TRACK WITH REAL TIME PROGRESS DISPLAY
+// UPLOAD TRACK WITH REAL TIME PERCENTAGE
 async function publishTrack(){
   if (!currentUser) return openAuth("login");
   const aFile = document.getElementById("audioFile").files[0];
@@ -1686,19 +1710,16 @@ async function publishTrack(){
 
     updateUploadProgress(10);
 
-    // ۱. آپلود کاور
     const cPath = `${currentUser.id}/${Date.now()}-cover.jpg`;
     await supabaseClient.storage.from("covers").upload(cPath, cFile, { upsert: false, contentType: "image/jpeg" });
     uploadedBytes += (cFile?.size || 0);
     updateUploadProgress(totalWeight ? (uploadedBytes / totalWeight) * 85 : 40);
 
-    // ۲. آپلود فایل صوتی
     const aPath = `${currentUser.id}/${Date.now()}-track.mp3`;
     await supabaseClient.storage.from("audio").upload(aPath, aFile, { upsert: false });
     uploadedBytes += (aFile?.size || 0);
     updateUploadProgress(totalWeight ? (uploadedBytes / totalWeight) * 85 : 75);
 
-    // ۳. آپلود ویدیو در صورت وجود
     let vUrl = null;
     if (vFile) {
       const vPath = `${currentUser.id}/${Date.now()}-video.mp4`;
@@ -1724,6 +1745,7 @@ async function publishTrack(){
       document.getElementById("videoFile").value = "";
       croppedCoverBlob = null;
       progressWrap.style.display = "none";
+      loadedPages.clear();
       await loadTracks();
       navigate("home");
     }, 400);
@@ -1773,6 +1795,7 @@ async function saveTrackEdit(){
     }
     await supabaseClient.from("tracks").update(updatePayload).eq("id", id);
     toast("Track updated!");
+    loadedPages.clear();
     await loadTracks();
     navigate("profile");
   } catch(e){
@@ -1787,6 +1810,7 @@ async function deleteTrack(t){
   try {
     await supabaseClient.from("tracks").delete().eq("id", t.id);
     toast("Track deleted.");
+    loadedPages.clear();
     await loadTracks();
   } catch(e){ toast("Delete failed."); }
 }
@@ -1813,21 +1837,47 @@ function updatePillGlider(viewName){
   });
 }
 
-function applyRoute(fromPop = true){
+// ON-DEMAND ROUTE & LAZY LOAD HANDLER
+async function applyRoute(fromPop = true){
   const p = new URLSearchParams(location.search), view = p.get("view") || "home";
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.getElementById("siteBackButton").classList.toggle("visible", !!p.get("view"));
 
   updatePillGlider(view);
 
-  if (view === "artist") {
-    document.getElementById("artist").classList.add("active");
+  const activeViewEl = document.getElementById(view);
+  if (activeViewEl) activeViewEl.classList.add("active");
+
+  if (view === "home") {
+    if (!loadedPages.has("home")) await loadInitialHomeData();
+  } else if (view === "discover") {
+    const loader = document.getElementById("discoverLoader");
+    if (!loadedPages.has("discover")) {
+      if (loader) loader.classList.add("show");
+      renderDiscover();
+      if (loader) loader.classList.remove("show");
+      loadedPages.add("discover");
+    } else {
+      updateCoverflow3D();
+    }
+  } else if (view === "search") {
+    animateSearchPill();
+  } else if (view === "library") {
+    const loader = document.getElementById("libraryLoader");
+    if (!loadedPages.has("library")) {
+      if (loader) loader.classList.add("show");
+      await loadLikes();
+      if (loader) loader.classList.remove("show");
+      loadedPages.add("library");
+    } else {
+      renderLibrary();
+    }
+  } else if (view === "profile") {
+    renderProfile();
+  } else if (view === "artist") {
     renderArtistChannel(p.get("artist"));
-  } else {
-    document.getElementById(view)?.classList.add("active");
-    if (view === "profile") renderProfile();
-    if (view === "library") renderLibrary();
   }
+
   if (!fromPop) window.scrollTo(0, 0);
 }
 
