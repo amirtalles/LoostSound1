@@ -2,7 +2,6 @@ const SUPABASE_URL = "https://iezjmlesxdqtgrzopnyf.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_oZzBug6zzrXVDEaLljsHeQ_EPQOhcnu";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-// ADMIN CONFIGURATION (ایمیل ادمین برای دسترسی به پنل مدیریت ترک‌های تبلیغاتی)
 const ADMIN_EMAILS = ["admin@lostsound.com", "amirtalles@gmail.com"];
 
 let tracks = [], artists = [], liked = new Set(), currentIndex = -1, currentUser = null, currentProfile = null;
@@ -10,12 +9,10 @@ let listeningSeconds = 0, lastAudioTime = 0, currentTrackObj = null, authMode = 
 const loadedPages = new Set();
 const audio = document.getElementById("audio");
 
-// 3D COVERFLOW VARIABLES
 let cfCurrentIndex = 0;
 let cfStartX = 0;
 let cfIsDragging = false;
 
-// CROPPING VARIABLES
 let cropTarget = "profile", cropFile = null, cropImage = null, cropScale = 1, cropX = 0, cropY = 0, cropDragging = false, cropLastX = 0, cropLastY = 0;
 let croppedAvatarBlob = null, croppedCoverBlob = null, croppedEditCoverBlob = null;
 
@@ -30,7 +27,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   applyRoute(false);
 });
 
-// THEME SYSTEM
 function initTheme(){
   const savedTheme = localStorage.getItem("ls_theme") || "night";
   setTheme(savedTheme);
@@ -76,7 +72,6 @@ function restoreMemoryAfterPicker(){
   if(fv && document.getElementById("fullPlayerOverlay")?.classList.contains("open")) fv.play().catch(()=>{});
 }
 
-// PULL TO REFRESH
 function setupPullToRefresh(){
   let touchStartY = 0, isPulling = false;
 
@@ -109,7 +104,6 @@ function setupPullToRefresh(){
   });
 }
 
-// EVENT LISTENERS
 function bindButtons(){
   const logoBtn = document.getElementById("brandLogoBtn"), popup = document.getElementById("socialPopup");
   if (logoBtn && popup) {
@@ -244,7 +238,6 @@ function closeFullPlayer(){
 
 function closeDrawer() { document.getElementById("drawer")?.classList.remove("open"); }
 
-// AUTH MODAL LOGIC
 function openAuth(mode = "register") {
   authMode = mode;
   const overlay = document.getElementById("authOverlay");
@@ -309,7 +302,6 @@ async function checkSession(){
     currentProfile = null;
   }
   
-  // بررسی دسترسی ادمین
   const adminBtn = document.getElementById("adminMenuBtn");
   if(adminBtn){
     const isAdmin = currentUser && (ADMIN_EMAILS.includes(currentUser.email) || currentProfile?.username === "admin");
@@ -411,7 +403,6 @@ async function logout(){
   toast("Logged out.");
 }
 
-// DATA LOADING
 async function loadInitialHomeData(){
   const loader = document.getElementById("homeLoader");
   if (loader) loader.classList.add("show");
@@ -443,9 +434,14 @@ async function loadArtists(){
 
 async function loadTracks(){
   try {
-    let result = await supabaseClient.from("tracks").select("id,artist_id,title,description,cover_url,audio_url,video_url,duration_seconds,play_count,is_featured,created_at,artists(id,user_id,name,username)").eq("is_published", true).order("created_at", { ascending: false });
-    const { data } = result;
-    if (!data) return;
+    let result = await supabaseClient
+      .from("tracks")
+      .select("id,artist_id,title,description,cover_url,audio_url,video_url,duration_seconds,play_count,created_at,artists(id,user_id,name,username)")
+      .eq("is_published", true)
+      .order("created_at", { ascending: false });
+
+    const { data, error } = result;
+    if (error || !data) return;
     
     tracks = data.map(t => {
       const a = Array.isArray(t.artists) ? t.artists[0] : t.artists;
@@ -540,11 +536,9 @@ function bindTrackClicks(container){
 
 function artistById(id){ return artists.find(a => String(a.id) === String(id)); }
 
-// DISCOVER & FEATURED PROMO
 function renderDiscover(){
-  // ۱. رندر ترک تبلیغاتی ویژه در بالا
   const promoSection = document.getElementById("featuredPromoSection");
-  const promoTrack = tracks.find(t => t.isFeatured);
+  const promoTrack = tracks.find(t => t.isFeatured) || tracks[0];
 
   if (promoTrack && promoSection) {
     promoSection.style.display = "block";
@@ -552,13 +546,9 @@ function renderDiscover(){
     document.getElementById("promoTitle").textContent = promoTrack.title;
     document.getElementById("promoArtist").textContent = promoTrack.artist;
     document.getElementById("promoPlayBtn").onclick = () => playIndex(tracks.indexOf(promoTrack));
-  } else if (promoSection) {
-    promoSection.style.display = "none";
   }
 
-  // ۲. رندر چرخ‌وفلک سه‌بعدی
   const stage = document.getElementById("coverflowStage");
-  const disc = document.getElementById("discoverList");
   if (!stage || !tracks.length) return;
 
   stage.innerHTML = tracks.map((t, i) => `
@@ -573,16 +563,6 @@ function renderDiscover(){
 
   updateCoverflow3D();
   setupCoverflowGestures();
-
-  if (disc) {
-    disc.innerHTML = tracks.map((t, i) => `
-      <div class="card" onclick="playIndex(${i})">
-        <img src="${safeURL(t.cover)}" alt="">
-        <h4>${escapeHTML(t.title)}</h4>
-        <p>${escapeHTML(t.artist)}</p>
-      </div>
-    `).join("");
-  }
 }
 
 function updateCoverflow3D(){
@@ -654,7 +634,6 @@ function setupCoverflowGestures(){
   };
 }
 
-// ADMIN PANEL LOGIC
 function renderAdminPanel(){
   const list = document.getElementById("adminTrackList");
   if (!list) return;
@@ -674,7 +653,6 @@ function renderAdminPanel(){
 
 async function toggleFeaturedTrack(trackId, currentStatus){
   try {
-    // اگر قرار است فعال شود، بقیه را غیرفعال کنیم
     if (!currentStatus) {
       await supabaseClient.from("tracks").update({ is_featured: false }).neq("id", "00000000-0000-0000-0000-000000000000");
     }
@@ -691,7 +669,6 @@ async function toggleFeaturedTrack(trackId, currentStatus){
   }
 }
 
-// SEARCH PILL
 function animateSearchPill(){
   const pill = document.getElementById("searchPill");
   const input = document.getElementById("searchInput");
@@ -728,7 +705,6 @@ function runSearch(){
   bindTrackClicks(box);
 }
 
-// PROFILE & CHANNEL
 function renderProfile(){
   const pName = document.getElementById("profileName"), pUser = document.getElementById("profileUsername"), pActs = document.getElementById("profileActions"), pTracks = document.getElementById("profileTracks");
   const avatarImg = document.getElementById("profileAvatar"), fallback = document.getElementById("profileAvatarFallback");
@@ -801,7 +777,6 @@ function renderLibrary(){
   bindTrackClicks(c);
 }
 
-// PLAYBACK LOGIC
 function selectTrack(i){
   if (i < 0 || i >= tracks.length) return;
   currentIndex = i;
@@ -932,7 +907,6 @@ function updateFullLikeBtn(){
   btn.classList.toggle("liked", isLiked);
 }
 
-// CROPPER
 function startCropping(file, target){
   if (!file) return;
   cropTarget = target;
@@ -1004,7 +978,6 @@ async function applyCroppedImage(){
   }, "image/jpeg", 0.85);
 }
 
-// PROFILE EDIT WITH PASSWORD UPDATE
 async function saveProfile(){
   if (!currentUser) return openAuth("login");
   const username = document.getElementById("editUsername").value.trim().toLowerCase();
@@ -1044,7 +1017,6 @@ async function saveProfile(){
   }
 }
 
-// UPLOAD TRACK WITH REAL TIME PROGRESS
 async function publishTrack(){
   if (!currentUser) return openAuth("login");
   const aFile = document.getElementById("audioFile").files[0];
@@ -1186,7 +1158,6 @@ async function deleteTrack(t){
   } catch(e){ toast("Delete failed."); }
 }
 
-// NAVIGATION & ROUTING
 function navigate(view, opts = {}){
   const u = new URL(location.href);
   u.search = "";
