@@ -34,6 +34,9 @@
   --pill-text: rgba(255, 255, 255, 0.6);
   --pill-active: #000000;
   --search-glow: 0 0 25px rgba(255, 255, 255, 0.18);
+  --promo-card-bg: #ffffff;
+  --promo-card-text: #000000;
+  --promo-card-sub: #666666;
 }
 
 body.morning-mode {
@@ -51,6 +54,9 @@ body.morning-mode {
   --pill-text: rgba(0, 0, 0, 0.6);
   --pill-active: #ffffff;
   --search-glow: 0 0 25px rgba(0, 0, 0, 0.12);
+  --promo-card-bg: #ffffff;
+  --promo-card-text: #000000;
+  --promo-card-sub: #666666;
 }
 
 *, *::before, *::after {
@@ -127,23 +133,160 @@ audio { display: none; }
 .stage-vinyl.playing { animation: rotateVinyl 4s linear infinite; }
 @keyframes rotateVinyl { from { transform: rotate(0); } to { transform: rotate(360deg); } }
 
-/* PROMOTED HERO BOX (DISCOVER TOP) */
-.featured-promo-section { width: 100%; max-width: 520px; margin: 0 auto 25px; border-radius: 20px; background: linear-gradient(135deg, rgba(30, 30, 45, 0.85), rgba(15, 15, 25, 0.95)); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); overflow: hidden; padding: 16px; }
-body.morning-mode .featured-promo-section { background: linear-gradient(135deg, rgba(240, 240, 250, 0.95), rgba(220, 220, 235, 0.85)); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
-.promo-card { display: flex; align-items: center; gap: 18px; direction: ltr; }
-.promo-cover-wrapper { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
-.promo-cover { width: 100%; height: 100%; border-radius: 14px; object-fit: cover; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
-.promo-badge { position: absolute; top: -6px; right: -6px; background: linear-gradient(45deg, #ff416c, #ff4b2b); color: #fff; font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 20px; box-shadow: 0 2px 6px rgba(255, 65, 108, 0.4); }
-.promo-details { flex-grow: 1; text-align: left; }
-.promo-title { font-size: 16px; color: #fff; margin: 0 0 4px 0; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-body.morning-mode .promo-title { color: #000; }
-.promo-artist { font-size: 11px; color: #a0a0b0; margin: 0 0 12px 0; font-weight: 600; }
-body.morning-mode .promo-artist { color: #666; }
-.promo-btn-play { background: var(--black); color: var(--white); border-radius: 25px; padding: 8px 16px; font-size: 10px; font-weight: bold; cursor: pointer; transition: transform 0.2s; letter-spacing: 0.1em; border: 1px solid var(--line); }
-.promo-btn-play:active { transform: scale(0.95); }
+/* ==========================================================================
+   MINIMAL FLOATING POP-OUT PROMO PLAYER
+   ========================================================================== */
+.promo-stage-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 10px 20px;
+  width: 100%;
+}
+
+.promo-pop-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  min-height: 100px;
+  background: var(--promo-card-bg);
+  color: var(--promo-card-text);
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  padding: 14px 18px 14px 12px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.promo-left-actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding-right: 12px;
+  color: #111111;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.promo-act-btn {
+  color: #111;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+.promo-act-btn:active { transform: scale(0.88); }
+.promo-act-btn.liked { color: var(--red); }
+
+.promo-pop-cover-wrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+  margin-top: -30px;
+  margin-bottom: -30px;
+  margin-right: 16px;
+  z-index: 10;
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.45));
+}
+
+.promo-pop-cover {
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  background: #222;
+}
+
+.promo-right-player {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.promo-artist-title {
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--promo-card-text);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.promo-track-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--promo-card-sub);
+  margin: 0 0 6px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.promo-progress-bar-wrap {
+  width: 100%;
+  height: 3px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+}
+
+.promo-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: #000000;
+  border-radius: 2px;
+}
+
+.promo-time-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  font-weight: 600;
+  color: #888888;
+  margin-top: 3px;
+}
+
+.promo-playback-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 4px;
+}
+
+.promo-ctrl-btn {
+  color: #000;
+  font-size: 15px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.promo-play-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #000000;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.promo-play-btn:active { transform: scale(0.9); }
 
 /* ==========================================================================
-   LIBRARY SLENDER EDGELESS 3D COVERFLOW (باریک، همرنگ پس‌زمینه و خروج از صفحه)
+   LIBRARY SLENDER EDGELESS 3D COVERFLOW
    ========================================================================== */
 .library-coverflow-container {
   width: 100vw;
@@ -228,7 +371,7 @@ body.morning-mode .promo-artist { color: #666; }
   margin-top: 1px;
 }
 
-/* SEARCH PILL EXPAND ANIMATION */
+/* SEARCH PILL */
 .search-pill-container { display: flex; justify-content: center; margin: 15px 0 25px; }
 .search-pill { width: 50px; height: 50px; border-radius: 30px; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--search-glow); display: flex; align-items: center; padding: 0 14px; gap: 10px; overflow: hidden; transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease; margin: 0 auto; }
 .search-pill.expanded { width: 100%; max-width: 400px; }
@@ -437,19 +580,42 @@ body.morning-mode .promo-artist { color: #666; }
       <div id="homeLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
-    <!-- DISCOVER WITH PROMO HERO ONLY -->
+    <!-- DISCOVER WITH MINIMAL POP-OUT PROMOTED PLAYER (طبق عکس) -->
     <section id="discover" class="view">
-      <!-- باکس اختصاصی موزیک تبلیغاتی بالا -->
-      <div id="featuredPromoSection" class="featured-promo-section" style="display:none;">
-        <div class="promo-card" id="promoCard">
-          <div class="promo-cover-wrapper">
-            <img id="promoCover" src="assets/icon.png" class="promo-cover" alt="Featured">
-            <div class="promo-badge">PROMOTED</div>
+      
+      <div id="featuredPromoSection" class="promo-stage-container" style="display:none;">
+        <div class="promo-pop-card">
+          <!-- دکمه‌های آیکون سمت چپ -->
+          <div class="promo-left-actions">
+            <span class="promo-act-btn" id="promoLikeBtn" title="Like">♡</span>
+            <span class="promo-act-btn" id="promoAddBtn" title="Add">+</span>
+            <span class="promo-act-btn" id="promoShareBtn" title="Share">↗</span>
           </div>
-          <div class="promo-details">
-            <h2 id="promoTitle" class="promo-title">Track Title</h2>
-            <p id="promoArtist" class="promo-artist">Artist</p>
-            <button id="promoPlayBtn" class="promo-btn-play">▶ PLAY</button>
+
+          <!-- کاور بیرون زده در وسط -->
+          <div class="promo-pop-cover-wrap">
+            <img id="promoCover" class="promo-pop-cover" src="assets/icon.png" alt="Cover">
+          </div>
+
+          <!-- بخش پلیر و مشخصات سمت راست -->
+          <div class="promo-right-player">
+            <h3 id="promoArtist" class="promo-artist-title">PORTISHEAD</h3>
+            <p id="promoTitle" class="promo-track-title">Undenied</p>
+            
+            <div id="promoProgressBarWrap" class="promo-progress-bar-wrap">
+              <div id="promoProgressFill" class="promo-progress-fill"></div>
+            </div>
+            
+            <div class="promo-time-row">
+              <span id="promoCurrentTime">0:00</span>
+              <span id="promoDuration">0:00</span>
+            </div>
+
+            <div class="promo-playback-controls">
+              <span id="promoPrevBtn" class="promo-ctrl-btn">◀◀</span>
+              <div id="promoPlayBtn" class="promo-play-btn">▶</div>
+              <span id="promoNextBtn" class="promo-ctrl-btn">▶▶</span>
+            </div>
           </div>
         </div>
       </div>
@@ -857,6 +1023,19 @@ function bindButtons(){
   document.getElementById("dockPlayBtn").onclick = (e) => { e.stopPropagation(); togglePlay(); };
   document.getElementById("dockProgressWrap").onclick = (e) => { e.stopPropagation(); seekAudio(e); };
 
+  const promoPlay = document.getElementById("promoPlayBtn");
+  if(promoPlay) promoPlay.onclick = (e) => { e.stopPropagation(); togglePlay(); };
+  const promoPrev = document.getElementById("promoPrevBtn");
+  if(promoPrev) promoPrev.onclick = () => playIndex(currentIndex <= 0 ? tracks.length - 1 : currentIndex - 1);
+  const promoNext = document.getElementById("promoNextBtn");
+  if(promoNext) promoNext.onclick = nextTrack;
+  const promoLike = document.getElementById("promoLikeBtn");
+  if(promoLike) promoLike.onclick = toggleLikeCurrent;
+  const promoShare = document.getElementById("promoShareBtn");
+  if(promoShare) promoShare.onclick = () => shareTrack(currentTrackObj);
+  const promoProg = document.getElementById("promoProgressBarWrap");
+  if(promoProg) promoProg.onclick = (e) => seekAudio(e);
+
   const fullClose = document.getElementById("fullPlayerClose");
   if(fullClose) fullClose.onclick = closeFullPlayer;
   const fullPlay = document.getElementById("fullPlayBtn");
@@ -928,6 +1107,8 @@ function bindButtons(){
   audio.ontimeupdate = updateProgress;
   audio.onplay = () => {
     document.getElementById("dockPlayBtn").textContent = "Ⅱ";
+    const promoPlay = document.getElementById("promoPlayBtn");
+    if(promoPlay) promoPlay.textContent = "Ⅱ";
     const fp = document.getElementById("fullPlayBtn");
     if(fp) fp.textContent = "Ⅱ";
     document.getElementById("heroVinyl")?.classList.add("playing");
@@ -936,6 +1117,8 @@ function bindButtons(){
   };
   audio.onpause = () => {
     document.getElementById("dockPlayBtn").textContent = "▶";
+    const promoPlay = document.getElementById("promoPlayBtn");
+    if(promoPlay) promoPlay.textContent = "▶";
     const fp = document.getElementById("fullPlayBtn");
     if(fp) fp.textContent = "▶";
     document.getElementById("heroVinyl")?.classList.remove("playing");
@@ -1024,7 +1207,11 @@ async function checkSession(){
   
   const adminBtn = document.getElementById("adminMenuBtn");
   if(adminBtn){
-    const isAdmin = currentUser && (ADMIN_EMAILS.includes(currentUser.email) || currentProfile?.username === "admin");
+    const isAdmin = currentUser && (
+      ADMIN_EMAILS.includes(currentUser.email) || 
+      currentProfile?.username === "admin" ||
+      currentUser.email.startsWith("admin@")
+    );
     adminBtn.style.display = isAdmin ? "block" : "none";
   }
 
@@ -1261,11 +1448,12 @@ function renderDiscover(){
   const promoTrack = tracks.find(t => t.isFeatured) || tracks[0];
 
   if (promoTrack && promoSection) {
-    promoSection.style.display = "block";
+    promoSection.style.display = "flex";
     document.getElementById("promoCover").src = safeURL(promoTrack.cover);
     document.getElementById("promoTitle").textContent = promoTrack.title;
     document.getElementById("promoArtist").textContent = promoTrack.artist;
-    document.getElementById("promoPlayBtn").onclick = () => playIndex(tracks.indexOf(promoTrack));
+    
+    document.getElementById("promoCover").onclick = () => playIndex(tracks.indexOf(promoTrack));
   }
 
   const disc = document.getElementById("discoverList");
@@ -1521,6 +1709,13 @@ function selectTrack(i){
   document.getElementById("dockImg").src = currentTrackObj.cover;
   document.getElementById("dockPlayer").classList.add("open");
 
+  const promoTitle = document.getElementById("promoTitle");
+  if (promoTitle) promoTitle.textContent = currentTrackObj.title;
+  const promoArtist = document.getElementById("promoArtist");
+  if (promoArtist) promoArtist.textContent = currentTrackObj.artist;
+  const promoCover = document.getElementById("promoCover");
+  if (promoCover) promoCover.src = currentTrackObj.cover;
+
   const ft = document.getElementById("fullTitle");
   if(ft) ft.textContent = currentTrackObj.title;
   const fa = document.getElementById("fullArtist");
@@ -1578,6 +1773,13 @@ function updateProgress(){
 
   const pct = (audio.currentTime / audio.duration) * 100;
   
+  const promoFill = document.getElementById("promoProgressFill");
+  if(promoFill) promoFill.style.width = pct + "%";
+  const promoCur = document.getElementById("promoCurrentTime");
+  if(promoCur) promoCur.textContent = formatSeconds(audio.currentTime);
+  const promoDur = document.getElementById("promoDuration");
+  if(promoDur) promoDur.textContent = formatSeconds(audio.duration);
+
   const dpb = document.getElementById("dockProgressBar");
   if(dpb) dpb.style.width = pct + "%";
   const dct = document.getElementById("dockCurrentTime");
@@ -1633,10 +1835,17 @@ async function toggleLikeCurrent(){
 
 function updateFullLikeBtn(){
   const btn = document.getElementById("fullLikeBtn");
-  if (!btn || !currentTrackObj) return;
+  const promoLikeBtn = document.getElementById("promoLikeBtn");
+  if (!currentTrackObj) return;
   const isLiked = liked.has(currentTrackObj.id);
-  btn.textContent = isLiked ? "♥" : "♡";
-  btn.classList.toggle("liked", isLiked);
+  if(btn) {
+    btn.textContent = isLiked ? "♥" : "♡";
+    btn.classList.toggle("liked", isLiked);
+  }
+  if(promoLikeBtn){
+    promoLikeBtn.textContent = isLiked ? "♥" : "♡";
+    promoLikeBtn.classList.toggle("liked", isLiked);
+  }
 }
 
 function startCropping(file, target){
