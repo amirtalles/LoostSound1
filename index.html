@@ -9,15 +9,19 @@
 <meta name="theme-color" content="#0d0d0d">
 
 <title>LOST SOUND | Music Streaming</title>
-<link rel="icon" type="image/png" href="assets/icon.png">
+<meta name="description" content="Independent music streaming and artist publishing platform.">
 
-<style id="main-styles">
-  /* محل قرارگیری CSS */
-</style>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 <body>
 
 <div class="app">
+
   <div id="pullRefreshSpinner" class="pull-spinner">UPDATING FEED...</div>
 
   <header class="topbar">
@@ -26,13 +30,16 @@
       <div id="brandLogoBtn" class="brand-logo-btn" role="button" aria-label="Menu">
         <img src="assets/icon.png" alt="Lost Sound" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
       </div>
+      
       <div id="socialPopup" class="social-popup">
         <a href="https://nightly.link/amirtalles/LoostSound1/actions/runs/32631611478/artifacts/9491199182.zip" target="_blank" rel="noopener noreferrer" class="social-item highlight">
           <span>Download App (APK)</span>
         </a>
       </div>
     </div>
+    
     <div class="top-title">LOST SOUND</div>
+
     <div class="top-right">
       <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Mode">🌙</button>
       <button id="menuButton" class="top-menu-btn">☰</button>
@@ -43,27 +50,32 @@
     
     <section id="home" class="view active">
       <div class="hero-layout">
-        <span class="hero-year-right">2026</span>
+        <span class="hero-year-right">2024</span>
         <div>
           <div class="hero-meta-top">MUSIC STREAMING</div>
           <h1 class="hero-title">LOST<br>SOUND</h1>
-          <div class="hero-year">2026</div>
+          <div class="hero-year">2024</div>
         </div>
+        
         <div class="hero-vinyl-stage">
           <div id="heroVinyl" class="stage-vinyl"></div>
           <div class="stage-cover">
-            <video id="introCoverVideo" autoplay muted loop playsinline poster="assets/icon.png">
+            <video id="introCoverVideo" autoplay muted loop playsinline preload="metadata" poster="assets/icon.png">
               <source src="assets/lost-cover.mp4" type="video/mp4">
             </video>
           </div>
         </div>
       </div>
-      <div class="section-title-line"><div class="section-title">LATEST UPLOADS</div></div>
+
+      <div class="section-title-line">
+        <div class="section-title">LATEST UPLOADS</div>
+      </div>
       <div id="latestList"></div>
       <div id="homeLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
     <section id="discover" class="view">
+      
       <div id="featuredPromoSection" class="featured-promo-section" style="display:none;">
         <div class="promo-card" id="promoCard">
           <div class="promo-cover-wrapper">
@@ -87,7 +99,9 @@
         </div>
       </div>
 
-      <div class="section-title-line"><div class="section-title">ALL RELEASES</div></div>
+      <div class="section-title-line">
+        <div class="section-title">ALL RELEASES</div>
+      </div>
       <div id="discoverList" class="cards"></div>
       <div id="discoverLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
@@ -101,12 +115,14 @@
 
     <section id="search" class="view">
       <div class="hero-meta-top">SEARCH</div>
+      
       <div class="search-pill-container">
         <div id="searchPill" class="search-pill">
-          <span style="font-size:16px;">🔍</span>
+          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
           <input id="searchInput" type="text" placeholder="Search artist, track...">
         </div>
       </div>
+
       <div id="searchResults"></div>
       <div id="searchLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
@@ -125,7 +141,7 @@
 
     <section id="profile" class="view">
       <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px">
-        <div style="width:64px;height:64px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;font-weight:900;overflow:hidden" id="profileAvatarWrap">
+        <div style="width:64px;height:64px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;font-weight:900;font-size:18px;overflow:hidden" id="profileAvatarWrap">
           <img id="profileAvatar" style="width:100%;height:100%;object-fit:cover;display:none">
           <div id="profileAvatarFallback">LSO</div>
         </div>
@@ -141,17 +157,103 @@
       <div id="profileLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
-    </main>
+    <section id="editProfile" class="view">
+      <div class="upload-card">
+        <div class="hero-meta-top">ACCOUNT</div>
+        <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">EDIT PROFILE</h2>
+        <div class="field"><label>PROFILE PHOTO</label><input id="profilePhotoFile" type="file" accept="image/*"></div>
+        <div class="field"><label>USERNAME</label><input id="editUsername" placeholder="username"></div>
+        <div class="field"><label>DISPLAY NAME</label><input id="editDisplayName" placeholder="Your name"></div>
+        <div class="field"><label>CHANGE PASSWORD</label><input id="editNewPassword" type="password" placeholder="Leave blank to keep current"></div>
+        <button id="saveProfileButton" class="primary-btn">SAVE PROFILE</button>
+      </div>
+    </section>
+
+    <section id="editTrack" class="view">
+      <div class="upload-card">
+        <div class="hero-meta-top">STUDIO</div>
+        <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">EDIT TRACK</h2>
+        <input type="hidden" id="editTrackId">
+        <div class="field"><label>NEW COVER ARTWORK</label><input id="editCoverFile" type="file" accept="image/*"></div>
+        <div class="field"><label>TRACK TITLE</label><input id="editTrackTitle" placeholder="Title"></div>
+        <div class="field"><label>ARTIST NAME</label><input id="editTrackArtist" placeholder="Artist"></div>
+        <button id="saveTrackButton" class="primary-btn">UPDATE TRACK</button>
+      </div>
+    </section>
+
+    <section id="upload" class="view">
+      <div class="upload-card">
+        <div class="hero-meta-top">CREATOR STUDIO</div>
+        <h2 style="font-size:24px;font-weight:900;margin:6px 0 15px">UPLOAD TRACK</h2>
+        <div class="field"><label>AUDIO FILE</label><input id="audioFile" type="file" accept="audio/*"></div>
+        <div class="field"><label>COVER ARTWORK</label><input id="coverFile" type="file" accept="image/*"></div>
+        <div class="field"><label>TRACK VIDEO (CANVAS VIDEO)</label><input id="videoFile" type="file" accept="video/*"></div>
+        <div class="field"><label>TRACK TITLE</label><input id="uploadTitle" placeholder="Title"></div>
+        <div class="field"><label>ARTIST NAME</label><input id="uploadArtist" placeholder="Artist"></div>
+        
+        <button id="publishButton" class="primary-btn">PUBLISH TRACK</button>
+        
+        <div id="uploadProgressWrap" class="upload-progress-wrap">
+          <div id="uploadProgressFill" class="upload-progress-fill"></div>
+          <div id="uploadProgressText" class="upload-progress-text">0%</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
 
   <div id="dockPlayer" class="dock-player">
     <div class="dock-inner">
       <img id="dockImg" class="dock-art" src="" alt="">
       <div class="dock-meta">
-        <h5 id="dockTitle">No track</h5>
+        <h5 id="dockTitle">No track selected</h5>
         <p id="dockArtist">LOST SOUND</p>
-        <div id="dockProgressWrap" class="dock-progress"><div id="dockProgressBar" class="dock-progress-bar"></div></div>
+        <div id="dockProgressWrap" class="dock-progress">
+          <div id="dockProgressBar" class="dock-progress-bar"></div>
+        </div>
+        <div class="dock-times">
+          <span id="dockCurrentTime">0:00</span>
+          <span id="dockDuration">0:00</span>
+        </div>
       </div>
       <button id="dockPlayBtn" class="dock-play-circle">▶</button>
+    </div>
+  </div>
+
+  <div id="fullPlayerOverlay" class="full-player-overlay">
+    <div class="full-player-top">
+      <button id="fullPlayerClose" class="full-player-close">⌵</button>
+      <div class="hero-meta-top" style="margin:0">NOW PLAYING</div>
+      <div style="width:40px"></div>
+    </div>
+
+    <div class="full-player-stage">
+      <img id="fullCoverImg" src="" alt="">
+      <video id="fullCoverVideo" autoplay muted loop playsinline></video>
+    </div>
+
+    <div class="full-player-meta">
+      <div class="full-player-titles">
+        <h2 id="fullTitle">Track Title</h2>
+        <p id="fullArtist">Artist Name</p>
+      </div>
+      <button id="fullLikeBtn" class="full-player-like-btn">♡</button>
+    </div>
+
+    <div class="full-player-scrub">
+      <div id="fullScrubBar" class="full-scrub-bar">
+        <div id="fullScrubFill" class="full-scrub-fill"></div>
+      </div>
+      <div class="full-scrub-times">
+        <span id="fullCurrentTime">0:00</span>
+        <span id="fullDuration">0:00</span>
+      </div>
+    </div>
+
+    <div class="full-player-controls">
+      <button id="fullPrevBtn" class="full-ctrl-btn">«</button>
+      <button id="fullPlayBtn" class="full-play-btn">▶</button>
+      <button id="fullNextBtn" class="full-ctrl-btn">»</button>
     </div>
   </div>
 
@@ -168,19 +270,75 @@
 
   <div id="drawer" class="drawer">
     <aside class="drawer-panel">
-      <div class="drawer-head"><strong>LSO</strong><button id="closeDrawer">×</button></div>
+      <div class="drawer-head">
+        <strong>LSO</strong>
+        <button id="closeDrawer" style="color:var(--black)">×</button>
+      </div>
       <div class="drawer-list">
+        <a href="https://nightly.link/amirtalles/LoostSound1/actions/runs/32631611478/artifacts/9491199182.zip" target="_blank" rel="noopener noreferrer" style="font-weight:bold;color:var(--black)">
+          📥 Download App
+        </a>
         <button data-go="home">Home</button>
-        <button data-go="admin" id="adminMenuBtn" style="display:none;color:var(--red);">Admin Panel</button>
+        <button data-go="discover">Discover</button>
+        <button data-go="search">Search</button>
+        <button data-go="library">Library</button>
+        <button data-go="profile">Profile</button>
+        <button data-go="upload">Upload</button>
+        
+        <button data-go="admin" id="adminMenuBtn" style="display:none; color:var(--red); font-weight:bold;">Admin Panel</button>
+        
         <button id="authMenuButton">Register / Login</button>
       </div>
     </aside>
   </div>
+
+  <div id="authOverlay" class="auth-overlay">
+    <div class="auth-panel">
+      <div id="authFeedbackOverlay" class="auth-feedback-overlay">
+        <div id="authSpinner" class="auth-spinner"></div>
+        <div id="authCheckmark" class="auth-checkmark" style="display:none">✓</div>
+        <div id="authFeedbackText" style="font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--black)">VERIFYING...</div>
+      </div>
+
+      <div class="hero-meta-top">ACCOUNT</div>
+      <h2 id="authTitle" class="auth-title">REGISTER</h2>
+
+      <div id="googleAuthSection">
+        <button type="button" id="btnGoogleAuth" class="btn-google-auth">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          <span>Continue with Google</span>
+        </button>
+        <div class="auth-divider">or with email</div>
+      </div>
+
+      <div class="field"><label>EMAIL</label><input id="authEmail" type="email" placeholder="you@example.com"></div>
+      <div id="authPasswordField" class="field"><label>PASSWORD</label><input id="authPassword" type="password" placeholder="Minimum 6 characters"></div>
+      <div id="authNameField" class="field"><label>DISPLAY NAME</label><input id="authDisplayName" placeholder="Artist Name"></div>
+      
+      <div id="authForgotRow" style="text-align:right;margin:-4px 0 10px;display:none">
+        <button id="authForgotBtn" style="font-size:10px;color:var(--gray);text-decoration:underline">Forgot password?</button>
+      </div>
+
+      <button id="authSubmit" class="auth-submit">CREATE ACCOUNT</button>
+      
+      <div style="text-align:center;margin-top:14px">
+        <button id="authSwitchBtn" style="font-size:11px;text-decoration:underline">Switch to Login</button> | 
+        <button id="authClose" style="font-size:11px;color:var(--gray)">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cropOverlay" class="crop-overlay"><div class="crop-panel"><div id="cropLabel" class="hero-meta-top" style="margin-bottom:10px">ADJUST PHOTO</div><div class="crop-stage circle" id="cropStage"><canvas id="cropCanvas" width="400" height="400"></canvas></div><div class="crop-controls"><button id="cropZoomOut">−</button><input id="cropZoom" type="range" min="1" max="3" step="0.01" value="1"><button id="cropZoomIn">+</button></div><div class="crop-actions"><button id="cropCancel">Cancel</button><button id="cropSave" style="background:var(--black);color:var(--white)">USE THIS PHOTO</button></div></div></div>
+
+  <div id="trackOptionsSheet" class="track-options-sheet"><div class="track-options-box"><div class="hero-meta-top" id="optionsTrackTitle">TRACK OPTIONS</div><button id="optEditTrack" style="display:none">✎ Edit Track</button><button id="optShareTrack">↗ Share Track</button><button id="optDeleteTrack" class="danger" style="display:none">🗑 Delete Track</button><button id="optCloseTrack" style="margin-top:10px;text-align:center">Cancel</button></div></div>
+
 </div>
 
+<audio id="audio" preload="metadata"></audio>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script id="main-script">
-  /* محل قرارگیری جاوااسکریپت */
-</script>
+
+<script src="app.js"></script>
+
 </body>
 </html>
