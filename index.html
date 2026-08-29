@@ -34,9 +34,6 @@
   --pill-text: rgba(255, 255, 255, 0.6);
   --pill-active: #000000;
   --search-glow: 0 0 25px rgba(255, 255, 255, 0.18);
-  --promo-card-bg: #ffffff;
-  --promo-card-text: #000000;
-  --promo-card-sub: #666666;
 }
 
 body.morning-mode {
@@ -54,9 +51,6 @@ body.morning-mode {
   --pill-text: rgba(0, 0, 0, 0.6);
   --pill-active: #ffffff;
   --search-glow: 0 0 25px rgba(0, 0, 0, 0.12);
-  --promo-card-bg: #ffffff;
-  --promo-card-text: #000000;
-  --promo-card-sub: #666666;
 }
 
 *, *::before, *::after {
@@ -134,156 +128,161 @@ audio { display: none; }
 @keyframes rotateVinyl { from { transform: rotate(0); } to { transform: rotate(360deg); } }
 
 /* ==========================================================================
-   MINIMAL FLOATING POP-OUT PROMO PLAYER
+   PORTISHEAD PIXEL-PERFECT HERO PROMO (طراحی صددرصد منطبق بر تصویر)
    ========================================================================== */
-.promo-stage-container {
+.promo-exact-wrap {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px 10px 20px;
-  width: 100%;
+  padding: 55px 12px 35px 12px;
 }
 
-.promo-pop-card {
+.promo-exact-pill {
   position: relative;
   width: 100%;
-  max-width: 440px;
-  min-height: 100px;
-  background: var(--promo-card-bg);
-  color: var(--promo-card-text);
-  border-radius: 16px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  max-width: 380px;
+  height: 96px;
+  background: #ffffff;
+  border-radius: 12px;
   display: flex;
   align-items: center;
-  padding: 14px 18px 14px 12px;
-  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
 }
 
-.promo-left-actions {
+.promo-exact-icons {
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: 0;
+  width: 24px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  gap: 16px;
-  padding-right: 12px;
-  color: #111111;
-  font-size: 16px;
-  flex-shrink: 0;
+  z-index: 1;
 }
 
-.promo-act-btn {
-  color: #111;
-  font-size: 15px;
-  line-height: 1;
+.p-icon-btn {
+  color: #1a1a1a;
   cursor: pointer;
-  transition: transform 0.15s ease, color 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, color 0.15s;
 }
-.promo-act-btn:active { transform: scale(0.88); }
-.promo-act-btn.liked { color: var(--red); }
+.p-icon-btn:active { transform: scale(0.85); }
+.p-icon-btn.liked svg { fill: #e53935; stroke: #e53935; }
 
-.promo-pop-cover-wrap {
-  position: relative;
-  width: 110px;
-  height: 110px;
-  flex-shrink: 0;
-  margin-top: -30px;
-  margin-bottom: -30px;
-  margin-right: 16px;
-  z-index: 10;
-  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.45));
+.promo-exact-art-wrap {
+  position: absolute;
+  left: 48px;
+  top: -32px;
+  bottom: -32px;
+  width: 156px;
+  height: 156px;
+  z-index: 5;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.42));
+  cursor: pointer;
 }
 
-.promo-pop-cover {
+.promo-exact-art {
   width: 100%;
   height: 100%;
   border-radius: 14px;
   object-fit: cover;
-  background: #222;
+  background: #111;
+  display: block;
 }
 
-.promo-right-player {
+.promo-exact-body {
+  margin-left: 216px;
+  margin-right: 14px;
   flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: center;
 }
 
-.promo-artist-title {
-  font-size: 13px;
+.promo-exact-artist {
+  font-size: 13.5px;
   font-weight: 900;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--promo-card-text);
+  color: #000000;
   margin: 0;
+  line-height: 1.1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.promo-track-title {
+.promo-exact-track {
   font-size: 12px;
   font-weight: 500;
-  color: var(--promo-card-sub);
-  margin: 0 0 6px 0;
+  color: #555555;
+  margin: 3px 0 6px 0;
+  line-height: 1.1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.promo-progress-bar-wrap {
+.promo-exact-bar {
   width: 100%;
-  height: 3px;
-  background: #e0e0e0;
+  height: 2px;
+  background: #eaeaea;
   border-radius: 2px;
   position: relative;
   cursor: pointer;
 }
 
-.promo-progress-fill {
+.promo-exact-fill {
   height: 100%;
   width: 0%;
   background: #000000;
   border-radius: 2px;
 }
 
-.promo-time-row {
+.promo-exact-times {
   display: flex;
   justify-content: space-between;
-  font-size: 9px;
-  font-weight: 600;
+  font-size: 8px;
+  font-weight: 700;
   color: #888888;
-  margin-top: 3px;
+  margin-top: 2px;
 }
 
-.promo-playback-controls {
+.promo-exact-ctrls {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 18px;
-  margin-top: 4px;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 2px;
 }
 
-.promo-ctrl-btn {
-  color: #000;
-  font-size: 15px;
+.p-ctrl-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
   cursor: pointer;
-  line-height: 1;
+  transition: transform 0.15s;
 }
+.p-ctrl-arrow:active { transform: scale(0.85); }
 
-.promo-play-btn {
-  width: 28px;
-  height: 28px;
+.p-play-circle {
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: #000000;
   color: #ffffff;
   display: grid;
   place-items: center;
-  font-size: 11px;
   cursor: pointer;
   transition: transform 0.15s;
 }
-.promo-play-btn:active { transform: scale(0.9); }
+.p-play-circle:active { transform: scale(0.9); }
 
 /* ==========================================================================
    LIBRARY SLENDER EDGELESS 3D COVERFLOW
@@ -580,43 +579,57 @@ audio { display: none; }
       <div id="homeLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
-    <!-- DISCOVER WITH MINIMAL POP-OUT PROMOTED PLAYER (طبق عکس) -->
+    <!-- DISCOVER WITH EXACT FLOATING POP-OUT HERO (مطابق تصویر) -->
     <section id="discover" class="view">
       
-      <div id="featuredPromoSection" class="promo-stage-container" style="display:none;">
-        <div class="promo-pop-card">
-          <!-- دکمه‌های آیکون سمت چپ -->
-          <div class="promo-left-actions">
-            <span class="promo-act-btn" id="promoLikeBtn" title="Like">♡</span>
-            <span class="promo-act-btn" id="promoAddBtn" title="Add">+</span>
-            <span class="promo-act-btn" id="promoShareBtn" title="Share">↗</span>
+      <div id="featuredPromoSection" class="promo-exact-wrap" style="display:none;">
+        <div class="promo-exact-pill">
+          
+          <!-- ۱. سه آیکون سمت چپ به صورت وکتور دقیق -->
+          <div class="promo-exact-icons">
+            <span class="p-icon-btn" id="promoLikeBtn" title="Like">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </span>
+            <span class="p-icon-btn" id="promoAddBtn" title="Add">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </span>
+            <span class="p-icon-btn" id="promoShareBtn" title="Share">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+            </span>
           </div>
 
-          <!-- کاور بیرون زده در وسط -->
-          <div class="promo-pop-cover-wrap">
-            <img id="promoCover" class="promo-pop-cover" src="assets/icon.png" alt="Cover">
+          <!-- ۲. کاور آلبوم مربع بزرگ و بیرون زده -->
+          <div class="promo-exact-art-wrap" id="promoCoverWrap">
+            <img id="promoCover" class="promo-exact-art" src="assets/icon.png" alt="Cover">
           </div>
 
-          <!-- بخش پلیر و مشخصات سمت راست -->
-          <div class="promo-right-player">
-            <h3 id="promoArtist" class="promo-artist-title">PORTISHEAD</h3>
-            <p id="promoTitle" class="promo-track-title">Undenied</p>
+          <!-- ۳. متن‌ها، نوار پیشرفت و کنترل‌ها در سمت راست -->
+          <div class="promo-exact-body">
+            <h3 id="promoArtist" class="promo-exact-artist">PORTISHEAD</h3>
+            <p id="promoTitle" class="promo-exact-track">Undenied</p>
             
-            <div id="promoProgressBarWrap" class="promo-progress-bar-wrap">
-              <div id="promoProgressFill" class="promo-progress-fill"></div>
+            <div id="promoProgressBarWrap" class="promo-exact-bar">
+              <div id="promoProgressFill" class="promo-exact-fill"></div>
             </div>
             
-            <div class="promo-time-row">
-              <span id="promoCurrentTime">0:00</span>
-              <span id="promoDuration">0:00</span>
+            <div class="promo-exact-times">
+              <span id="promoCurrentTime">3:48</span>
+              <span id="promoDuration">0:56</span>
             </div>
 
-            <div class="promo-playback-controls">
-              <span id="promoPrevBtn" class="promo-ctrl-btn">◀◀</span>
-              <div id="promoPlayBtn" class="promo-play-btn">▶</div>
-              <span id="promoNextBtn" class="promo-ctrl-btn">▶▶</span>
+            <div class="promo-exact-ctrls">
+              <span id="promoPrevBtn" class="p-ctrl-arrow">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="11 19 2 12 11 5 11 19"></polygon><polygon points="22 19 13 12 22 5 22 19"></polygon></svg>
+              </span>
+              <div id="promoPlayBtn" class="p-play-circle">
+                <svg id="promoPlayIcon" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              </div>
+              <span id="promoNextBtn" class="p-ctrl-arrow">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 19 22 12 13 5 13 19"></polygon><polygon points="2 19 11 12 2 5 2 19"></polygon></svg>
+              </span>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -642,7 +655,7 @@ audio { display: none; }
       <!-- PILL SEARCH BAR -->
       <div class="search-pill-container">
         <div id="searchPill" class="search-pill">
-          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 14z"/></svg>
           <input id="searchInput" type="text" placeholder="Search artist, track...">
         </div>
       </div>
@@ -1023,6 +1036,7 @@ function bindButtons(){
   document.getElementById("dockPlayBtn").onclick = (e) => { e.stopPropagation(); togglePlay(); };
   document.getElementById("dockProgressWrap").onclick = (e) => { e.stopPropagation(); seekAudio(e); };
 
+  // دکمه‌های پروموت هیرو
   const promoPlay = document.getElementById("promoPlayBtn");
   if(promoPlay) promoPlay.onclick = (e) => { e.stopPropagation(); togglePlay(); };
   const promoPrev = document.getElementById("promoPrevBtn");
@@ -1107,8 +1121,8 @@ function bindButtons(){
   audio.ontimeupdate = updateProgress;
   audio.onplay = () => {
     document.getElementById("dockPlayBtn").textContent = "Ⅱ";
-    const promoPlay = document.getElementById("promoPlayBtn");
-    if(promoPlay) promoPlay.textContent = "Ⅱ";
+    const promoIcon = document.getElementById("promoPlayIcon");
+    if(promoIcon) promoIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
     const fp = document.getElementById("fullPlayBtn");
     if(fp) fp.textContent = "Ⅱ";
     document.getElementById("heroVinyl")?.classList.add("playing");
@@ -1117,8 +1131,8 @@ function bindButtons(){
   };
   audio.onpause = () => {
     document.getElementById("dockPlayBtn").textContent = "▶";
-    const promoPlay = document.getElementById("promoPlayBtn");
-    if(promoPlay) promoPlay.textContent = "▶";
+    const promoIcon = document.getElementById("promoPlayIcon");
+    if(promoIcon) promoIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
     const fp = document.getElementById("fullPlayBtn");
     if(fp) fp.textContent = "▶";
     document.getElementById("heroVinyl")?.classList.remove("playing");
@@ -1453,7 +1467,7 @@ function renderDiscover(){
     document.getElementById("promoTitle").textContent = promoTrack.title;
     document.getElementById("promoArtist").textContent = promoTrack.artist;
     
-    document.getElementById("promoCover").onclick = () => playIndex(tracks.indexOf(promoTrack));
+    document.getElementById("promoCoverWrap").onclick = () => playIndex(tracks.indexOf(promoTrack));
   }
 
   const disc = document.getElementById("discoverList");
@@ -1843,7 +1857,6 @@ function updateFullLikeBtn(){
     btn.classList.toggle("liked", isLiked);
   }
   if(promoLikeBtn){
-    promoLikeBtn.textContent = isLiked ? "♥" : "♡";
     promoLikeBtn.classList.toggle("liked", isLiked);
   }
 }
