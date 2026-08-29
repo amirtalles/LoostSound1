@@ -15,15 +15,18 @@
 <link rel="icon" type="image/png" href="assets/icon.png">
 <link rel="apple-touch-icon" href="assets/icon.png">
 
-<link rel="stylesheet" href="style.css">
+<!-- لینک استایل با پارامتر شکستن کش -->
+<link rel="stylesheet" href="style.css?v=3">
 
 </head>
 <body>
 
 <div class="app">
 
+  <!-- PULL REFRESH INDICATOR -->
   <div id="pullRefreshSpinner" class="pull-spinner">UPDATING FEED...</div>
 
+  <!-- TOPBAR -->
   <header class="topbar">
     <div class="top-left">
       <button id="siteBackButton" class="top-menu-btn" title="Back">‹</button>
@@ -31,6 +34,7 @@
         <img src="assets/icon.png" alt="Lost Sound" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
       </div>
       
+      <!-- LOGO POPUP WITH DIRECT APP DOWNLOAD -->
       <div id="socialPopup" class="social-popup">
         <a href="https://nightly.link/amirtalles/LoostSound1/actions/runs/32631611478/artifacts/9491199182.zip" target="_blank" rel="noopener noreferrer" class="social-item highlight">
           <span>Download App (APK)</span>
@@ -46,15 +50,17 @@
     </div>
   </header>
 
+  <!-- CONTENT -->
   <main class="page">
     
+    <!-- HOME -->
     <section id="home" class="view active">
       <div class="hero-layout">
-        <span class="hero-year-right">2024</span>
+        <span class="hero-year-right">2026</span>
         <div>
           <div class="hero-meta-top">MUSIC STREAMING</div>
           <h1 class="hero-title">LOST<br>SOUND</h1>
-          <div class="hero-year">2024</div>
+          <div class="hero-year">2026</div>
         </div>
         
         <div class="hero-vinyl-stage">
@@ -74,8 +80,9 @@
       <div id="homeLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
+    <!-- DISCOVER WITH PROMO HERO & 3D POD -->
     <section id="discover" class="view">
-      
+      <!-- باکس اختصاصی موزیک تبلیغاتی بالا -->
       <div id="featuredPromoSection" class="featured-promo-section" style="display:none;">
         <div class="promo-card" id="promoCard">
           <div class="promo-cover-wrapper">
@@ -90,22 +97,20 @@
         </div>
       </div>
 
-      <div class="hero-meta-top" style="margin-top:20px;">DISCOVER</div>
-      <h1 class="hero-title" style="font-size:30px;margin-bottom:6px">FEATURED</h1>
+      <div class="hero-meta-top" style="margin-top:16px;">LOST SOUND SELECTION</div>
+      <h1 class="hero-title" style="font-size:28px;margin-bottom:8px">DISCOVER</h1>
 
+      <!-- استیج سه‌بعدی کپسولی فشرده -->
       <div class="coverflow-pod-container">
         <div class="coverflow-pod" id="coverflowWrap">
           <div class="coverflow-stage" id="coverflowStage"></div>
         </div>
       </div>
 
-      <div class="section-title-line">
-        <div class="section-title">ALL RELEASES</div>
-      </div>
-      <div id="discoverList" class="cards"></div>
       <div id="discoverLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
+    <!-- ADMIN PANEL -->
     <section id="admin" class="view">
       <div class="hero-meta-top">DASHBOARD</div>
       <h1 class="hero-title" style="font-size:36px;margin-bottom:15px">ADMIN</h1>
@@ -113,9 +118,11 @@
       <div id="adminTrackList"></div>
     </section>
 
+    <!-- SEARCH WITH PILL EXPAND ANIMATION -->
     <section id="search" class="view">
       <div class="hero-meta-top">SEARCH</div>
       
+      <!-- PILL SEARCH BAR -->
       <div class="search-pill-container">
         <div id="searchPill" class="search-pill">
           <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
@@ -127,6 +134,7 @@
       <div id="searchLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
+    <!-- LIBRARY / LIKED PLAYLIST -->
     <section id="library" class="view">
       <div class="hero-meta-top">YOUR ARCHIVE</div>
       <h1 class="hero-title" style="font-size:36px;margin-bottom:15px">MY SOUND</h1>
@@ -134,11 +142,13 @@
       <div id="libraryLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
+    <!-- ARTIST CHANNEL -->
     <section id="artist" class="view">
       <div id="artistPage"></div>
       <div id="artistLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
+    <!-- PROFILE -->
     <section id="profile" class="view">
       <div style="display:flex;align-items:center;gap:15px;margin-bottom:20px">
         <div style="width:64px;height:64px;border-radius:50%;background:var(--black);color:var(--white);display:grid;place-items:center;font-weight:900;font-size:18px;overflow:hidden" id="profileAvatarWrap">
@@ -157,6 +167,7 @@
       <div id="profileLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
+    <!-- EDIT PROFILE -->
     <section id="editProfile" class="view">
       <div class="upload-card">
         <div class="hero-meta-top">ACCOUNT</div>
@@ -169,6 +180,7 @@
       </div>
     </section>
 
+    <!-- EDIT TRACK -->
     <section id="editTrack" class="view">
       <div class="upload-card">
         <div class="hero-meta-top">STUDIO</div>
@@ -181,6 +193,7 @@
       </div>
     </section>
 
+    <!-- UPLOAD TRACK -->
     <section id="upload" class="view">
       <div class="upload-card">
         <div class="hero-meta-top">CREATOR STUDIO</div>
@@ -202,6 +215,7 @@
 
   </main>
 
+  <!-- DOCK MINI PLAYER -->
   <div id="dockPlayer" class="dock-player">
     <div class="dock-inner">
       <img id="dockImg" class="dock-art" src="" alt="">
@@ -220,6 +234,7 @@
     </div>
   </div>
 
+  <!-- FULL-SCREEN EXPANDED MODAL PLAYER -->
   <div id="fullPlayerOverlay" class="full-player-overlay">
     <div class="full-player-top">
       <button id="fullPlayerClose" class="full-player-close">⌵</button>
@@ -257,6 +272,7 @@
     </div>
   </div>
 
+  <!-- FLOATING PILL TABBAR -->
   <div class="pill-nav-container">
     <nav class="pill-nav" id="pillNav">
       <div class="pill-glider" id="pillGlider"></div>
@@ -268,6 +284,7 @@
     </nav>
   </div>
 
+  <!-- DRAWER / DASHBOARD MENU -->
   <div id="drawer" class="drawer">
     <aside class="drawer-panel">
       <div class="drawer-head">
@@ -285,6 +302,7 @@
         <button data-go="profile">Profile</button>
         <button data-go="upload">Upload</button>
         
+        <!-- دکمه پنل ادمین -->
         <button data-go="admin" id="adminMenuBtn" style="display:none; color:var(--red); font-weight:bold;">Admin Panel</button>
         
         <button id="authMenuButton">Register / Login</button>
@@ -292,6 +310,7 @@
     </aside>
   </div>
 
+  <!-- AUTH MODAL -->
   <div id="authOverlay" class="auth-overlay">
     <div class="auth-panel">
       <div id="authFeedbackOverlay" class="auth-feedback-overlay">
@@ -328,8 +347,10 @@
     </div>
   </div>
 
+  <!-- UNIVERSAL CROPPER MODAL -->
   <div id="cropOverlay" class="crop-overlay"><div class="crop-panel"><div id="cropLabel" class="hero-meta-top" style="margin-bottom:10px">ADJUST PHOTO</div><div class="crop-stage circle" id="cropStage"><canvas id="cropCanvas" width="400" height="400"></canvas></div><div class="crop-controls"><button id="cropZoomOut">−</button><input id="cropZoom" type="range" min="1" max="3" step="0.01" value="1"><button id="cropZoomIn">+</button></div><div class="crop-actions"><button id="cropCancel">Cancel</button><button id="cropSave" style="background:var(--black);color:var(--white)">USE THIS PHOTO</button></div></div></div>
 
+  <!-- TRACK OPTIONS SHEET -->
   <div id="trackOptionsSheet" class="track-options-sheet"><div class="track-options-box"><div class="hero-meta-top" id="optionsTrackTitle">TRACK OPTIONS</div><button id="optEditTrack" style="display:none">✎ Edit Track</button><button id="optShareTrack">↗ Share Track</button><button id="optDeleteTrack" class="danger" style="display:none">🗑 Delete Track</button><button id="optCloseTrack" style="margin-top:10px;text-align:center">Cancel</button></div></div>
 
 </div>
@@ -337,8 +358,6 @@
 <audio id="audio" preload="metadata"></audio>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="app.js"></script>
-
 </body>
 </html>
