@@ -15,9 +15,366 @@
 <link rel="icon" type="image/png" href="assets/icon.png">
 <link rel="apple-touch-icon" href="assets/icon.png">
 
-<!-- لینک استایل با پارامتر شکستن کش -->
-<link rel="stylesheet" href="style.css?v=3">
+<style>
+/* ==========================================================================
+   THEME VARIABLES & BASE STYLES
+   ========================================================================== */
+:root {
+  --bg: #0d0d0d;
+  --paper: #171717;
+  --paper-sub: #212121;
+  --black: #ffffff;
+  --white: #000000;
+  --gray: #8e8e8e;
+  --line: rgba(255, 255, 255, 0.12);
+  --red: #ff4d4d;
+  --shadow: 0 14px 35px rgba(0, 0, 0, 0.6);
+  --pill-bg: rgba(30, 30, 30, 0.85);
+  --pill-glider: #ffffff;
+  --pill-text: rgba(255, 255, 255, 0.6);
+  --pill-active: #000000;
+  --search-glow: 0 0 25px rgba(255, 255, 255, 0.18);
+}
 
+body.morning-mode {
+  --bg: #f5f2eb;
+  --paper: #ffffff;
+  --paper-sub: #ebe6dc;
+  --black: #000000;
+  --white: #ffffff;
+  --gray: #77736c;
+  --line: rgba(0, 0, 0, 0.1);
+  --red: #e53935;
+  --shadow: 0 14px 35px rgba(0, 0, 0, 0.12);
+  --pill-bg: rgba(235, 230, 220, 0.88);
+  --pill-glider: #000000;
+  --pill-text: rgba(0, 0, 0, 0.6);
+  --pill-active: #ffffff;
+  --search-glow: 0 0 25px rgba(0, 0, 0, 0.12);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--black);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, sans-serif;
+  overflow-x: hidden;
+  transition: background 0.28s ease, color 0.28s ease;
+}
+
+button, input, textarea, select {
+  font-family: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+}
+
+button { cursor: pointer; }
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+audio { display: none; }
+
+.app { min-height: 100vh; padding-bottom: 135px; }
+
+/* SPINNERS */
+.pull-spinner { display: none; text-align: center; padding: 10px 0; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--gray); background: var(--paper-sub); border-bottom: 1px solid var(--line); }
+.page-loader { display: none; padding: 40px 0; text-align: center; }
+.page-loader.show { display: block; }
+.page-spinner { width: 32px; height: 32px; border: 2.5px solid var(--line); border-top-color: var(--black); border-radius: 50%; margin: 0 auto 10px; animation: spin 0.75s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* TOPBAR */
+.topbar { height: 54px; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; background: var(--bg); backdrop-filter: blur(18px); border-bottom: 1px solid var(--line); transition: background 0.28s ease; }
+.top-left { position: relative; display: flex; align-items: center; gap: 8px; }
+.brand-logo-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--black); color: var(--white); display: grid; place-items: center; cursor: pointer; overflow: hidden; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); border: 1px solid var(--line); }
+.top-right { display: flex; align-items: center; gap: 12px; }
+.theme-toggle-btn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 16px; background: var(--paper-sub); border: 1px solid var(--line); transition: transform 0.2s; }
+.theme-toggle-btn:active { transform: scale(0.9); }
+.social-popup { position: absolute; top: 46px; left: 0; background: var(--paper); border-radius: 14px; padding: 6px; box-shadow: var(--shadow); border: 1px solid var(--line); min-width: 165px; display: none; z-index: 500; }
+.social-popup.show { display: flex; flex-direction: column; gap: 2px; animation: popIn .16s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes popIn { from { opacity: 0; transform: scale(0.92) translateY(-4px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.social-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; transition: 0.15s; }
+.social-item:hover { background: var(--paper-sub); }
+.social-item.highlight { background: var(--black); color: var(--white); margin-bottom: 4px; }
+.top-title { font-size: 11px; letter-spacing: .22em; font-weight: 800; text-transform: uppercase; }
+.top-menu-btn { font-size: 20px; padding: 4px; line-height: 1; color: var(--black); }
+#siteBackButton { visibility: hidden; opacity: .35; transition: .2s; font-size: 22px; }
+#siteBackButton.visible { visibility: visible; opacity: 1; }
+
+/* PAGES */
+.page { width: 100%; max-width: 920px; margin: auto; padding: 12px 18px; }
+.view { display: none; }
+.view.active { display: block; }
+
+/* HERO */
+.hero-layout { display: grid; grid-template-columns: 1fr 185px; align-items: center; gap: 15px; margin: 8px 0 28px; position: relative; }
+.hero-meta-top { font-size: 9.5px; letter-spacing: .14em; font-weight: 800; text-transform: uppercase; color: var(--gray); margin-bottom: 6px; }
+.hero-title { font-size: clamp(34px, 5.8vw, 48px); line-height: 0.86; letter-spacing: -0.05em; font-weight: 900; }
+.hero-year { font-size: 10px; font-weight: 700; letter-spacing: .12em; margin-top: 16px; color: var(--gray); }
+.hero-year-right { position: absolute; top: 0; right: 0; font-size: 10px; font-weight: 700; letter-spacing: .12em; color: var(--gray); }
+.hero-vinyl-stage { position: relative; width: 100%; height: 145px; display: flex; align-items: center; justify-content: flex-start; }
+.stage-cover { position: relative; z-index: 2; width: 130px; height: 130px; border-radius: 6px; overflow: hidden; background: #111; box-shadow: var(--shadow); flex: 0 0 auto; border: 1px solid var(--line); }
+.stage-cover video { width: 100%; height: 100%; object-fit: cover; }
+.stage-vinyl { position: absolute; z-index: 1; left: 65px; width: 130px; height: 130px; border-radius: 50%; background: radial-gradient(circle, #2a2a2a 0 5%, #444 5.5% 6%, #111 6.5% 12%, #222 12.5% 13%, #050505 13.5% 27%, #222 27.5% 28%, #050505 28.5% 44%, #222 44.5% 45%, #050505 45.5% 61%, #1a1a1a 61.5% 62%, #050505 62.5% 100%); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); pointer-events: none; }
+.stage-vinyl.playing { animation: rotateVinyl 4s linear infinite; }
+@keyframes rotateVinyl { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+/* PROMOTED HERO BOX (DISCOVER TOP) */
+.featured-promo-section { width: 100%; max-width: 520px; margin: 0 auto 25px; border-radius: 20px; background: linear-gradient(135deg, rgba(30, 30, 45, 0.85), rgba(15, 15, 25, 0.95)); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px); overflow: hidden; padding: 16px; }
+body.morning-mode .featured-promo-section { background: linear-gradient(135deg, rgba(240, 240, 250, 0.95), rgba(220, 220, 235, 0.85)); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); }
+.promo-card { display: flex; align-items: center; gap: 18px; direction: ltr; }
+.promo-cover-wrapper { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+.promo-cover { width: 100%; height: 100%; border-radius: 14px; object-fit: cover; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
+.promo-badge { position: absolute; top: -6px; right: -6px; background: linear-gradient(45deg, #ff416c, #ff4b2b); color: #fff; font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 20px; box-shadow: 0 2px 6px rgba(255, 65, 108, 0.4); }
+.promo-details { flex-grow: 1; text-align: left; }
+.promo-title { font-size: 16px; color: #fff; margin: 0 0 4px 0; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+body.morning-mode .promo-title { color: #000; }
+.promo-artist { font-size: 11px; color: #a0a0b0; margin: 0 0 12px 0; font-weight: 600; }
+body.morning-mode .promo-artist { color: #666; }
+.promo-btn-play { background: var(--black); color: var(--white); border-radius: 25px; padding: 8px 16px; font-size: 10px; font-weight: bold; cursor: pointer; transition: transform 0.2s; letter-spacing: 0.1em; border: 1px solid var(--line); }
+.promo-btn-play:active { transform: scale(0.95); }
+
+/* ==========================================================================
+   LIBRARY SLENDER EDGELESS 3D COVERFLOW (باریک، همرنگ پس‌زمینه و خروج از صفحه)
+   ========================================================================== */
+.library-coverflow-container {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  margin-top: 15px;
+  margin-bottom: 25px;
+  overflow: visible;
+}
+
+.library-coverflow-pod {
+  position: relative;
+  width: 100%;
+  height: 155px;
+  background: transparent;
+  perspective: 1000px;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.library-coverflow-stage {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+.coverflow-item {
+  position: absolute;
+  width: 115px;
+  height: 115px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transform-origin: center center;
+  transition: transform 0.38s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.35s ease, filter 0.35s ease;
+}
+
+.coverflow-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.coverflow-item .cf-meta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 8px;
+  background: linear-gradient(0deg, rgba(0,0,0,0.92) 0%, transparent 100%);
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.coverflow-item.active .cf-meta {
+  opacity: 1;
+}
+
+.cf-meta h4 {
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cf-meta p {
+  font-size: 8.5px;
+  color: #ccc;
+  margin-top: 1px;
+}
+
+/* SEARCH PILL EXPAND ANIMATION */
+.search-pill-container { display: flex; justify-content: center; margin: 15px 0 25px; }
+.search-pill { width: 50px; height: 50px; border-radius: 30px; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--search-glow); display: flex; align-items: center; padding: 0 14px; gap: 10px; overflow: hidden; transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease; margin: 0 auto; }
+.search-pill.expanded { width: 100%; max-width: 400px; }
+.search-icon { width: 20px; height: 20px; flex: 0 0 auto; fill: var(--black); opacity: 0.85; }
+.search-pill input { width: 100%; border: none; background: transparent; font-size: 15px; font-weight: 700; outline: none; color: var(--black); opacity: 0; transition: opacity 0.3s ease 0.15s; }
+.search-pill.expanded input { opacity: 1; }
+
+/* TRACK ROWS */
+.section-title-line { display: flex; align-items: center; justify-content: space-between; margin: 20px 0 10px; }
+.section-title { font-size: 10px; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; color: var(--gray); }
+.track-row { display: grid; grid-template-columns: 74px 38px minmax(0, 1fr) 24px; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.track-thumb-wrap { position: relative; width: 74px; height: 74px; }
+.track-thumb { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; background: var(--paper-sub); border: 1px solid var(--line); }
+.avatar-badge { position: absolute; top: -6px; left: -6px; width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); z-index: 4; cursor: pointer; }
+.avatar-badge-fallback { position: absolute; top: -6px; left: -6px; width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--bg); background: var(--paper-sub); color: var(--black); display: grid; place-items: center; font-size: 9px; font-weight: bold; z-index: 4; cursor: pointer; }
+.track-play-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--black); color: var(--white); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); display: grid; place-items: center; font-size: 12px; transition: 0.15s; }
+.track-play-btn:hover { opacity: 0.85; }
+.track-meta { min-width: 0; cursor: pointer; }
+.track-meta h4 { font-size: 13.5px; font-weight: 800; line-height: 1.2; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin: 0; }
+.track-meta .artist-name { font-size: 11px; color: var(--gray); margin-top: 3px; font-weight: 500; }
+.track-meta .track-stats { font-size: 9.5px; color: var(--gray); margin-top: 4px; display: flex; gap: 6px; }
+.track-more-btn { font-size: 18px; color: var(--black); cursor: pointer; text-align: right; }
+
+/* MISC RESULTS & ADMIN */
+.search-group-title { font-size: 10px; letter-spacing: .16em; font-weight: bold; margin: 20px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line); color: var(--gray); }
+.artist-result { display: flex; align-items: center; gap: 12px; padding: 10px 4px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.artist-result img, .artist-result .artist-fallback { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
+.artist-fallback { display: grid; place-items: center; background: var(--paper-sub); color: var(--black); font-weight: 800; font-size: 14px; border: 1px solid var(--line); }
+
+.admin-track-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.admin-track-info h4 { font-size: 14px; margin: 0 0 4px 0; }
+.admin-track-info p { font-size: 11px; color: var(--gray); margin: 0; }
+.admin-toggle-btn { padding: 6px 12px; border-radius: 14px; font-size: 10px; font-weight: bold; border: 1px solid var(--line); }
+.admin-toggle-btn.featured { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* CHANNEL VIEW */
+.channel-hero { display: flex; align-items: center; gap: 16px; padding: 8px 0 20px; border-bottom: 1px solid var(--line); }
+.channel-avatar { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; background: #111; flex: 0 0 auto; border: 1px solid var(--line); }
+.channel-meta h2 { font-size: 26px; line-height: .95; letter-spacing: -.05em; margin: 4px 0; }
+.channel-id { font-size: 10px; color: var(--gray); }
+.channel-actions { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+
+/* DOCK PLAYER */
+.dock-player { display: none; position: fixed; left: 14px; right: 14px; bottom: 78px; z-index: 400; padding: 8px 12px; background: var(--paper); border-radius: 14px; border: 1px solid var(--line); box-shadow: var(--shadow); cursor: pointer; transition: background 0.28s ease; }
+.dock-player.open { display: block; }
+.dock-inner { display: grid; grid-template-columns: 44px minmax(0, 1fr) 38px; gap: 10px; align-items: center; }
+.dock-art { width: 44px; height: 44px; border-radius: 5px; object-fit: cover; background: #111; }
+.dock-meta h5 { font-size: 12px; font-weight: 800; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin: 0; }
+.dock-meta p { font-size: 10px; color: var(--gray); margin-top: 1px; margin-bottom: 0; }
+.dock-progress { width: 100%; height: 2px; background: var(--paper-sub); margin-top: 6px; position: relative; border-radius: 2px; }
+.dock-progress-bar { height: 100%; width: 0; background: var(--black); border-radius: 2px; }
+.dock-times { display: flex; justify-content: space-between; font-size: 8.5px; color: var(--gray); font-weight: 700; margin-top: 3px; }
+.dock-play-circle { width: 38px; height: 38px; border-radius: 50%; background: var(--black); color: var(--white); display: grid; place-items: center; font-size: 13px; margin-left: auto; }
+
+/* FULL-SCREEN PLAYER */
+.full-player-overlay { position: fixed; inset: 0; z-index: 8000; background: var(--bg); display: flex; flex-direction: column; justify-content: space-between; padding: 24px 28px calc(28px + env(safe-area-inset-bottom)); transform: translateY(100%); transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), background 0.28s ease; overflow-y: auto; }
+.full-player-overlay.open { transform: translateY(0); }
+.full-player-top { display: flex; align-items: center; justify-content: space-between; height: 44px; }
+.full-player-close { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 24px; font-weight: bold; cursor: pointer; line-height: 1; color: var(--black); }
+.full-player-stage { width: 100%; max-width: 340px; margin: 20px auto; aspect-ratio: 1; position: relative; border-radius: 18px; overflow: hidden; background: #111; box-shadow: var(--shadow); border: 1px solid var(--line); }
+.full-player-stage img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.full-player-stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; z-index: 2; }
+.full-player-meta { width: 100%; max-width: 340px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: space-between; }
+.full-player-titles h2 { font-size: 22px; font-weight: 900; letter-spacing: -0.03em; line-height: 1.2; }
+.full-player-titles p { font-size: 14px; color: var(--gray); margin-top: 4px; font-weight: 600; }
+.full-player-like-btn { font-size: 24px; color: var(--gray); cursor: pointer; transition: 0.15s; }
+.full-player-like-btn.liked { color: var(--red); }
+.full-player-scrub { width: 100%; max-width: 340px; margin: 15px auto 0; }
+.full-scrub-bar { width: 100%; height: 4px; background: var(--paper-sub); border-radius: 4px; cursor: pointer; position: relative; }
+.full-scrub-fill { height: 100%; width: 0; background: var(--black); border-radius: 4px; }
+.full-scrub-times { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray); font-weight: 700; margin-top: 6px; }
+.full-player-controls { width: 100%; max-width: 340px; margin: 20px auto 10px; display: flex; align-items: center; justify-content: space-between; }
+.full-ctrl-btn { font-size: 28px; color: var(--black); cursor: pointer; }
+.full-play-btn { width: 64px; height: 64px; border-radius: 50%; background: var(--black); color: var(--white); display: grid; place-items: center; font-size: 22px; cursor: pointer; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); }
+
+/* FLOATING PILL TABBAR */
+.pill-nav-container { position: fixed; left: 0; right: 0; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 350; display: flex; justify-content: center; pointer-events: none; }
+.pill-nav { pointer-events: auto; position: relative; display: flex; align-items: center; background: var(--pill-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 4px; border-radius: 40px; border: 1px solid var(--line); box-shadow: var(--shadow); width: min(380px, 92vw); transition: background 0.28s ease, border-color 0.28s ease; }
+.pill-glider { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 5); background: var(--pill-glider); border-radius: 30px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15); transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.2), background 0.28s ease; z-index: 1; pointer-events: none; }
+.pill-item { flex: 1; position: relative; z-index: 2; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--pill-text); border-radius: 30px; transition: color 0.22s ease; user-select: none; }
+.pill-item.active { color: var(--pill-active); }
+
+/* FORMS & UPLOAD */
+.upload-card { background: var(--paper); padding: 20px; border-radius: 14px; border: 1px solid var(--line); max-width: 540px; margin: auto; }
+.field { margin: 12px 0; }
+.field label { display: block; font-size: 9px; font-weight: 800; letter-spacing: .12em; margin-bottom: 6px; color: var(--gray); }
+.field input, .field textarea, .field select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper-sub); font-size: 13px; outline: none; color: var(--black); }
+.primary-btn { padding: 11px 20px; background: var(--black); color: var(--white); border-radius: 24px; font-size: 10px; font-weight: 800; letter-spacing: .12em; width: 100%; margin-top: 8px; }
+.small-btn { padding: 7px 12px; border: 1px solid var(--line); border-radius: 18px; font-size: 9.5px; background: var(--paper-sub); font-weight: bold; color: var(--black); }
+.toast { position: fixed; left: 50%; bottom: 140px; z-index: 9999; transform: translateX(-50%); padding: 10px 18px; background: var(--black); color: var(--white); border-radius: 30px; font-size: 11px; font-weight: 800; white-space: nowrap; box-shadow: var(--shadow); }
+
+.upload-progress-wrap { display: none; margin-top: 14px; background: var(--paper-sub); border-radius: 20px; height: 18px; position: relative; overflow: hidden; border: 1px solid var(--line); }
+.upload-progress-fill { height: 100%; width: 0%; background: var(--black); border-radius: 20px; transition: width 0.18s cubic-bezier(0.4, 0, 0.2, 1); }
+.upload-progress-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 9.5px; font-weight: 900; color: var(--white); mix-blend-mode: difference; }
+
+/* DRAWER */
+.drawer { position: fixed; inset: 0; z-index: 500; display: none; background: rgba(0, 0, 0, 0.7); }
+.drawer.open { display: block; }
+.drawer-panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(320px, 85vw); padding: 22px; background: var(--paper); overflow-y: auto; border-left: 1px solid var(--line); }
+.drawer-head { display: flex; align-items: center; justify-content: space-between; font-size: 18px; }
+.drawer-list { margin-top: 25px; }
+.drawer-list button, .drawer-list a { width: 100%; padding: 12px 0; text-align: left; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--black); display: block; }
+
+/* AUTH MODAL */
+.auth-overlay { position: fixed; inset: 0; z-index: 5000; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); }
+.auth-overlay.open { display: flex; }
+.auth-panel { position: relative; width: 100%; max-width: 380px; background: var(--paper); border-radius: 16px; padding: 26px; box-shadow: var(--shadow); border: 1px solid var(--line); }
+.auth-title { font-size: 28px; line-height: .9; letter-spacing: -.05em; margin-bottom: 8px; font-weight: 900; }
+.auth-submit { width: 100%; padding: 13px; margin-top: 12px; border-radius: 25px; background: var(--black); color: var(--white); font-weight: 800; font-size: 11px; letter-spacing: .05em; }
+.auth-feedback-overlay { position: absolute; inset: 0; background: var(--paper); border-radius: 16px; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 10; animation: fadeIn 0.22s ease forwards; }
+.auth-feedback-overlay.show { display: flex; }
+.auth-spinner { width: 36px; height: 36px; border: 3px solid var(--line); border-top-color: var(--black); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.auth-checkmark { width: 44px; height: 44px; border-radius: 50%; background: rgba(34, 197, 94, 0.15); border: 2px solid #22c55e; display: grid; place-items: center; font-size: 22px; color: #22c55e; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.btn-google-auth { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; border-radius: 25px; background: var(--paper-sub); color: var(--black); border: 1px solid var(--line); font-size: 11.5px; font-weight: 800; margin-bottom: 14px; cursor: pointer; transition: transform 0.15s, opacity 0.15s; }
+.btn-google-auth:active { transform: scale(0.98); opacity: 0.85; }
+.auth-divider { display: flex; align-items: center; gap: 10px; margin: 12px 0 14px; color: var(--gray); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+/* CROPPER & BOTTOM SHEETS */
+.crop-overlay { position: fixed; inset: 0; z-index: 9000; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); }
+.crop-overlay.open { display: flex; }
+.crop-panel { width: min(400px, 100%); background: var(--paper); border-radius: 16px; padding: 18px; border: 1px solid var(--line); }
+.crop-stage { width: min(260px, 70vw); height: min(260px, 70vw); margin: 0 auto; background: #050505; overflow: hidden; touch-action: none; position: relative; border: 1px solid var(--line); }
+.crop-stage.circle { border-radius: 50%; }
+.crop-stage.square { border-radius: 8px; }
+#cropCanvas { width: 100%; height: 100%; }
+.crop-controls { display: grid; grid-template-columns: 36px 1fr 36px; align-items: center; gap: 8px; margin-top: 12px; }
+.crop-controls button { height: 36px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper-sub); font-size: 16px; color: var(--black); }
+.crop-actions { display: flex; gap: 6px; margin-top: 14px; }
+.crop-actions button { flex: 1; padding: 10px; border-radius: 20px; border: 1px solid var(--line); font-size: 10px; font-weight: bold; }
+.track-options-sheet { position: fixed; inset: 0; z-index: 7000; background: rgba(0, 0, 0, 0.7); display: none; align-items: flex-end; justify-content: center; padding: 14px; }
+.track-options-sheet.open { display: flex; }
+.track-options-box { width: min(460px, 100%); background: var(--paper); border-radius: 18px; padding: 16px; box-shadow: var(--shadow); border: 1px solid var(--line); }
+.track-options-box button { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; margin-top: 6px; font-size: 12px; font-weight: bold; text-align: left; background: var(--paper-sub); color: var(--black); }
+.track-options-box button.danger { color: var(--red); }
+
+/* RESPONSIVE */
+@media(max-width: 480px){
+  .hero-layout { grid-template-columns: 1fr 160px; gap: 8px; }
+  .stage-cover, .stage-vinyl { width: 115px; height: 115px; }
+  .stage-vinyl { left: 55px; }
+  .track-row { grid-template-columns: 64px 34px minmax(0, 1fr) 20px; gap: 10px; }
+  .track-thumb-wrap { width: 64px; height: 64px; }
+  .track-play-btn { width: 34px; height: 34px; }
+}
+</style>
 </head>
 <body>
 
@@ -80,7 +437,7 @@
       <div id="homeLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
-    <!-- DISCOVER WITH PROMO HERO & 3D POD -->
+    <!-- DISCOVER WITH PROMO HERO ONLY -->
     <section id="discover" class="view">
       <!-- باکس اختصاصی موزیک تبلیغاتی بالا -->
       <div id="featuredPromoSection" class="featured-promo-section" style="display:none;">
@@ -97,16 +454,10 @@
         </div>
       </div>
 
-      <div class="hero-meta-top" style="margin-top:16px;">LOST SOUND SELECTION</div>
-      <h1 class="hero-title" style="font-size:28px;margin-bottom:8px">DISCOVER</h1>
-
-      <!-- استیج سه‌بعدی کپسولی فشرده -->
-      <div class="coverflow-pod-container">
-        <div class="coverflow-pod" id="coverflowWrap">
-          <div class="coverflow-stage" id="coverflowStage"></div>
-        </div>
+      <div class="section-title-line">
+        <div class="section-title">FEATURED DISCOVERY</div>
       </div>
-
+      <div id="discoverList"></div>
       <div id="discoverLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
@@ -134,10 +485,21 @@
       <div id="searchLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
 
-    <!-- LIBRARY / LIKED PLAYLIST -->
+    <!-- LIBRARY WITH SLENDER EDGELESS 3D COVERFLOW -->
     <section id="library" class="view">
       <div class="hero-meta-top">YOUR ARCHIVE</div>
-      <h1 class="hero-title" style="font-size:36px;margin-bottom:15px">MY SOUND</h1>
+      <h1 class="hero-title" style="font-size:32px;margin-bottom:6px">MY SOUND</h1>
+
+      <!-- استیج سه‌بعدی باریک، بدون کادر و خروج آزاد از صفحه -->
+      <div class="library-coverflow-container">
+        <div class="library-coverflow-pod" id="libraryCoverflowWrap">
+          <div class="library-coverflow-stage" id="libraryCoverflowStage"></div>
+        </div>
+      </div>
+
+      <div class="section-title-line">
+        <div class="section-title">SAVED RELEASES</div>
+      </div>
       <div id="likedList"></div>
       <div id="libraryLoader" class="page-loader"><div class="page-spinner"></div></div>
     </section>
@@ -301,10 +663,7 @@
         <button data-go="library">Library</button>
         <button data-go="profile">Profile</button>
         <button data-go="upload">Upload</button>
-        
-        <!-- دکمه پنل ادمین -->
         <button data-go="admin" id="adminMenuBtn" style="display:none; color:var(--red); font-weight:bold;">Admin Panel</button>
-        
         <button id="authMenuButton">Register / Login</button>
       </div>
     </aside>
@@ -358,6 +717,1266 @@
 <audio id="audio" preload="metadata"></audio>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app.js"></script>
+<script>
+const SUPABASE_URL = "https://iezjmlesxdqtgrzopnyf.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_oZzBug6zzrXVDEaLljsHeQ_EPQOhcnu";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+const ADMIN_EMAILS = ["admin@lostsound.com", "amirtalles@gmail.com"];
+
+let tracks = [], artists = [], liked = new Set(), currentIndex = -1, currentUser = null, currentProfile = null;
+let listeningSeconds = 0, lastAudioTime = 0, currentTrackObj = null, authMode = "register", selectedOptionTrack = null;
+const loadedPages = new Set();
+const audio = document.getElementById("audio");
+
+let cfCurrentIndex = 0;
+let cfStartX = 0;
+let cfIsDragging = false;
+
+let cropTarget = "profile", cropFile = null, cropImage = null, cropScale = 1, cropX = 0, cropY = 0, cropDragging = false, cropLastX = 0, cropLastY = 0;
+let croppedAvatarBlob = null, croppedCoverBlob = null, croppedEditCoverBlob = null;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  initTheme();
+  setupIntroVideo();
+  bindButtons();
+  setupPullToRefresh();
+  
+  await checkSession();
+  await loadInitialHomeData();
+  applyRoute(false);
+});
+
+function initTheme(){
+  const savedTheme = localStorage.getItem("ls_theme") || "night";
+  setTheme(savedTheme);
+}
+
+function setTheme(mode){
+  const btn = document.getElementById("themeToggleBtn");
+  if (mode === "morning") {
+    document.body.classList.add("morning-mode");
+    if(btn) btn.textContent = "☀️";
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#f5f2eb');
+  } else {
+    document.body.classList.remove("morning-mode");
+    if(btn) btn.textContent = "🌙";
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#0d0d0d');
+  }
+  localStorage.setItem("ls_theme", mode);
+}
+
+function toggleTheme(){
+  const isMorning = document.body.classList.contains("morning-mode");
+  setTheme(isMorning ? "night" : "morning");
+}
+
+function setupIntroVideo(){
+  const v = document.getElementById("introCoverVideo");
+  if (!v) return;
+  v.addEventListener("ended", () => { v.currentTime = 0; v.play().catch(()=>{}); });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && v.paused) v.play().catch(()=>{}); });
+}
+
+function freeMemoryForPicker(){
+  const v = document.getElementById("introCoverVideo");
+  if(v) v.pause();
+  const fv = document.getElementById("fullCoverVideo");
+  if(fv) fv.pause();
+}
+
+function restoreMemoryAfterPicker(){
+  const v = document.getElementById("introCoverVideo");
+  if(v && document.querySelector(".view.active")?.id === "home") v.play().catch(()=>{});
+  const fv = document.getElementById("fullCoverVideo");
+  if(fv && document.getElementById("fullPlayerOverlay")?.classList.contains("open")) fv.play().catch(()=>{});
+}
+
+function setupPullToRefresh(){
+  let touchStartY = 0, isPulling = false;
+
+  window.addEventListener('touchstart', (e) => {
+    if (window.scrollY === 0) {
+      touchStartY = e.touches[0].clientY;
+      isPulling = true;
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (!isPulling) return;
+    const pullDistance = e.touches[0].clientY - touchStartY;
+    if (pullDistance > 75 && window.scrollY === 0) {
+      const spinner = document.getElementById("pullRefreshSpinner");
+      if (spinner) spinner.style.display = "block";
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchend', async () => {
+    if (!isPulling) return;
+    isPulling = false;
+    const spinner = document.getElementById("pullRefreshSpinner");
+    if (spinner && spinner.style.display === "block") {
+      loadedPages.clear();
+      await loadInitialHomeData();
+      spinner.style.display = "none";
+      toast("Archive Updated!");
+    }
+  });
+}
+
+function bindButtons(){
+  const logoBtn = document.getElementById("brandLogoBtn"), popup = document.getElementById("socialPopup");
+  if (logoBtn && popup) {
+    logoBtn.onclick = (e) => { e.stopPropagation(); popup.classList.toggle("show"); };
+    document.addEventListener("click", () => popup.classList.remove("show"));
+  }
+
+  document.getElementById("themeToggleBtn").onclick = toggleTheme;
+  document.getElementById("siteBackButton").onclick = goBack;
+  document.querySelectorAll(".pill-item").forEach(btn => btn.onclick = () => navigate(btn.dataset.view));
+  document.querySelectorAll("[data-go]").forEach(btn => btn.onclick = () => { closeDrawer(); navigate(btn.dataset.go); });
+
+  document.getElementById("menuButton").onclick = () => document.getElementById("drawer").classList.add("open");
+  document.getElementById("closeDrawer").onclick = closeDrawer;
+  document.getElementById("authMenuButton").onclick = () => { closeDrawer(); currentUser ? logout() : openAuth("login"); };
+  
+  const authClose = document.getElementById("authClose");
+  if(authClose) authClose.onclick = () => document.getElementById("authOverlay").classList.remove("open");
+  const authSwitch = document.getElementById("authSwitchBtn");
+  if(authSwitch) authSwitch.onclick = toggleAuthMode;
+  const authForgot = document.getElementById("authForgotBtn");
+  if(authForgot) authForgot.onclick = () => openAuth("forgot");
+  const authSub = document.getElementById("authSubmit");
+  if(authSub) authSub.onclick = submitAuth;
+  const googleBtn = document.getElementById("btnGoogleAuth");
+  if(googleBtn) googleBtn.onclick = signInWithGoogle;
+
+  document.getElementById("dockPlayer").onclick = (e) => {
+    if (e.target.id !== "dockPlayBtn") openFullPlayer();
+  };
+  document.getElementById("dockPlayBtn").onclick = (e) => { e.stopPropagation(); togglePlay(); };
+  document.getElementById("dockProgressWrap").onclick = (e) => { e.stopPropagation(); seekAudio(e); };
+
+  const fullClose = document.getElementById("fullPlayerClose");
+  if(fullClose) fullClose.onclick = closeFullPlayer;
+  const fullPlay = document.getElementById("fullPlayBtn");
+  if(fullPlay) fullPlay.onclick = togglePlay;
+  const fullPrev = document.getElementById("fullPrevBtn");
+  if(fullPrev) fullPrev.onclick = () => playIndex(currentIndex <= 0 ? tracks.length - 1 : currentIndex - 1);
+  const fullNext = document.getElementById("fullNextBtn");
+  if(fullNext) fullNext.onclick = nextTrack;
+  const fullScrub = document.getElementById("fullScrubBar");
+  if(fullScrub) fullScrub.onclick = seekAudioFull;
+  const fullLike = document.getElementById("fullLikeBtn");
+  if(fullLike) fullLike.onclick = toggleLikeCurrent;
+
+  const pubBtn = document.getElementById("publishButton");
+  if(pubBtn) pubBtn.onclick = publishTrack;
+  const saveTrkBtn = document.getElementById("saveTrackButton");
+  if(saveTrkBtn) saveTrkBtn.onclick = saveTrackEdit;
+  const sInput = document.getElementById("searchInput");
+  if(sInput) sInput.oninput = runSearch;
+
+  document.querySelectorAll("input[type='file']").forEach(inp => {
+    inp.removeAttribute("capture");
+    inp.addEventListener("click", (e) => {
+      e.stopPropagation();
+      freeMemoryForPicker();
+    });
+  });
+
+  const saveProfBtn = document.getElementById("saveProfileButton");
+  if(saveProfBtn) saveProfBtn.onclick = saveProfile;
+
+  const pPhoto = document.getElementById("profilePhotoFile");
+  if(pPhoto) pPhoto.onchange = e => { restoreMemoryAfterPicker(); const f = e.target.files[0]; if (f) startCropping(f, "profile"); };
+  const cFile = document.getElementById("coverFile");
+  if(cFile) cFile.onchange = e => { restoreMemoryAfterPicker(); const f = e.target.files[0]; if (f) startCropping(f, "cover"); };
+  const ecFile = document.getElementById("editCoverFile");
+  if(ecFile) ecFile.onchange = e => { restoreMemoryAfterPicker(); const f = e.target.files[0]; if (f) startCropping(f, "editCover"); };
+
+  const cCancel = document.getElementById("cropCancel");
+  if(cCancel) cCancel.onclick = () => document.getElementById("cropOverlay").classList.remove("open");
+  const cSave = document.getElementById("cropSave");
+  if(cSave) cSave.onclick = applyCroppedImage;
+  const cZoom = document.getElementById("cropZoom");
+  if(cZoom) cZoom.oninput = e => { cropScale = Number(e.target.value); drawCrop(); };
+  const cZOut = document.getElementById("cropZoomOut");
+  if(cZOut) cZOut.onclick = () => { cropScale = Math.max(1, cropScale - 0.1); drawCrop(); };
+  const cZIn = document.getElementById("cropZoomIn");
+  if(cZIn) cZIn.onclick = () => { cropScale = Math.min(3, cropScale + 0.1); drawCrop(); };
+
+  const cropStage = document.getElementById("cropStage");
+  if(cropStage){
+    cropStage.addEventListener("mousedown", cropPointerStart);
+    window.addEventListener("mousemove", cropPointerMove, { passive: false });
+    window.addEventListener("mouseup", cropPointerEnd);
+    cropStage.addEventListener("touchstart", cropPointerStart, { passive: false });
+    window.addEventListener("touchmove", cropPointerMove, { passive: false });
+    window.addEventListener("touchend", cropPointerEnd);
+  }
+
+  const optClose = document.getElementById("optCloseTrack");
+  if(optClose) optClose.onclick = closeTrackOptions;
+  const optShare = document.getElementById("optShareTrack");
+  if(optShare) optShare.onclick = () => { shareTrack(selectedOptionTrack); closeTrackOptions(); };
+  const optEdit = document.getElementById("optEditTrack");
+  if(optEdit) optEdit.onclick = () => { openEditTrack(selectedOptionTrack); closeTrackOptions(); };
+  const optDel = document.getElementById("optDeleteTrack");
+  if(optDel) optDel.onclick = () => { deleteTrack(selectedOptionTrack); closeTrackOptions(); };
+
+  audio.ontimeupdate = updateProgress;
+  audio.onplay = () => {
+    document.getElementById("dockPlayBtn").textContent = "Ⅱ";
+    const fp = document.getElementById("fullPlayBtn");
+    if(fp) fp.textContent = "Ⅱ";
+    document.getElementById("heroVinyl")?.classList.add("playing");
+    const fv = document.getElementById("fullCoverVideo");
+    if (fv && fv.style.display === "block") fv.play().catch(()=>{});
+  };
+  audio.onpause = () => {
+    document.getElementById("dockPlayBtn").textContent = "▶";
+    const fp = document.getElementById("fullPlayBtn");
+    if(fp) fp.textContent = "▶";
+    document.getElementById("heroVinyl")?.classList.remove("playing");
+    const fv = document.getElementById("fullCoverVideo");
+    if (fv) fv.pause();
+  };
+  audio.onended = nextTrack;
+}
+
+function openFullPlayer(){
+  if (!currentTrackObj) return;
+  document.getElementById("fullPlayerOverlay")?.classList.add("open");
+  const fv = document.getElementById("fullCoverVideo");
+  if (fv && fv.style.display === "block" && !audio.paused) fv.play().catch(()=>{});
+}
+
+function closeFullPlayer(){
+  document.getElementById("fullPlayerOverlay")?.classList.remove("open");
+}
+
+function closeDrawer() { document.getElementById("drawer")?.classList.remove("open"); }
+
+function openAuth(mode = "register") {
+  authMode = mode;
+  const overlay = document.getElementById("authOverlay");
+  const fb = document.getElementById("authFeedbackOverlay");
+  if(fb) fb.classList.remove("show");
+
+  const title = document.getElementById("authTitle");
+  const submit = document.getElementById("authSubmit");
+  const nameField = document.getElementById("authNameField");
+  const passField = document.getElementById("authPasswordField");
+  const googleSection = document.getElementById("googleAuthSection");
+  const forgotRow = document.getElementById("authForgotRow");
+  const switchBtn = document.getElementById("authSwitchBtn");
+
+  if (mode === "register") {
+    if(title) title.textContent = "REGISTER";
+    if(submit) submit.textContent = "CREATE ACCOUNT";
+    if(nameField) nameField.style.display = "block";
+    if(passField) passField.style.display = "block";
+    if(googleSection) googleSection.style.display = "block";
+    if(forgotRow) forgotRow.style.display = "none";
+    if(switchBtn) switchBtn.textContent = "Switch to Login";
+  } else if (mode === "login") {
+    if(title) title.textContent = "LOGIN";
+    if(submit) submit.textContent = "LOGIN";
+    if(nameField) nameField.style.display = "none";
+    if(passField) passField.style.display = "block";
+    if(googleSection) googleSection.style.display = "block";
+    if(forgotRow) forgotRow.style.display = "block";
+    if(switchBtn) switchBtn.textContent = "Switch to Register";
+  } else if (mode === "forgot") {
+    if(title) title.textContent = "RESET PASSWORD";
+    if(submit) submit.textContent = "SEND RESET LINK";
+    if(nameField) nameField.style.display = "none";
+    if(passField) passField.style.display = "none";
+    if(googleSection) googleSection.style.display = "none";
+    if(forgotRow) forgotRow.style.display = "none";
+    if(switchBtn) switchBtn.textContent = "Back to Login";
+  }
+
+  overlay?.classList.add("open");
+}
+
+function toggleAuthMode() {
+  if (authMode === "register") openAuth("login");
+  else if (authMode === "login") openAuth("register");
+  else openAuth("login");
+}
+
+async function checkSession(){
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    currentUser = session?.user || null;
+    if (currentUser) {
+      const { data: p } = await supabaseClient.from("profiles").select("*").eq("id", currentUser.id).maybeSingle();
+      currentProfile = p || { id: currentUser.id, display_name: currentUser.email.split("@")[0], username: "artist" };
+    } else {
+      currentProfile = null;
+    }
+  } catch (err) {
+    currentUser = null;
+    currentProfile = null;
+  }
+  
+  const adminBtn = document.getElementById("adminMenuBtn");
+  if(adminBtn){
+    const isAdmin = currentUser && (ADMIN_EMAILS.includes(currentUser.email) || currentProfile?.username === "admin");
+    adminBtn.style.display = isAdmin ? "block" : "none";
+  }
+
+  renderProfile();
+  const authBtn = document.getElementById("authMenuButton");
+  if (authBtn) authBtn.textContent = currentUser ? "Logout" : "Register / Login";
+}
+
+async function signInWithGoogle(){
+  try {
+    const { error } = await supabaseClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + window.location.pathname }
+    });
+    if (error) throw error;
+  } catch(e) {
+    toast(e.message || "Google Sign-In failed.");
+  }
+}
+
+async function submitAuth(){
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword")?.value;
+  const nameInput = document.getElementById("authDisplayName");
+  const name = nameInput?.value.trim() || email.split("@")[0];
+
+  if (!email) return toast("Enter your email.");
+  if (authMode !== "forgot" && !password) return toast("Enter password.");
+
+  const fbOverlay = document.getElementById("authFeedbackOverlay");
+  const spinner = document.getElementById("authSpinner");
+  const checkmark = document.getElementById("authCheckmark");
+  const fbText = document.getElementById("authFeedbackText");
+
+  if(spinner) spinner.style.display = "block";
+  if(checkmark) checkmark.style.display = "none";
+  if(fbText) fbText.textContent = authMode === "forgot" ? "SENDING LINK..." : "VERIFYING...";
+  fbOverlay?.classList.add("show");
+
+  try {
+    if (authMode === "register") {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email, password, options: { data: { display_name: name } }
+      });
+      if (error) throw error;
+      currentUser = data.user;
+      if (currentUser) {
+        await supabaseClient.from("profiles").upsert({ id: currentUser.id, display_name: name, username: email.split("@")[0] });
+        await supabaseClient.from("artists").insert({ user_id: currentUser.id, name, username: email.split("@")[0] });
+      }
+      if(fbText) fbText.textContent = "ACCOUNT CREATED!";
+    } else if (authMode === "login") {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      currentUser = data.user;
+      if(fbText) fbText.textContent = "WELCOME BACK!";
+    } else if (authMode === "forgot") {
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname
+      });
+      if (error) throw error;
+      if(fbText) fbText.textContent = "RESET LINK SENT!";
+    }
+
+    if(spinner) spinner.style.display = "none";
+    if(checkmark) checkmark.style.display = "grid";
+
+    setTimeout(async () => {
+      fbOverlay?.classList.remove("show");
+      document.getElementById("authOverlay")?.classList.remove("open");
+      document.getElementById("authEmail").value = "";
+      if(document.getElementById("authPassword")) document.getElementById("authPassword").value = "";
+
+      loadedPages.clear();
+      await checkSession();
+      await loadInitialHomeData();
+      applyRoute(false);
+    }, 1100);
+
+  } catch(e) {
+    fbOverlay?.classList.remove("show");
+    toast(e.message || "Authentication failed.");
+  }
+}
+
+async function logout(){
+  await supabaseClient.auth.signOut();
+  currentUser = null;
+  currentProfile = null;
+  liked.clear();
+  loadedPages.clear();
+  renderProfile();
+  renderLibrary();
+  const adminBtn = document.getElementById("adminMenuBtn");
+  if(adminBtn) adminBtn.style.display = "none";
+  toast("Logged out.");
+}
+
+async function loadInitialHomeData(){
+  const loader = document.getElementById("homeLoader");
+  if (loader) loader.classList.add("show");
+  
+  await loadArtists();
+  await loadTracks();
+  
+  if (loader) loader.classList.remove("show");
+  loadedPages.add("home");
+}
+
+async function loadArtists(){
+  try {
+    const { data } = await supabaseClient.from("artists").select("id,user_id,name,username");
+    const rows = data || [];
+    const ids = rows.map(a => a.user_id).filter(Boolean);
+    let profiles = [];
+    if (ids.length) {
+      const pr = await supabaseClient.from("profiles").select("id,avatar_url,display_name,username").in("id", ids);
+      if (!pr.error) profiles = pr.data || [];
+    }
+    const pmap = new Map(profiles.map(p => [p.id, p]));
+    artists = rows.map(a => {
+      const p = pmap.get(a.user_id) || {};
+      return { id: a.id, userId: a.user_id, name: a.name || p.display_name || "Artist", username: a.username || p.username || "", avatar: p.avatar_url || "" };
+    });
+  } catch(e){ artists = []; }
+}
+
+async function loadTracks(){
+  try {
+    let result = await supabaseClient
+      .from("tracks")
+      .select("id,artist_id,title,description,cover_url,audio_url,video_url,duration_seconds,play_count,created_at,artists(id,user_id,name,username)")
+      .eq("is_published", true)
+      .order("created_at", { ascending: false });
+
+    const { data, error } = result;
+    if (error || !data) return;
+    
+    tracks = data.map(t => {
+      const a = Array.isArray(t.artists) ? t.artists[0] : t.artists;
+      return {
+        id: t.id,
+        artistId: t.artist_id,
+        artistUserId: a?.user_id || "",
+        title: t.title,
+        description: t.description || "",
+        cover: t.cover_url,
+        audio: t.audio_url,
+        video: t.video_url || "",
+        isFeatured: t.is_featured || false,
+        duration: formatSeconds(t.duration_seconds || 0),
+        artist: a?.name || "Unknown Artist",
+        username: a?.username || "",
+        plays: t.play_count || 0,
+        date: formatDate(t.created_at)
+      };
+    });
+    
+    renderLatestList();
+  } catch(e) {}
+}
+
+async function loadLikes(){
+  if (!currentUser) {
+    liked.clear();
+    renderLibrary();
+    return;
+  }
+  const { data } = await supabaseClient.from("track_likes").select("track_id").eq("user_id", currentUser.id);
+  liked = new Set((data || []).map(x => x.track_id));
+  updateFullLikeBtn();
+  renderLibrary();
+}
+
+function renderLatestList(){
+  const container = document.getElementById("latestList");
+  if (!container) return;
+  container.innerHTML = tracks.map((t, i) => trackRowHTML(t, i)).join("");
+  bindTrackClicks(container);
+}
+
+function trackRowHTML(t, i){
+  const artist = artistById(t.artistId);
+  const avatar = artist?.avatar ? `<img class="avatar-badge" data-artist-avatar="${t.artistId}" src="${safeURL(artist.avatar)}" alt="">` : `<div class="avatar-badge-fallback" data-artist-avatar="${t.artistId}">${escapeHTML((t.artist||"A")[0].toUpperCase())}</div>`;
+  const isPlaying = currentIndex >= 0 && tracks[currentIndex]?.id === t.id && !audio.paused;
+
+  return `
+    <div class="track-row">
+      <div class="track-thumb-wrap">
+        ${avatar}
+        <img class="track-thumb" src="${safeURL(t.cover)}" alt="">
+      </div>
+      <button class="track-play-btn" data-play-index="${i}">${isPlaying ? "Ⅱ" : "▶"}</button>
+      <div class="track-meta" data-track-meta="${i}">
+        <h4>${escapeHTML(t.title)}</h4>
+        <div class="artist-name">${escapeHTML(t.artist)}</div>
+        <div class="track-stats"><span>${t.date}</span><span>•</span><span data-play-count-id="${t.id}">${Number(t.plays||0).toLocaleString()} plays</span></div>
+      </div>
+      <div class="track-more-btn" data-track-sheet="${t.id}">⋮</div>
+    </div>
+  `;
+}
+
+function bindTrackClicks(container){
+  container.querySelectorAll("[data-play-index]").forEach(b => {
+    b.onclick = (e) => {
+      e.stopPropagation();
+      const i = Number(b.dataset.playIndex);
+      if (currentIndex === i && !audio.paused) audio.pause(); else playIndex(i);
+    };
+  });
+  container.querySelectorAll("[data-track-meta]").forEach(b => {
+    b.onclick = () => playIndex(Number(b.dataset.trackMeta));
+  });
+  container.querySelectorAll("[data-artist-avatar]").forEach(b => {
+    b.onclick = (e) => {
+      e.stopPropagation();
+      navigate("artist", { artistId: b.dataset.artistAvatar });
+    };
+  });
+  container.querySelectorAll("[data-track-sheet]").forEach(b => {
+    b.onclick = (e) => {
+      e.stopPropagation();
+      const t = tracks.find(x => String(x.id) === String(b.dataset.trackSheet));
+      if (t) openTrackOptions(t);
+    };
+  });
+}
+
+function artistById(id){ return artists.find(a => String(a.id) === String(id)); }
+
+function renderDiscover(){
+  const promoSection = document.getElementById("featuredPromoSection");
+  const promoTrack = tracks.find(t => t.isFeatured) || tracks[0];
+
+  if (promoTrack && promoSection) {
+    promoSection.style.display = "block";
+    document.getElementById("promoCover").src = safeURL(promoTrack.cover);
+    document.getElementById("promoTitle").textContent = promoTrack.title;
+    document.getElementById("promoArtist").textContent = promoTrack.artist;
+    document.getElementById("promoPlayBtn").onclick = () => playIndex(tracks.indexOf(promoTrack));
+  }
+
+  const disc = document.getElementById("discoverList");
+  if (disc) {
+    disc.innerHTML = tracks.map((t, i) => trackRowHTML(t, i)).join("");
+    bindTrackClicks(disc);
+  }
+}
+
+// 3D COVERFLOW LOGIC IN LIBRARY
+function renderLibrary(){
+  const c = document.getElementById("likedList");
+  const lt = tracks.filter(t => liked.has(t.id));
+  
+  const stage = document.getElementById("libraryCoverflowStage");
+  const pool = lt.length ? lt : tracks;
+
+  if (stage && pool.length) {
+    stage.innerHTML = pool.map((t, i) => `
+      <div class="coverflow-item" data-cf-index="${i}" onclick="handleCoverflowClick(${i}, ${lt.length > 0})">
+        <img src="${safeURL(t.cover)}" alt="">
+        <div class="cf-meta">
+          <h4>${escapeHTML(t.title)}</h4>
+          <p>${escapeHTML(t.artist)}</p>
+        </div>
+      </div>
+    `).join("");
+
+    updateCoverflow3D();
+    setupCoverflowGestures(pool.length);
+  }
+
+  if (!c) return;
+  c.innerHTML = lt.length ? lt.map(t => trackRowHTML(t, tracks.indexOf(t))).join("") : "<p style='font-size:11px;color:var(--gray);margin-top:10px'>No saved tracks yet. Like any track to add it here.</p>";
+  bindTrackClicks(c);
+}
+
+function updateCoverflow3D(){
+  const items = document.querySelectorAll("#libraryCoverflowStage .coverflow-item");
+  if (!items.length) return;
+
+  items.forEach((item, i) => {
+    const offset = i - cfCurrentIndex;
+    const absOffset = Math.abs(offset);
+
+    if (absOffset > 4) {
+      item.style.opacity = "0";
+      item.style.pointerEvents = "none";
+      item.style.transform = `translateX(${offset * 75}px) translateZ(-350px) scale(0.3)`;
+      item.classList.remove("active");
+    } else if (offset === 0) {
+      item.style.opacity = "1";
+      item.style.pointerEvents = "auto";
+      item.style.zIndex = "40";
+      item.style.filter = "none";
+      item.style.transform = `translateX(0px) translateZ(50px) rotateY(0deg) scale(1.18)`;
+      item.classList.add("active");
+    } else {
+      const direction = offset > 0 ? 1 : -1;
+      const tx = offset * 68 + (direction * 22);
+      const rotY = direction * -38; 
+      const tz = -60 * absOffset;
+      const scale = Math.max(0.65, 1 - (absOffset * 0.12));
+
+      item.style.opacity = absOffset === 1 ? "0.95" : absOffset === 2 ? "0.7" : absOffset === 3 ? "0.4" : "0.15";
+      item.style.pointerEvents = "auto";
+      item.style.zIndex = `${30 - absOffset}`;
+      item.style.filter = "brightness(0.7)";
+      item.style.transform = `translateX(${tx}px) translateZ(${tz}px) rotateY(${rotY}deg) scale(${scale})`;
+      item.classList.remove("active");
+    }
+  });
+}
+
+function handleCoverflowClick(index, fromLikedOnly){
+  if (index === cfCurrentIndex) {
+    const pool = fromLikedOnly ? tracks.filter(t => liked.has(t.id)) : tracks;
+    const trackToPlay = pool[index];
+    if (trackToPlay) playIndex(tracks.indexOf(trackToPlay));
+  } else {
+    cfCurrentIndex = index;
+    updateCoverflow3D();
+  }
+}
+
+function setupCoverflowGestures(poolLen){
+  const wrap = document.getElementById("libraryCoverflowWrap");
+  if (!wrap) return;
+
+  wrap.ontouchstart = (e) => {
+    cfStartX = e.touches[0].clientX;
+    cfIsDragging = true;
+  };
+  wrap.ontouchmove = (e) => { if (!cfIsDragging) return; };
+  wrap.ontouchend = (e) => {
+    if (!cfIsDragging) return;
+    cfIsDragging = false;
+    const diff = e.changedTouches[0].clientX - cfStartX;
+    if (diff < -35 && cfCurrentIndex < poolLen - 1) {
+      cfCurrentIndex++;
+      updateCoverflow3D();
+    } else if (diff > 35 && cfCurrentIndex > 0) {
+      cfCurrentIndex--;
+      updateCoverflow3D();
+    }
+  };
+}
+
+function renderAdminPanel(){
+  const list = document.getElementById("adminTrackList");
+  if (!list) return;
+
+  list.innerHTML = tracks.map(t => `
+    <div class="admin-track-item">
+      <div class="admin-track-info">
+        <h4>${escapeHTML(t.title)}</h4>
+        <p>${escapeHTML(t.artist)} • ${t.plays} plays</p>
+      </div>
+      <button class="admin-toggle-btn ${t.isFeatured ? 'featured' : ''}" onclick="toggleFeaturedTrack('${t.id}', ${t.isFeatured})">
+        ${t.isFeatured ? '★ Promoted (Active)' : '☆ Set as Promoted'}
+      </button>
+    </div>
+  `).join("");
+}
+
+async function toggleFeaturedTrack(trackId, currentStatus){
+  try {
+    if (!currentStatus) {
+      await supabaseClient.from("tracks").update({ is_featured: false }).neq("id", "00000000-0000-0000-0000-000000000000");
+    }
+
+    const { error } = await supabaseClient.from("tracks").update({ is_featured: !currentStatus }).eq("id", trackId);
+    if (error) throw error;
+
+    toast(!currentStatus ? "Track set as Top Promoted!" : "Promoted track removed.");
+    loadedPages.clear();
+    await loadTracks();
+    renderAdminPanel();
+  } catch(e) {
+    toast(e.message || "Failed to update status.");
+  }
+}
+
+function animateSearchPill(){
+  const pill = document.getElementById("searchPill");
+  const input = document.getElementById("searchInput");
+  if (!pill) return;
+  
+  pill.classList.remove("expanded");
+  setTimeout(() => {
+    pill.classList.add("expanded");
+    if (input) input.focus();
+  }, 80);
+}
+
+function runSearch(){
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const box = document.getElementById("searchResults");
+  if (!q) { box.innerHTML = ""; return; }
+  
+  const ar = artists.filter(a => (a.name + " " + a.username).toLowerCase().includes(q));
+  const tr = tracks.filter(t => (t.title + " " + t.artist).toLowerCase().includes(q));
+  
+  let out = "";
+  if (ar.length) {
+    out += `<div class="search-group-title">ARTISTS & CHANNELS</div>` + ar.map(a => `
+      <div class="artist-result" onclick="navigate('artist', { artistId: '${a.id}' })">
+        ${a.avatar ? `<img src="${safeURL(a.avatar)}">` : `<div class="artist-fallback">${(a.name||"A")[0].toUpperCase()}</div>`}
+        <div><strong>${escapeHTML(a.name)}</strong><br><small style="color:var(--gray)">@${escapeHTML(a.username)}</small></div>
+      </div>
+    `).join("");
+  }
+  if (tr.length) {
+    out += `<div class="search-group-title">TRACKS</div>` + tr.map(t => trackRowHTML(t, tracks.indexOf(t))).join("");
+  }
+  box.innerHTML = out || "<p style='font-size:11px;color:var(--gray);margin-top:10px'>No results.</p>";
+  bindTrackClicks(box);
+}
+
+function renderProfile(){
+  const pName = document.getElementById("profileName"), pUser = document.getElementById("profileUsername"), pActs = document.getElementById("profileActions"), pTracks = document.getElementById("profileTracks");
+  const avatarImg = document.getElementById("profileAvatar"), fallback = document.getElementById("profileAvatarFallback");
+  
+  if (!currentUser) {
+    if(pName) pName.textContent = "LOST SOUND";
+    if(pUser) pUser.textContent = "@guest";
+    if(avatarImg) avatarImg.style.display = "none";
+    if(fallback) fallback.style.display = "grid";
+    if(pActs) pActs.innerHTML = `<button class="small-btn" onclick="openAuth('login')">Login / Register</button>`;
+    if(pTracks) pTracks.innerHTML = "<p style='font-size:11px;color:var(--gray);margin-top:10px'>Login to view your tracks.</p>";
+    return;
+  }
+
+  if(pName) pName.textContent = currentProfile?.display_name || "Artist";
+  if(pUser) pUser.textContent = "@" + (currentProfile?.username || "user");
+  if (currentProfile?.avatar_url) {
+    if(avatarImg){ avatarImg.src = currentProfile.avatar_url; avatarImg.style.display = "block"; }
+    if(fallback) fallback.style.display = "none";
+  } else {
+    if(avatarImg) avatarImg.style.display = "none";
+    if(fallback) fallback.style.display = "grid";
+  }
+
+  if(pActs) pActs.innerHTML = `<button class="small-btn" onclick="navigate('editProfile')">Edit Profile</button><button class="small-btn" onclick="navigate('upload')">+ Upload</button><button class="small-btn" onclick="logout()">Logout</button>`;
+  
+  const mine = tracks.filter(t => t.artistUserId === currentUser.id);
+  if(pTracks){
+    pTracks.innerHTML = mine.length ? mine.map((t, i) => trackRowHTML(t, tracks.indexOf(t))).join("") : "<p style='font-size:11px;color:var(--gray);margin-top:10px'>No uploads yet.</p>";
+    bindTrackClicks(pTracks);
+  }
+}
+
+function renderArtistChannel(id){
+  const a = artistById(id), c = document.getElementById("artistPage");
+  if (!c) return;
+  if (!a) { c.innerHTML = "<p style='padding:20px'>Channel not found.</p>"; return; }
+  const mine = tracks.filter(t => String(t.artistId) === String(a.id));
+  const av = a.avatar ? `<img class="channel-avatar" src="${safeURL(a.avatar)}">` : `<div class="channel-avatar artist-fallback">${(a.name||"A")[0].toUpperCase()}</div>`;
+  const isOwner = currentUser && a.userId === currentUser.id;
+
+  c.innerHTML = `
+    <div class="channel-hero">
+      ${av}
+      <div class="channel-meta">
+        <div class="hero-meta-top">ARTIST CHANNEL</div>
+        <h2>${escapeHTML(a.name)}</h2>
+        <div class="channel-id">@${escapeHTML(a.username || a.id)}</div>
+        <div class="channel-actions">
+          ${isOwner ? `<button class="small-btn" id="editChannelBtn">✎ Edit Channel</button>` : ''}
+          <button class="small-btn" id="shareChannelBtn">↗ Share Profile</button>
+        </div>
+      </div>
+    </div>
+    <div class="section-title-line"><div class="section-title">RELEASES (${mine.length})</div></div>
+    <div id="channelTrackList">${mine.length ? mine.map(t => trackRowHTML(t, tracks.indexOf(t))).join("") : "<p style='font-size:11px;color:var(--gray)'>No tracks.</p>"}</div>
+  `;
+  bindTrackClicks(c);
+  document.getElementById("shareChannelBtn").onclick = () => shareProfile(a);
+  if (isOwner) {
+    document.getElementById("editChannelBtn").onclick = () => navigate("editProfile");
+  }
+}
+
+function selectTrack(i){
+  if (i < 0 || i >= tracks.length) return;
+  currentIndex = i;
+  currentTrackObj = tracks[i];
+  listeningSeconds = 0;
+  lastAudioTime = 0;
+
+  document.getElementById("dockTitle").textContent = currentTrackObj.title;
+  document.getElementById("dockArtist").textContent = currentTrackObj.artist;
+  document.getElementById("dockImg").src = currentTrackObj.cover;
+  document.getElementById("dockPlayer").classList.add("open");
+
+  const ft = document.getElementById("fullTitle");
+  if(ft) ft.textContent = currentTrackObj.title;
+  const fa = document.getElementById("fullArtist");
+  if(fa) fa.textContent = currentTrackObj.artist;
+  const fc = document.getElementById("fullCoverImg");
+  if(fc) fc.src = currentTrackObj.cover;
+
+  const fv = document.getElementById("fullCoverVideo");
+  if (fv) {
+    if (currentTrackObj.video) {
+      fv.src = currentTrackObj.video;
+      fv.oncanplay = () => { fv.style.display = "block"; if (!audio.paused) fv.play().catch(()=>{}); };
+      fv.load();
+    } else {
+      fv.removeAttribute("src");
+      fv.style.display = "none";
+    }
+  }
+
+  updateFullLikeBtn();
+}
+
+function playIndex(i){
+  if (i < 0 || i >= tracks.length) return;
+  selectTrack(i);
+  if (currentTrackObj.audio) {
+    audio.src = currentTrackObj.audio;
+    audio.load();
+    audio.play().catch(()=>{});
+  }
+  renderLatestList();
+}
+
+function togglePlay(){
+  if (currentIndex < 0) { if (tracks.length) playIndex(0); return; }
+  if (audio.paused) audio.play().catch(()=>{}); else audio.pause();
+}
+
+function nextTrack(){ if (tracks.length) playIndex((currentIndex + 1) % tracks.length); }
+
+function updateProgress(){
+  if (!audio.duration) return;
+
+  if (!audio.paused && audio.currentTime > 0) {
+    const timeDelta = audio.currentTime - lastAudioTime;
+    if (timeDelta > 0 && timeDelta < 1.5) {
+      listeningSeconds += timeDelta;
+      if (listeningSeconds >= 60) {
+        listeningSeconds = 0;
+        if (currentTrackObj) countPlay(currentTrackObj);
+      }
+    }
+  }
+  lastAudioTime = audio.currentTime;
+
+  const pct = (audio.currentTime / audio.duration) * 100;
+  
+  const dpb = document.getElementById("dockProgressBar");
+  if(dpb) dpb.style.width = pct + "%";
+  const dct = document.getElementById("dockCurrentTime");
+  if(dct) dct.textContent = formatSeconds(audio.currentTime);
+  const dd = document.getElementById("dockDuration");
+  if(dd) dd.textContent = formatSeconds(audio.duration);
+
+  const fsf = document.getElementById("fullScrubFill");
+  if(fsf) fsf.style.width = pct + "%";
+  const fct = document.getElementById("fullCurrentTime");
+  if(fct) fct.textContent = formatSeconds(audio.currentTime);
+  const fd = document.getElementById("fullDuration");
+  if(fd) fd.textContent = formatSeconds(audio.duration);
+}
+
+async function countPlay(track){
+  if (!track?.id) return;
+  track.plays = Number(track.plays || 0) + 1;
+  document.querySelectorAll(`[data-play-count-id="${track.id}"]`).forEach(el => el.textContent = `${track.plays} plays`);
+  try { await supabaseClient.rpc("increment_play_count", { track_id: track.id }); } catch(e){}
+}
+
+function seekAudio(e){
+  if (!audio.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+  lastAudioTime = audio.currentTime;
+}
+
+function seekAudioFull(e){
+  if (!audio.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
+  lastAudioTime = audio.currentTime;
+}
+
+async function toggleLikeCurrent(){
+  if (!currentUser) return openAuth("login");
+  if (!currentTrackObj) return;
+  const id = currentTrackObj.id;
+  if (liked.has(id)) {
+    await supabaseClient.from("track_likes").delete().eq("user_id", currentUser.id).eq("track_id", id);
+    liked.delete(id);
+    toast("Removed from Library");
+  } else {
+    await supabaseClient.from("track_likes").insert({ user_id: currentUser.id, track_id: id });
+    liked.add(id);
+    toast("Saved to Library!");
+  }
+  updateFullLikeBtn();
+  renderLibrary();
+}
+
+function updateFullLikeBtn(){
+  const btn = document.getElementById("fullLikeBtn");
+  if (!btn || !currentTrackObj) return;
+  const isLiked = liked.has(currentTrackObj.id);
+  btn.textContent = isLiked ? "♥" : "♡";
+  btn.classList.toggle("liked", isLiked);
+}
+
+function startCropping(file, target){
+  if (!file) return;
+  cropTarget = target;
+  const stage = document.getElementById("cropStage");
+  if (target === "profile") {
+    stage.className = "crop-stage circle";
+    document.getElementById("cropLabel").textContent = "ADJUST PROFILE PHOTO";
+  } else {
+    stage.className = "crop-stage square";
+    document.getElementById("cropLabel").textContent = "ADJUST COVER ARTWORK";
+  }
+
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    cropFile = file; cropImage = img; cropScale = 1; cropX = 0; cropY = 0;
+    document.getElementById("cropZoom").value = "1";
+    document.getElementById("cropOverlay").classList.add("open");
+    drawCrop();
+    URL.revokeObjectURL(url);
+  };
+  img.src = url;
+}
+
+function drawCrop(){
+  const canvas = document.getElementById("cropCanvas"), ctx = canvas.getContext("2d"), s = canvas.width;
+  ctx.clearRect(0, 0, s, s); ctx.fillStyle = "#050505"; ctx.fillRect(0, 0, s, s);
+  if (!cropImage) return;
+
+  const base = Math.max(s / cropImage.naturalWidth, s / cropImage.naturalHeight);
+  const w = cropImage.naturalWidth * base * cropScale, h = cropImage.naturalHeight * base * cropScale;
+  const x = (s - w) / 2 + cropX, y = (s - h) / 2 + cropY;
+
+  ctx.save();
+  ctx.beginPath();
+  if (cropTarget === "profile") ctx.arc(s / 2, s / 2, s / 2, 0, Math.PI * 2);
+  else ctx.rect(0, 0, s, s);
+  ctx.clip();
+  ctx.drawImage(cropImage, x, y, w, h);
+  ctx.restore();
+}
+
+function cropPointerStart(e){ if (!cropImage) return; cropDragging = true; const p = e.touches?.[0] || e; cropLastX = p.clientX; cropLastY = p.clientY; }
+function cropPointerMove(e){ if (!cropDragging) return; const p = e.touches?.[0] || e; cropX += p.clientX - cropLastX; cropY += p.clientY - cropLastY; cropLastX = p.clientX; cropLastY = p.clientY; drawCrop(); e.preventDefault(); }
+function cropPointerEnd(){ cropDragging = false; }
+
+async function applyCroppedImage(){
+  if (!cropImage) return;
+  const canvas = document.createElement("canvas"); canvas.width = 400; canvas.height = 400;
+  const ctx = canvas.getContext("2d"), s = 400;
+  const base = Math.max(s / cropImage.naturalWidth, s / cropImage.naturalHeight);
+  const w = cropImage.naturalWidth * base * cropScale, h = cropImage.naturalHeight * base * cropScale;
+  const x = (s - w) / 2 + cropX, y = (s - h) / 2 + cropY;
+
+  ctx.save(); ctx.beginPath();
+  if (cropTarget === "profile") ctx.arc(200, 200, 200, 0, Math.PI * 2);
+  else ctx.rect(0, 0, s, s);
+  ctx.clip();
+  ctx.drawImage(cropImage, x, y, w, h);
+  ctx.restore();
+
+  canvas.toBlob(blob => {
+    if (cropTarget === "profile") croppedAvatarBlob = blob;
+    else if (cropTarget === "cover") croppedCoverBlob = blob;
+    else if (cropTarget === "editCover") croppedEditCoverBlob = blob;
+    
+    document.getElementById("cropOverlay").classList.remove("open");
+    toast("Image cropped & ready.");
+  }, "image/jpeg", 0.85);
+}
+
+async function saveProfile(){
+  if (!currentUser) return openAuth("login");
+  const username = document.getElementById("editUsername").value.trim().toLowerCase();
+  const displayName = document.getElementById("editDisplayName").value.trim();
+  const newPassword = document.getElementById("editNewPassword").value;
+  let avatarUrl = currentProfile?.avatar_url || null;
+
+  const btn = document.getElementById("saveProfileButton");
+  btn.disabled = true; btn.textContent = "SAVING...";
+
+  try {
+    if (newPassword) {
+      if (newPassword.length < 6) throw new Error("Password must be at least 6 characters.");
+      const { error: passErr } = await supabaseClient.auth.updateUser({ password: newPassword });
+      if (passErr) throw passErr;
+    }
+
+    if (croppedAvatarBlob) {
+      const path = `${currentUser.id}/avatar-${Date.now()}.jpg`;
+      await supabaseClient.storage.from("avatars").upload(path, croppedAvatarBlob, { upsert: true, contentType: "image/jpeg" });
+      avatarUrl = supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+      croppedAvatarBlob = null;
+    }
+
+    await supabaseClient.from("profiles").upsert({ id: currentUser.id, username, display_name: displayName, avatar_url: avatarUrl });
+    await supabaseClient.from("artists").update({ name: displayName, username }).eq("user_id", currentUser.id);
+    
+    await checkSession();
+    await loadArtists();
+    navigate("profile");
+    toast("Profile & security updated!");
+    document.getElementById("editNewPassword").value = "";
+  } catch(e) { 
+    toast(e.message || "Update failed."); 
+  } finally {
+    btn.disabled = false; btn.textContent = "SAVE PROFILE";
+  }
+}
+
+async function publishTrack(){
+  if (!currentUser) return openAuth("login");
+  const aFile = document.getElementById("audioFile").files[0];
+  const cFile = croppedCoverBlob || document.getElementById("coverFile").files[0];
+  const vFile = document.getElementById("videoFile").files[0];
+  const title = document.getElementById("uploadTitle").value.trim();
+  const artistName = document.getElementById("uploadArtist").value.trim();
+
+  if (!aFile || !cFile || !title) return toast("Fill required fields.");
+
+  const btn = document.getElementById("publishButton");
+  const progressWrap = document.getElementById("uploadProgressWrap");
+  const progressFill = document.getElementById("uploadProgressFill");
+  const progressText = document.getElementById("uploadProgressText");
+
+  btn.disabled = true; btn.textContent = "UPLOADING...";
+  progressWrap.style.display = "block";
+  progressFill.style.width = "0%";
+  progressText.textContent = "0%";
+
+  function updateUploadProgress(pct){
+    progressFill.style.width = pct + "%";
+    progressText.textContent = Math.round(pct) + "%";
+  }
+
+  try {
+    let { data: art } = await supabaseClient.from("artists").select("*").eq("user_id", currentUser.id).maybeSingle();
+    if (!art) {
+      const { data: newArt } = await supabaseClient.from("artists").insert({ user_id: currentUser.id, name: artistName || "Artist", username: currentProfile?.username || "artist" }).select().single();
+      art = newArt;
+    }
+
+    const totalWeight = (aFile?.size || 0) + (cFile?.size || 0) + (vFile?.size || 0);
+    let uploadedBytes = 0;
+
+    updateUploadProgress(10);
+
+    const cPath = `${currentUser.id}/${Date.now()}-cover.jpg`;
+    await supabaseClient.storage.from("covers").upload(cPath, cFile, { upsert: false, contentType: "image/jpeg" });
+    uploadedBytes += (cFile?.size || 0);
+    updateUploadProgress(totalWeight ? (uploadedBytes / totalWeight) * 85 : 40);
+
+    const aPath = `${currentUser.id}/${Date.now()}-track.mp3`;
+    await supabaseClient.storage.from("audio").upload(aPath, aFile, { upsert: false });
+    uploadedBytes += (aFile?.size || 0);
+    updateUploadProgress(totalWeight ? (uploadedBytes / totalWeight) * 85 : 75);
+
+    let vUrl = null;
+    if (vFile) {
+      const vPath = `${currentUser.id}/${Date.now()}-video.mp4`;
+      await supabaseClient.storage.from("videos").upload(vPath, vFile, { upsert: false });
+      vUrl = supabaseClient.storage.from("videos").getPublicUrl(vPath).data.publicUrl;
+    }
+
+    const aUrl = supabaseClient.storage.from("audio").getPublicUrl(aPath).data.publicUrl;
+    const cUrl = supabaseClient.storage.from("covers").getPublicUrl(cPath).data.publicUrl;
+
+    updateUploadProgress(92);
+
+    await supabaseClient.from("tracks").insert({
+      artist_id: art.id, title, cover_url: cUrl, audio_url: aUrl, video_url: vUrl, play_count: 0, is_published: true, is_featured: false
+    });
+
+    updateUploadProgress(100);
+
+    setTimeout(async () => {
+      toast("Track published!");
+      document.getElementById("audioFile").value = "";
+      document.getElementById("coverFile").value = "";
+      document.getElementById("videoFile").value = "";
+      croppedCoverBlob = null;
+      progressWrap.style.display = "none";
+      loadedPages.clear();
+      await loadTracks();
+      navigate("home");
+    }, 400);
+
+  } catch(e) {
+    toast(e.message || "Upload failed.");
+    progressWrap.style.display = "none";
+  } finally {
+    btn.disabled = false; btn.textContent = "PUBLISH TRACK";
+  }
+}
+
+function openTrackOptions(t){
+  selectedOptionTrack = t;
+  document.getElementById("optionsTrackTitle").textContent = t.title;
+  const isOwner = currentUser && t.artistUserId === currentUser.id;
+  document.getElementById("optEditTrack").style.display = isOwner ? "block" : "none";
+  document.getElementById("optDeleteTrack").style.display = isOwner ? "block" : "none";
+  document.getElementById("trackOptionsSheet").classList.add("open");
+}
+function closeTrackOptions(){ document.getElementById("trackOptionsSheet").classList.remove("open"); }
+
+function openEditTrack(t){
+  document.getElementById("editTrackId").value = t.id;
+  document.getElementById("editTrackTitle").value = t.title;
+  document.getElementById("editTrackArtist").value = t.artist;
+  croppedEditCoverBlob = null;
+  navigate("editTrack");
+}
+
+async function saveTrackEdit(){
+  const id = document.getElementById("editTrackId").value;
+  const title = document.getElementById("editTrackTitle").value.trim();
+  if (!id || !title) return toast("Fill title.");
+
+  const btn = document.getElementById("saveTrackButton");
+  btn.disabled = true; btn.textContent = "SAVING...";
+
+  try {
+    let updatePayload = { title };
+    if (croppedEditCoverBlob) {
+      const cPath = `${currentUser.id}/${Date.now()}-editcover.jpg`;
+      await supabaseClient.storage.from("covers").upload(cPath, croppedEditCoverBlob, { upsert: false, contentType: "image/jpeg" });
+      updatePayload.cover_url = supabaseClient.storage.from("covers").getPublicUrl(cPath).data.publicUrl;
+      croppedEditCoverBlob = null;
+    }
+    await supabaseClient.from("tracks").update(updatePayload).eq("id", id);
+    toast("Track updated!");
+    loadedPages.clear();
+    await loadTracks();
+    navigate("profile");
+  } catch(e){
+    toast("Edit failed.");
+  } finally {
+    btn.disabled = false; btn.textContent = "UPDATE TRACK";
+  }
+}
+
+async function deleteTrack(t){
+  if (!confirm(`Delete "${t.title}" permanently?`)) return;
+  try {
+    await supabaseClient.from("tracks").delete().eq("id", t.id);
+    toast("Track deleted.");
+    loadedPages.clear();
+    await loadTracks();
+  } catch(e){ toast("Delete failed."); }
+}
+
+function navigate(view, opts = {}){
+  const u = new URL(location.href);
+  u.search = "";
+  if (view && view !== "home") u.searchParams.set("view", view);
+  if (view === "artist" && opts.artistId) u.searchParams.set("artist", opts.artistId);
+  history.pushState({ view, ...opts }, "", u.href);
+  applyRoute(false);
+}
+
+function updatePillGlider(viewName){
+  const navMap = { "home": 0, "discover": 1, "search": 2, "library": 3, "profile": 4 };
+  const idx = navMap[viewName] !== undefined ? navMap[viewName] : 0;
+  
+  const glider = document.getElementById("pillGlider");
+  if (glider) {
+    glider.style.transform = `translateX(${idx * 100}%)`;
+  }
+  document.querySelectorAll(".pill-item").forEach(item => {
+    item.classList.toggle("active", item.dataset.view === viewName);
+  });
+}
+
+async function applyRoute(fromPop = true){
+  const p = new URLSearchParams(location.search), view = p.get("view") || "home";
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("siteBackButton")?.classList.toggle("visible", !!p.get("view"));
+
+  updatePillGlider(view);
+
+  const activeViewEl = document.getElementById(view);
+  if (activeViewEl) activeViewEl.classList.add("active");
+
+  if (view === "home") {
+    if (!loadedPages.has("home")) await loadInitialHomeData();
+  } else if (view === "discover") {
+    const loader = document.getElementById("discoverLoader");
+    if (!loadedPages.has("discover")) {
+      if (loader) loader.classList.add("show");
+      renderDiscover();
+      if (loader) loader.classList.remove("show");
+      loadedPages.add("discover");
+    } else {
+      renderDiscover();
+    }
+  } else if (view === "admin") {
+    renderAdminPanel();
+  } else if (view === "search") {
+    animateSearchPill();
+  } else if (view === "library") {
+    const loader = document.getElementById("libraryLoader");
+    if (!loadedPages.has("library")) {
+      if (loader) loader.classList.add("show");
+      await loadLikes();
+      if (loader) loader.classList.remove("show");
+      loadedPages.add("library");
+    } else {
+      renderLibrary();
+    }
+  } else if (view === "profile") {
+    renderProfile();
+  } else if (view === "artist") {
+    renderArtistChannel(p.get("artist"));
+  }
+
+  if (!fromPop) window.scrollTo(0, 0);
+}
+
+window.addEventListener("popstate", () => applyRoute(true));
+function goBack(){ history.length > 1 ? history.back() : navigate("home"); }
+
+function shareProfile(a){
+  const url = `${location.origin}${location.pathname}?view=artist&artist=${a.id}`;
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => toast("Channel link copied!"));
+}
+
+function shareTrack(t){
+  const trk = t || (currentIndex >= 0 ? tracks[currentIndex] : null);
+  if (!trk) return;
+  const url = `${location.origin}${location.pathname}?view=track&id=${trk.id}`;
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(() => toast("Track link copied!"));
+}
+
+function formatSeconds(s){ if (!isFinite(s)) return "0:00"; return Math.floor(s/60) + ":" + String(Math.floor(s%60)).padStart(2, "0"); }
+function formatDate(d){ if (!d) return "Recently"; return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(new Date(d)); }
+function toast(m){ document.querySelector(".toast")?.remove(); const e = document.createElement("div"); e.className = "toast"; e.textContent = m; document.body.appendChild(e); setTimeout(() => e.remove(), 2200); }
+function escapeHTML(v){ return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function safeURL(v){ return String(v??"").replace(/"/g,"%22"); }
+</script>
 </body>
 </html>
